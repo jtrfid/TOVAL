@@ -173,6 +173,7 @@ public class CollectionUtils {
 		return true;
 	}
 	
+	
 	public static <T, C extends Collection<T>> C copy(C coll) 
 			throws 	InstantiationException, 
 					IllegalAccessException, 

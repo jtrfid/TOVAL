@@ -37,5 +37,18 @@ public class RandomUtils {
 			throw new IllegalArgumentException("lower bound higher than upper bound");
 		return rand.nextInt(upperBound-lowerBound)+lowerBound;
 	}
+	
+	/**
+	 * Returns a random <code>long</code> value out of a specified range
+	 * @param lowerBound Lower bound of the target range (inclusive)
+	 * @param upperBound Upper bound of the target range (exclusive)
+	 * @return A random <code>long</code> value out of a specified range
+	 */
+	public static long randomLongBetween(long lowerBound, long upperBound) {
+		if(upperBound<lowerBound)
+			throw new IllegalArgumentException("lower bound higher than upper bound");
+		return lowerBound + (long)(rand.nextDouble()*(upperBound - lowerBound));
+	}
+
 
 }

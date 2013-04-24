@@ -13,5 +13,23 @@ public class StringConstraint extends AbstractConstraint<String> {
 		System.out.println(c);
 		System.out.println(c.validate(12));
 	}
+	
+	
+
+	@Override
+	public StringOperator getOperator() {
+		return (StringOperator) super.getOperator();
+	}
+
+	@Override
+	public StringConstraint clone() {
+		StringConstraint result = null;
+		try {
+			result = new StringConstraint(new String(element), getOperator(), parameters.clone());
+		} catch (ParameterException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

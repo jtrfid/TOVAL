@@ -150,6 +150,11 @@ public class Validate {
 			throw new ParameterException(ErrorCode.RANGEVIOLATION);
 	}
 	
+	public static void minMax(long min, long max) throws ParameterException{
+		if(min > max)
+			throw new ParameterException(ErrorCode.RANGEVIOLATION);
+	}
+	
 	/**
 	 * Check if a given value has a specific type.
 	 * @param value

@@ -87,5 +87,7 @@ public abstract class AbstractConstraint<T extends Object> {
 	public boolean validate(Object value) throws ParameterException {
 		return operator.validate(value, parameters);
 	}
+	
+	public abstract AbstractConstraint<T> clone();
 
 }
