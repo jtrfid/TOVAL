@@ -280,6 +280,19 @@ public class ListUtils {
 	}
 	
 	/**
+	 * Returns a string list representation of the given list.
+	 * @param coll List to convert
+	 * @return A list containing string representations for all elements of the input list.
+	 */
+	public static List<String> asStringList(List<?> coll){
+		List<String> result = new ArrayList<String>();
+		for(Object t: coll){
+			result.add(t.toString());
+		}
+		return result;
+	}
+	
+	/**
 	 * Returns an Iterator for all possible permutations of the given list.
 	 * @param <T> Type of list elements
 	 * @param list Basic list for permutations
