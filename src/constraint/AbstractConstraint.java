@@ -2,6 +2,7 @@ package constraint;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 import validate.ParameterException;
 import validate.ParameterException.ErrorCode;
@@ -89,5 +90,42 @@ public abstract class AbstractConstraint<T extends Object> {
 	}
 	
 	public abstract AbstractConstraint<T> clone();
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((element == null) ? 0 : element.hashCode());
+		result = prime * result
+				+ ((operator == null) ? 0 : operator.hashCode());
+		result = prime * result + Arrays.hashCode(parameters);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractConstraint other = (AbstractConstraint) obj;
+		if (element == null) {
+			if (other.element != null)
+				return false;
+		} else if (!element.equals(other.element))
+			return false;
+		if (operator == null) {
+			if (other.operator != null)
+				return false;
+		} else if (!operator.equals(other.operator))
+			return false;
+		if (!Arrays.equals(parameters, other.parameters))
+			return false;
+		return true;
+	}
+	
+	
 
 }

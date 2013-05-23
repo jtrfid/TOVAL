@@ -1,7 +1,10 @@
 package misc.valuegeneration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import validate.InconsistencyException;
 import validate.ParameterException;
@@ -22,8 +25,9 @@ import validate.Validate;
  */
 public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	
-	private ArrayList<E> keys = new ArrayList<E>();
-	private ArrayList<Double> limits = new ArrayList<Double>();
+	private List<E> keys = new ArrayList<E>();
+	private List<Double> limits = new ArrayList<Double>();
+	private List<Double> probabilities = new ArrayList<Double>();
 	private boolean isValid = false;
 	private Random rand = new Random();
 	private double tolerance;
@@ -39,6 +43,10 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		tolerance = 1.0/toleranceDenominator;
 	}
 	
+	public StochasticValueGenerator() throws ParameterException{
+		this(1000);
+	}
+	
 	/**
 	 * Adds a new element together with its occurrence probability.<br>
 	 * The method checks and sets the validity state of the chooser.
@@ -51,8 +59,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	public boolean addProbability(E o, Double p) throws InconsistencyException, ParameterException {
 		if(isValid())
 			return false;
-		Validate.notNull(p);
-		Validate.notNegative(p);
+		Validate.probability(p);
 		if(keys.isEmpty()){
 			keys.add(o);
 			limits.add(p);
@@ -65,7 +72,20 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		}
 		if((1.0-getSum())<=tolerance)
 			isValid = true;
+		probabilities.add(p);
 		return true;
+	}
+	
+	public Double getProbability(Object o){
+		try{
+			return probabilities.get(keys.indexOf(o));
+		} catch (Exception e){
+			return null;
+		}
+	}
+	
+	public Set<E> getElements(){
+		return new HashSet<E>(keys);
 	}
 	
 	/**

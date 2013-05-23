@@ -12,7 +12,8 @@ public class PropertyException extends Exception {
 	public PropertyException(Object property, Object value) {
 		super();
 		this.property = property.toString();
-		this.value = value.toString();
+		if(value != null)
+			this.value = value.toString();
 	}
 	
 	public PropertyException(Object property, Object value, String notification) {

@@ -1,8 +1,8 @@
 package constraint;
 
 import validate.ParameterException;
-import validate.Validate;
 import validate.ParameterException.ErrorCode;
+import validate.Validate;
 
 public enum StringOperator implements Operator<String> {
 	
@@ -62,5 +62,15 @@ public enum StringOperator implements Operator<String> {
 	public String toString(){
 		return sign;
 	}
+	
+	public static StringOperator parse(String operatorString){
+		if(operatorString.equals("=="))
+			return StringOperator.EQUAL;
+		if(operatorString.equals("!="))
+			return StringOperator.NOT_EQUAL;
+		return null;
+	}
+	
+	
 	
 }

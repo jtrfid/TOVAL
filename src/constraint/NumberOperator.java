@@ -1,8 +1,8 @@
 package constraint;
 
 import validate.ParameterException;
-import validate.Validate;
 import validate.ParameterException.ErrorCode;
+import validate.Validate;
 
 
 public enum NumberOperator implements Operator<Number>{
@@ -77,6 +77,22 @@ public enum NumberOperator implements Operator<Number>{
 	@Override
 	public String toString(){
 		return sign;
+	}
+	
+	public static NumberOperator parse(String operatorString){
+		if(operatorString.equals("<"))
+			return NumberOperator.SMALLER;
+		if(operatorString.equals("<="))
+			return NumberOperator.SMALLER_EQUAL;
+		if(operatorString.equals(">"))
+			return NumberOperator.LARGER;
+		if(operatorString.equals(">="))
+			return NumberOperator.LARGER_EQUAL;
+		if(operatorString.equals("=="))
+			return NumberOperator.EQUAL;
+		if(operatorString.equals("!="))
+			return NumberOperator.NOT_EQUAL;
+		return null;
 	}
 
 }
