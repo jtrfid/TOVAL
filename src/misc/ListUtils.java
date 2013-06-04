@@ -71,6 +71,15 @@ public class ListUtils {
 		return result;
 	}
 	
+	public static <T> void swapElements(List<T> list, T element1, T element2){
+		int index1 = list.indexOf(element1);
+		int index2 = list.indexOf(element2);
+		if(index1 == -1 || index1 == -1){
+			return;
+		}
+		Collections.swap(list, index1, index2);
+	}
+	
 	/**
 	 * Returns a new list containing all elements of the original list but {@link exclude}
 	 * @param <T> Type of list elements

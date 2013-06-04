@@ -19,6 +19,7 @@ public interface ValueGenerator<E extends Object> {
 	
 	public boolean isValid();
 	
-	public Class getValueType() throws InconsistencyException;
+	public Class getValueClass() throws InconsistencyException;
+	
 
 }

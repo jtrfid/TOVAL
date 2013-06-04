@@ -24,6 +24,10 @@ public class AbstractProperties {
 		loadDefaultProperties();
 	}
 	
+	protected AbstractProperties(Properties properties){
+		setProperties(properties);
+	}
+	
 	public Properties getProperties(){
 		return props;
 	}
@@ -39,6 +43,10 @@ public class AbstractProperties {
 		FileInputStream fis = new FileInputStream(fileName);
 		props.load(fis);
 		fis.close();
+	}
+	
+	public void setProperties(Properties properties){
+		this.props = properties;
 	}
 	
 	protected void loadDefaultProperties(){

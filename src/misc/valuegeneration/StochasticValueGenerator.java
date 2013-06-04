@@ -1,8 +1,10 @@
 package misc.valuegeneration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	
 	private List<E> keys = new ArrayList<E>();
 	private List<Double> limits = new ArrayList<Double>();
-	private List<Double> probabilities = new ArrayList<Double>();
+	private Map<E, Double> probabilities = new HashMap<E, Double>();
 	private boolean isValid = false;
 	private Random rand = new Random();
 	private double tolerance;
@@ -47,6 +49,15 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		this(1000);
 	}
 	
+	public void removeElement(Object key){
+		if(!keys.contains(key))
+			return;
+		int index = keys.indexOf(key);
+		keys.remove(index);
+		limits.remove(index);
+		probabilities.remove(index);
+	}
+	
 	/**
 	 * Adds a new element together with its occurrence probability.<br>
 	 * The method checks and sets the validity state of the chooser.
@@ -60,6 +71,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		if(isValid())
 			return false;
 		Validate.probability(p);
+	
 		if(keys.isEmpty()){
 			keys.add(o);
 			limits.add(p);
@@ -70,15 +82,16 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 			keys.add(o);
 			limits.add(getSum() + p);
 		}
+		
 		if((1.0-getSum())<=tolerance)
 			isValid = true;
-		probabilities.add(p);
+		probabilities.put(o, p);
 		return true;
 	}
 	
 	public Double getProbability(Object o){
 		try{
-			return probabilities.get(keys.indexOf(o));
+			return probabilities.get(o);
 		} catch (Exception e){
 			return null;
 		}
@@ -125,10 +138,24 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	}
 	
 	@Override
-	public Class getValueType() throws InconsistencyException{
-		if(!isValid())
-			throw new InconsistencyException("Cannot provide elements in invalid state.");
+	public Class getValueClass() throws InconsistencyException{
+		if(keys.isEmpty())
+			throw new InconsistencyException("Value generator is empty.");
 		return keys.get(0).getClass();
+	}
+	
+	@Override
+	public StochasticValueGenerator<E> clone(){
+		StochasticValueGenerator<E> result;
+		try {
+			result = new StochasticValueGenerator<E>();
+			for(E element: getElements()){
+				result.addProbability(element, getProbability(element));
+			}
+		} catch (ParameterException e) {
+			return null;
+		}
+		return result;
 	}
 	
 }
