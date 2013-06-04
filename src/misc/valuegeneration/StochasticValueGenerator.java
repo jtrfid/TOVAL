@@ -157,5 +157,10 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		}
 		return result;
 	}
+
+	@Override
+	public boolean isEmpty() {
+		return keys.isEmpty();
+	}
 	
 }

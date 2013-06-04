@@ -21,5 +21,5 @@ public interface ValueGenerator<E extends Object> {
 	
 	public Class getValueClass() throws InconsistencyException;
 	
-
+	public boolean isEmpty();
 }
