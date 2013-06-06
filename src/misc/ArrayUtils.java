@@ -214,8 +214,12 @@ public class ArrayUtils {
 	 * @return String representation of {@link arr}
 	 * @see ArrayUtils#getFormat(Object[])
 	 */
+	public static <T> String toString(T[] arr, char valueSeparation) {
+		return toString(arr, DEFAULT_PRECISION, valueSeparation);
+	}
+	
 	public static <T> String toString(T[] arr) {
-		return toString(arr, DEFAULT_PRECISION);
+		return toString(arr, DEFAULT_PRECISION, VALUE_SEPARATION);
 	}
 	
 	/**
@@ -225,9 +229,9 @@ public class ArrayUtils {
 	 * @return String representation of {@link arr}
 	 * @see ArrayUtils#getFormat(Object[], int)
 	 */
-	public static <T> String toString(T[] arr, int precision) {
+	public static <T> String toString(T[] arr, int precision, char valueSeparation) {
 		if(arr.length>0)
-			return String.format(getFormat(arr, precision), arr);
+			return String.format(getFormat(arr, precision, valueSeparation), arr);
 		else return EMPTY_ARRAY;
 	}
 	
@@ -240,12 +244,12 @@ public class ArrayUtils {
 	 * @see Formatter
 	 * @see String#format(String, Object...)
 	 */
-	private static <T> String getFormat(T[] arr, int precision) {
+	private static <T> String getFormat(T[] arr, int precision, char valueSeparation) {
 		StringBuilder builder = new StringBuilder();
 		builder.append('[');
 		for(int i=0; i<arr.length-1; i++) {
 			builder.append(FormatUtils.getFormat(arr[i], precision));
-			builder.append(VALUE_SEPARATION);
+			builder.append(valueSeparation);
 		}
 		builder.append(FormatUtils.getFormat(arr[arr.length-1], precision));
 		builder.append(']');
