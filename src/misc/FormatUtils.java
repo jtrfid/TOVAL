@@ -3,6 +3,8 @@ package misc;
 
 public class FormatUtils {
 	
+	private static final double BASE = 1024, KB = BASE, MB = KB*BASE, GB = MB*BASE;
+	
 	/**
 	 * Format used for representing integers.
 	 */
@@ -164,7 +166,19 @@ public class FormatUtils {
 		return String.format('%'+String.format(TRIM_BASE_FORMAT, length), format.substring(1));
 	}
 	
-	
+	public static String formatFileSize(double size) {
+        if(size >= GB) {
+            return format(size/GB, 2) + " GB";
+        }
+        if(size >= MB) {
+            return format(size/MB, 2) + " MB";
+        }
+        if(size >= KB) {
+            return format(size/KB, 2) + " KB";
+        }
+        return "" + (int)size + " bytes";
+    }
+
 
 
 }

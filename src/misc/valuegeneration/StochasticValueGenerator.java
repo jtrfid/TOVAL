@@ -1,5 +1,7 @@
 package misc.valuegeneration;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,6 +28,8 @@ import validate.Validate;
  * @param <E> element Type
  */
 public class StochasticValueGenerator<E> implements ValueGenerator<E>{
+	
+	private static final String probFormat = "%s: %s%%\n";
 	
 	private List<E> keys = new ArrayList<E>();
 	private List<Double> limits = new ArrayList<Double>();
@@ -161,6 +165,16 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	@Override
 	public boolean isEmpty() {
 		return keys.isEmpty();
+	}
+	
+	@Override
+	public String toString(){
+		NumberFormat nf = new DecimalFormat("#0.##");
+		StringBuilder builder = new StringBuilder();
+		for(E e: keys){
+			builder.append(String.format(probFormat, e, nf.format(getProbability(e)*100.0)));
+		}
+		return builder.toString();
 	}
 	
 }

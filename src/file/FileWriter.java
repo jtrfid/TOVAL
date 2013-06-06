@@ -25,6 +25,7 @@ public class FileWriter {
 	protected String eolString = DEFAULT_EOL_STRING;
 	protected BufferedWriter output = null;
 	protected File outputFile = null;
+	protected String fileExtension = DEFAULT_FILE_EXTENSION;
 	
 	//------- Constructors -------------------------------------------------------------------
 	
@@ -243,7 +244,12 @@ public class FileWriter {
 	}
 	
 	public String getFileExtension(){
-		return DEFAULT_FILE_EXTENSION;
+		return fileExtension;
+	}
+	
+	public void setFileExtension(String extension){
+		//TODO:
+		this.fileExtension = extension;
 	}
 	
 	public String getCharset(){
@@ -363,8 +369,9 @@ public class FileWriter {
 	}
 	
 	public void closeFile() throws IOException {
-		if(output != null)
+		if(output != null){
 			output.close();
+		}
 	}
 
 	public static void main(String[] args) throws Exception{

@@ -2,6 +2,9 @@ package misc;
 
 import java.util.StringTokenizer;
 
+import validate.ParameterException;
+import validate.Validate;
+
 public class StringUtils {
 	
 	public static StringTokenizer splitArrayString(String array, String delimiter){
@@ -48,6 +51,13 @@ public class StringUtils {
 	public static String removeSurrounding(String string, char character){
 		String result = removeLeading(string, character);
 		return removeEnding(result, character);
+	}
+	
+	public static String convertToHTML(String string) throws ParameterException{
+		Validate.notNull(string);
+		String htmlString = "<html>"+string.replace("\n", "<br>")+"</html>";
+		htmlString.replace(" ", "&nbsp;");
+		return htmlString;
 	}
 
 }
