@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import misc.CollectionUtils;
+import de.invation.code.toval.misc.CollectionUtils;
+
 
 /**
  * This class manages a number of points and places them in a circular way according to the minimum distance between any two points. <br>

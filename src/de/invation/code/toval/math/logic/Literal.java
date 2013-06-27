@@ -1,4 +1,4 @@
-package math.logic;
+package de.invation.code.toval.math.logic;
 
 import java.util.Comparator;
 

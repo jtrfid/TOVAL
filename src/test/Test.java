@@ -3,7 +3,8 @@ package test;
 import java.util.ArrayList;
 import java.util.List;
 
-import misc.CollectionUtils;
+import de.invation.code.toval.misc.CollectionUtils;
+
 
 
 

@@ -1,4 +1,4 @@
-package properties;
+package de.invation.code.toval.properties;
 
 
 public class PropertyException extends Exception {

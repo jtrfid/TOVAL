@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import misc.CollectionUtils;
-import misc.FormatUtils;
-import misc.MapUtils;
+import de.invation.code.toval.misc.CollectionUtils;
+import de.invation.code.toval.misc.FormatUtils;
+import de.invation.code.toval.misc.MapUtils;
+
 
 /**
  * Class for managing a set of observation values.<br>

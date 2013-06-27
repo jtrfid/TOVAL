@@ -1,4 +1,4 @@
-package misc;
+package de.invation.code.toval.misc;
 
 
 public class FormatUtils {

@@ -1,4 +1,4 @@
-package properties;
+package de.invation.code.toval.properties;
 
 import java.io.File;
 import java.io.FileInputStream;

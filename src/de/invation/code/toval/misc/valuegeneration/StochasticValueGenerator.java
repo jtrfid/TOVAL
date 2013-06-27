@@ -1,4 +1,4 @@
-package misc.valuegeneration;
+package de.invation.code.toval.misc.valuegeneration;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

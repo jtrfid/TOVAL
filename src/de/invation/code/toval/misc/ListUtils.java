@@ -1,4 +1,4 @@
-package misc;
+package de.invation.code.toval.misc;
 
 import java.util.ArrayList;
 import java.util.Arrays;

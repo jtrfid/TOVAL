@@ -1,6 +1,6 @@
 package de.invation.code.toval.constraint;
 
-import misc.ArrayUtils;
+import de.invation.code.toval.misc.ArrayUtils;
 import validate.ParameterException;
 import validate.ParameterException.ErrorCode;
 

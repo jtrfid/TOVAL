@@ -1,4 +1,4 @@
-package misc;
+package de.invation.code.toval.misc;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

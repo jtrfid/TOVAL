@@ -8,12 +8,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.misc.CollectionUtils;
+import de.invation.code.toval.misc.SetUtils;
+
 import validate.ParameterException;
 import validate.ParameterException.ErrorCode;
 import validate.Validate;
 
-import misc.CollectionUtils;
-import misc.SetUtils;
 
 /**
  * Class for modeling multisets.<br>

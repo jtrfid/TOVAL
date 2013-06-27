@@ -1,4 +1,4 @@
-package parser;
+package de.invation.code.toval.parser;
 
 public class ParserException extends Exception {
 

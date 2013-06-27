@@ -1,4 +1,4 @@
-package misc.valuegeneration;
+package de.invation.code.toval.misc.valuegeneration;
 
 public class ValueGenerationException extends Exception {
 

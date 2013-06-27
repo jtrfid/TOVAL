@@ -1,6 +1,6 @@
 package graphic.diagrams.panels;
 import de.invation.code.toval.math.MathUtils;
-import misc.FormatUtils;
+import de.invation.code.toval.misc.FormatUtils;
 
 	/**
 	 * Class for managing information about ticks adjusted to i.e. axes or lines.<br>
