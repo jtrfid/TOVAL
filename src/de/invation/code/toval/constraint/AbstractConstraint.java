@@ -1,4 +1,4 @@
-package constraint;
+package de.invation.code.toval.constraint;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

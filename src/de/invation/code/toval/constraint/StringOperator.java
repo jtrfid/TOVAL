@@ -1,4 +1,4 @@
-package constraint;
+package de.invation.code.toval.constraint;
 
 import validate.ParameterException;
 import validate.ParameterException.ErrorCode;
