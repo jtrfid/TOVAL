@@ -2,7 +2,8 @@ package de.invation.code.toval.misc.valuegeneration;
 
 import java.util.List;
 
-import validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException;
+
 
 public interface ValueChooser<E extends Object> {
 	

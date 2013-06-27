@@ -1,8 +1,8 @@
 package de.invation.code.toval.constraint;
 
 import de.invation.code.toval.misc.ArrayUtils;
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 public class NumberConstraint extends AbstractConstraint<Number>{
 	

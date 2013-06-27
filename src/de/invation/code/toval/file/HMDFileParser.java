@@ -3,7 +3,8 @@ package de.invation.code.toval.file;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException;
+
 
 public class HMDFileParser extends LineBasedFileTransformer {
 	

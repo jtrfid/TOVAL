@@ -4,9 +4,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
+
 
 public abstract class AbstractConstraint<T extends Object> {
 	

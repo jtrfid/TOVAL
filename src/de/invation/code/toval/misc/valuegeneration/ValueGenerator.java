@@ -1,6 +1,6 @@
 package de.invation.code.toval.misc.valuegeneration;
 
-import validate.InconsistencyException;
+import de.invation.code.toval.validate.InconsistencyException;
 
 
 /**

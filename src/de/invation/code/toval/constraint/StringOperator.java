@@ -1,8 +1,8 @@
 package de.invation.code.toval.constraint;
 
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
-import validate.Validate;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 public enum StringOperator implements Operator<String> {
 	

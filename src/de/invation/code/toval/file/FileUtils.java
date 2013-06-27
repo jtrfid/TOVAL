@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
+
 
 public class FileUtils {
 	

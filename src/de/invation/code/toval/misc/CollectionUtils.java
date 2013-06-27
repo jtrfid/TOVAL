@@ -7,7 +7,8 @@ import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 
-import reflect.GenericReflection;
+import de.invation.code.toval.reflect.GenericReflection;
+
 
 public class CollectionUtils {
 	

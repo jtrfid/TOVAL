@@ -3,7 +3,8 @@ package de.invation.code.toval.graphic.diagrams.models;
 import java.util.HashMap;
 import java.util.List;
 
-import types.StatList;
+import de.invation.code.toval.types.StatList;
+
 
 public class ScatterChartModel<S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> implements ChartModel<S,T> {
 	

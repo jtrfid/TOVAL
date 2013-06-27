@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import types.HashList;
+import de.invation.code.toval.types.HashList;
+
 
 public class SetUtils {
 	

@@ -1,6 +1,6 @@
 package de.invation.code.toval.graphic.diagrams.models;
 
-import types.StatList;
+import de.invation.code.toval.types.StatList;
 
 public interface ChartModel<S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> {
 	

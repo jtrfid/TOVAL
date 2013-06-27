@@ -1,7 +1,7 @@
 package de.invation.code.toval.constraint;
 
-import validate.ParameterException;
-import validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 public class StringConstraint extends AbstractConstraint<String> {
 

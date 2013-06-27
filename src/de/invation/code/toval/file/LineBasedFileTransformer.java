@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 public class LineBasedFileTransformer {
 	

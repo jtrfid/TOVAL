@@ -1,6 +1,6 @@
 package de.invation.code.toval.constraint;
 
-import validate.ParameterException;
+import de.invation.code.toval.validate.ParameterException;
 
 
 public interface Operator<O extends Object> {

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 import de.invation.code.toval.math.Permutations;
+import de.invation.code.toval.types.HashList;
 
-import types.HashList;
 
 public class ListUtils {
 	

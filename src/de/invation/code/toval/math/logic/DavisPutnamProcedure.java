@@ -2,7 +2,8 @@ package de.invation.code.toval.math.logic;
 
 import java.util.Iterator;
 
-import types.HashList;
+import de.invation.code.toval.types.HashList;
+
 
 
 public class DavisPutnamProcedure {

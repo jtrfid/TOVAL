@@ -10,9 +10,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import validate.InconsistencyException;
-import validate.ParameterException;
-import validate.Validate;
+import de.invation.code.toval.validate.InconsistencyException;
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+
 
 /**
  * This class allows to choose elements according to given occurrence probabilities.
