@@ -43,6 +43,8 @@ public class ParameterException extends Exception{
 			case NULLELEMENTS: return msg_NullElements;
 			case INCONSISTENCY: return super.getMessage();
 			case INCOMPATIBILITY: return super.getMessage();
+			case MEMORY: return super.getMessage();
+			case TYPE: return super.getMessage();
 			case CONSTRAINT: return msg_Constraint;
 		}
 		return null;
@@ -53,7 +55,7 @@ public class ParameterException extends Exception{
 	}
 	
 	public enum ErrorCode { 
-		NULLPOINTER, RANGEVIOLATION, NEGATIVE, NOTNEGATIVE, POSITIVE, NOTPOSITIVE, EMPTY, NULLELEMENTS, INCONSISTENCY, TYPE, INCOMPATIBILITY, CONSTRAINT;
+		NULLPOINTER, RANGEVIOLATION, NEGATIVE, NOTNEGATIVE, POSITIVE, NOTPOSITIVE, EMPTY, NULLELEMENTS, INCONSISTENCY, TYPE, INCOMPATIBILITY, CONSTRAINT, MEMORY;
 	}
 
 }
