@@ -1,7 +1,5 @@
 package graphic.diagrams.panels;
 
-import graphic.DisplayFrame;
-import graphic.GraphicUtils;
 import graphic.diagrams.models.ChartModel;
 import graphic.diagrams.models.ChartModel.ValueDimension;
 
@@ -14,6 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JPanel;
+
+import de.invation.code.toval.graphic.DisplayFrame;
+import de.invation.code.toval.graphic.GraphicUtils;
 
 
 

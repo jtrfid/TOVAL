@@ -1,4 +1,4 @@
-package graphic;
+package de.invation.code.toval.graphic;
 
 import java.awt.Color;
 import java.awt.Graphics;

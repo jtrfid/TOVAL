@@ -1,4 +1,4 @@
-package debug;
+package de.invation.code.toval.debug;
 
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;

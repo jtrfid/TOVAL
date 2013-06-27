@@ -3,7 +3,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import math.MathUtils;
+import de.invation.code.toval.math.MathUtils;
+
 
 /**
  * List implementation that stores additional information about the managed data,

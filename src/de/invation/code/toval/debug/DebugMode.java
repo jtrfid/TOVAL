@@ -1,4 +1,4 @@
-package debug;
+package de.invation.code.toval.debug;
 
 public enum DebugMode {
 	

@@ -1,4 +1,4 @@
-package graphic;
+package de.invation.code.toval.graphic;
 
 import java.util.ArrayList;
 import java.util.HashMap;

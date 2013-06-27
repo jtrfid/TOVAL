@@ -1,8 +1,6 @@
 package graphic.diagrams.panels;
 
 
-import graphic.DisplayFrame;
-import graphic.SpringUtilities;
 import graphic.diagrams.models.ChartModel.ValueDimension;
 
 import java.awt.BorderLayout;
@@ -17,6 +15,9 @@ import javax.swing.JSlider;
 import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import de.invation.code.toval.graphic.DisplayFrame;
+import de.invation.code.toval.graphic.SpringUtilities;
 
 
 @SuppressWarnings("serial")

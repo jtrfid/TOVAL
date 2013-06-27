@@ -1,4 +1,4 @@
-package math;
+package de.invation.code.toval.math;
 
 import java.math.BigInteger;
 import java.util.Iterator;

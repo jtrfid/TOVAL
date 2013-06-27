@@ -1,4 +1,4 @@
-package graphic;
+package de.invation.code.toval.graphic;
 
 public class Position {
 	private final String toStringFormat = "(%s;%s)";

@@ -1,12 +1,13 @@
 package graphic.diagrams.panels;
 
-import graphic.GraphicUtils;
 import graphic.diagrams.models.DotChartModel;
 import graphic.diagrams.models.ChartModel.ValueDimension;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+
+import de.invation.code.toval.graphic.GraphicUtils;
 
 @SuppressWarnings("serial")
 public class DotChartPanel extends ScatterChartPanel {

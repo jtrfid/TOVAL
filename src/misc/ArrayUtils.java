@@ -6,9 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import de.invation.code.toval.math.Permutations;
+
 import reflect.GenericReflection;
 
-import math.Permutations;
 
 public class ArrayUtils {
 	

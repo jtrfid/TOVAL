@@ -1,5 +1,5 @@
 package graphic.diagrams.panels;
-import math.MathUtils;
+import de.invation.code.toval.math.MathUtils;
 import misc.FormatUtils;
 
 	/**

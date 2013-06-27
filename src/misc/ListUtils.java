@@ -7,7 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import math.Permutations;
+import de.invation.code.toval.math.Permutations;
+
 import types.HashList;
 
 public class ListUtils {

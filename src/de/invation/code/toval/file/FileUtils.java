@@ -1,4 +1,4 @@
-package file;
+package de.invation.code.toval.file;
 
 import java.io.File;
 import java.io.IOException;
