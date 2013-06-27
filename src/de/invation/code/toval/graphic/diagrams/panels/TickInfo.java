@@ -1,4 +1,4 @@
-package graphic.diagrams.panels;
+package de.invation.code.toval.graphic.diagrams.panels;
 import de.invation.code.toval.math.MathUtils;
 import de.invation.code.toval.misc.FormatUtils;
 

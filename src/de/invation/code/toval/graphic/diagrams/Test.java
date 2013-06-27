@@ -1,8 +1,9 @@
-package graphic.diagrams;
-import graphic.diagrams.models.OneDimChartModel;
-import graphic.diagrams.panels.BarChartPanel;
+package de.invation.code.toval.graphic.diagrams;
 
 import java.util.Arrays;
+
+import de.invation.code.toval.graphic.diagrams.models.OneDimChartModel;
+import de.invation.code.toval.graphic.diagrams.panels.BarChartPanel;
 
 
 public class Test {

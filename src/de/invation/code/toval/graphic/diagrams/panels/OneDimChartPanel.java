@@ -1,12 +1,12 @@
-package graphic.diagrams.panels;
-import graphic.diagrams.models.ChartModel.ValueDimension;
-import graphic.diagrams.models.OneDimChartModel;
+package de.invation.code.toval.graphic.diagrams.panels;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 
 import de.invation.code.toval.graphic.GraphicUtils;
+import de.invation.code.toval.graphic.diagrams.models.OneDimChartModel;
+import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
 
 
 @SuppressWarnings("serial")

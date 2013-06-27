@@ -1,4 +1,4 @@
-package graphic.mvc;
+package de.invation.code.toval.graphic.mvc;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

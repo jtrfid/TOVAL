@@ -1,7 +1,5 @@
-package graphic.diagrams.panels;
+package de.invation.code.toval.graphic.diagrams.panels;
 
-import graphic.diagrams.models.ChartModel;
-import graphic.diagrams.models.ChartModel.ValueDimension;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +13,8 @@ import javax.swing.JPanel;
 
 import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.GraphicUtils;
+import de.invation.code.toval.graphic.diagrams.models.ChartModel;
+import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
 
 
 

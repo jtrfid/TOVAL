@@ -1,7 +1,6 @@
-package graphic.diagrams.panels;
+package de.invation.code.toval.graphic.diagrams.panels;
 
 
-import graphic.diagrams.models.ChartModel.ValueDimension;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
@@ -18,6 +17,7 @@ import javax.swing.event.ChangeListener;
 
 import de.invation.code.toval.graphic.DisplayFrame;
 import de.invation.code.toval.graphic.SpringUtilities;
+import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
 
 
 @SuppressWarnings("serial")

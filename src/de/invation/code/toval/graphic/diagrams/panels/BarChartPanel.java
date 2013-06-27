@@ -1,9 +1,10 @@
-package graphic.diagrams.panels;
+package de.invation.code.toval.graphic.diagrams.panels;
 
-import graphic.diagrams.models.ChartModel;
 
 import java.awt.Graphics;
 import java.awt.Point;
+
+import de.invation.code.toval.graphic.diagrams.models.ChartModel;
 
 @SuppressWarnings("serial")
 public class BarChartPanel extends ScatterChartPanel {

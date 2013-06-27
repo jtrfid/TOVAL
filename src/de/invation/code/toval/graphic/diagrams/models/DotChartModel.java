@@ -1,4 +1,4 @@
-package graphic.diagrams.models;
+package de.invation.code.toval.graphic.diagrams.models;
 
 import java.util.ArrayList;
 import java.util.List;

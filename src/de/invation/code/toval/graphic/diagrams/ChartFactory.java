@@ -1,15 +1,16 @@
-package graphic.diagrams;
+package de.invation.code.toval.graphic.diagrams;
 
-import graphic.diagrams.models.DotChartModel;
-import graphic.diagrams.models.OneDimChartModel;
-import graphic.diagrams.models.ScatterChartModel;
-import graphic.diagrams.panels.BarChartPanel;
-import graphic.diagrams.panels.DotChartPanel;
-import graphic.diagrams.panels.OneDimChartPanel;
-import graphic.diagrams.panels.ScatterChartPanel;
 
 import java.util.List;
 import java.util.Map;
+
+import de.invation.code.toval.graphic.diagrams.models.DotChartModel;
+import de.invation.code.toval.graphic.diagrams.models.OneDimChartModel;
+import de.invation.code.toval.graphic.diagrams.models.ScatterChartModel;
+import de.invation.code.toval.graphic.diagrams.panels.BarChartPanel;
+import de.invation.code.toval.graphic.diagrams.panels.DotChartPanel;
+import de.invation.code.toval.graphic.diagrams.panels.OneDimChartPanel;
+import de.invation.code.toval.graphic.diagrams.panels.ScatterChartPanel;
 
 public class ChartFactory {
 	
