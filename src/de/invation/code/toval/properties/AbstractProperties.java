@@ -2,6 +2,7 @@ package de.invation.code.toval.properties;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -33,10 +34,14 @@ public class AbstractProperties {
 		return props;
 	}
 	
-	public void store(String filename) throws IOException{
-		FileOutputStream fos = new FileOutputStream(filename);
-		props.store(fos, "");
-		fos.close();
+	public void store(String filename) throws IOException {
+		try {
+			FileOutputStream fos = new FileOutputStream(filename);
+			props.store(fos, "");
+			fos.close();
+		} catch (Exception e) {
+			throw new IOException("Cannot store properties file to disk.");
+		}
 	}
 	
 	public void load(String fileName) throws IOException{
