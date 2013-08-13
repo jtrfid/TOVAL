@@ -249,7 +249,6 @@ public class FileWriter {
 	}
 	
 	public void setFileExtension(String extension){
-		//TODO:
 		this.fileExtension = extension;
 	}
 	

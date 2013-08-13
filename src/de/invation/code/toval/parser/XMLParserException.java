@@ -6,6 +6,10 @@ public class XMLParserException extends ParserException {
 	private final String msg_Tagstructure = "Corrupted tagstructure";
 	
 	private ErrorCode errorCode = null;
+	
+	public XMLParserException() {
+		super();
+	}
 
 	public XMLParserException(ErrorCode errorCode) {
 		super();

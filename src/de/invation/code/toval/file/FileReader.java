@@ -26,6 +26,9 @@ public class FileReader {
 	}
 	
 	
+	
+	
+	
 	//------- Getters and Setters -------------------------------------------------------------
 	
 	public Charset getCharset(){
