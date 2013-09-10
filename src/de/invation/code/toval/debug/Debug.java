@@ -1,8 +1,12 @@
 package de.invation.code.toval.debug;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import de.invation.code.toval.file.FileWriter;
+import de.invation.code.toval.validate.ParameterException;
 
 /**
  * Debugging class.
@@ -23,7 +27,24 @@ public class Debug {
 	
 	private static PrintStream printStream = System.out;
 	
-	private static final String messageOffset = "                          ";
+	private static final String messageOffset = "                    ";
+	
+	private static FileWriter fileWriter = null;
+	
+	private static OutputMode outputMode = OutputMode.SYSOUT;
+	
+	public static void setOutputMode(OutputMode mode){
+		outputMode = mode;
+		if(outputMode == OutputMode.FILE && fileWriter == null){
+			try {
+				fileWriter = new FileWriter("debug");
+			} catch (ParameterException e) {
+				printStream.println("Cannot prepare file writer for output-mode FILE: Parameter Exception");
+			}
+		}
+	}
+	
+	
 	/**
 	 * Sets the debug mode
 	 * @param mode New debug mode
@@ -33,6 +54,13 @@ public class Debug {
 		debugMode = mode;
 	} 
 	
+	public static void closeFile(){
+		try {
+			fileWriter.closeFile();
+		} catch (IOException e) {
+			printStream.println("Cannot close file: I/O Exception");
+		}
+	}
 
 	
 	/**
@@ -49,7 +77,7 @@ public class Debug {
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
-			printStream.println("DEBUG "+getTime()+" Message:   "+prepareMessage(message));
+			println(getTime()+" Message:   "+prepareMessage(message));
 		}
 	}
 	
@@ -61,7 +89,7 @@ public class Debug {
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
-			printStream.print("DEBUG "+getTime()+" Message:   "+prepareMessage(message));
+			print(getTime()+" Message:   "+prepareMessage(message));
 		}
 	}
 	
@@ -89,7 +117,7 @@ public class Debug {
 	public static void error(String message){
 		if(debugMode == DebugMode.SILENT)
 			return;
-		System.out.println("DEBUG "+getTime()+" Error:   "+message);
+		println(getTime()+" Error:   "+message);
 	}
 	
 	public static void newLine(){
@@ -103,7 +131,39 @@ public class Debug {
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
-			System.out.println();
+			if(outputMode == OutputMode.SYSOUT){
+				printStream.println();
+			} else if(outputMode == OutputMode.FILE){
+				try {
+					fileWriter.newLine();
+				} catch (IOException e) {
+					printStream.println("Cannot write output to file: I/O Exception");
+				}
+			}
+		}
+	}
+	
+	private static void print(String string){
+		if(outputMode == OutputMode.SYSOUT){
+			printStream.print(string);
+		} else if(outputMode == OutputMode.FILE){
+			try {
+				fileWriter.write(string);
+			} catch (IOException e) {
+				printStream.println("Cannot write output to file: I/O Exception");
+			}
+		}
+	}
+	
+	private static void println(String string){
+		if(outputMode == OutputMode.SYSOUT){
+			printStream.println(string);
+		} else if(outputMode == OutputMode.FILE){
+			try {
+				fileWriter.writeLine(string);
+			} catch (IOException e) {
+				printStream.println("Cannot write output to file: I/O Exception");
+			}
 		}
 	}
 	

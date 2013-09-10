@@ -30,8 +30,12 @@ public abstract class FileFormat {
 	
 	public abstract String getFileExtension();
 	
-	public abstract String getFileHeader();
+	public String getFileHeader(){
+		return "";
+	}
 	
-	public abstract String getFileFooter();
+	public String getFileFooter(){
+		return "";
+	}
 
 }

@@ -44,7 +44,7 @@ public class FileWriter {
 	 */
 	public FileWriter() {
 		try{
-		initialize(getDefaultFileName(), getDefaultPath());
+			initialize(getDefaultFileName(), getDefaultPath());
 		}catch(ParameterException e){
 			// Is only thrown if default path or file names are invalid.
 			// Should be avoided by setting the static fields appropriately.
@@ -366,6 +366,11 @@ public class FileWriter {
 		prepare();
 		output.write(line);
 		output.write(eolString);
+	}
+	
+	public void newLine() throws IOException{
+		prepare();
+		output.newLine();
 	}
 	
 	public void closeFile() throws IOException {

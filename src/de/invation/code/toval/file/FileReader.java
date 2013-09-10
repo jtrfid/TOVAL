@@ -25,10 +25,6 @@ public class FileReader {
 		initialize(fileName);
 	}
 	
-	
-	
-	
-	
 	//------- Getters and Setters -------------------------------------------------------------
 	
 	public Charset getCharset(){
