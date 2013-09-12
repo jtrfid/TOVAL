@@ -27,6 +27,11 @@ public class ParameterException extends Exception{
 		usePredefinedMessages = false;
 	}
 	
+	public ParameterException(String message){
+		super(message);
+		usePredefinedMessages = false;
+	}
+	
 	@Override
 	public String getMessage(){
 		if(!usePredefinedMessages){

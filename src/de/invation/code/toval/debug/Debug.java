@@ -74,10 +74,18 @@ public class Debug {
 	}
 	
 	public static void message(String message, DebugMode mode){
+		message(message, mode, true);
+	}
+	
+	public static void message(String message, DebugMode mode, boolean withHeader){
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
-			println(getTime()+" Message:   "+prepareMessage(message));
+			if(withHeader){
+				println(getTime()+" Message:   "+prepareMessage(message));
+			} else {
+				println(prepareMessage(message));
+			}
 		}
 	}
 	
