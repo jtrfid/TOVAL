@@ -130,6 +130,16 @@ public class Multiset<O extends Object> {
 	}
 	
 	/**
+	 * Checks if the support of this multiset contains the given object.
+	 * @param object The object to check.
+	 * @return <code>true</code> if the support contains the oject;<br>
+	 * <code>false</code> otherwise.
+	 */
+	public boolean contains(O object){
+		return multiplicities.keySet().contains(object);
+	}
+	
+	/**
 	 * Checks if the support of this multiset contains all given objects.
 	 * @param objects The objects to check.
 	 * @return <code>true</code> if the support contains all ojects;<br>
