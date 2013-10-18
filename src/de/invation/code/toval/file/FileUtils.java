@@ -117,4 +117,17 @@ public class FileUtils {
         return ext;
     }
 	
+	public static String getPath(File f){
+		String absolutePath = f.getAbsolutePath();
+		return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator)+1);
+	}
+	
+	public static String getName(File f){
+		String name = f.getName();
+		if(name.contains(".")){
+			return name.substring(0, name.lastIndexOf('.'));
+		}
+		return name;
+	}
+	
 }

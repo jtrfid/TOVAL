@@ -1,5 +1,7 @@
 package de.invation.code.toval.validate;
 
+import java.io.File;
+
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 
@@ -305,6 +307,65 @@ public class Validate {
 			throw new TypeException("Double");
 		}
 		return doubleValue;
+	}
+	
+	public static void fileName(String fileName) throws ParameterException{
+		Validate.notNull(fileName);
+		Validate.notEmpty(fileName);
+		if(fileName.contains(File.separator))
+			throw new ParameterException("File name contains path separator char!");
+	}
+	
+	public static File noDirectory(String fileName) throws ParameterException{
+		Validate.notNull(fileName);
+		Validate.notEmpty(fileName);
+		return Validate.noDirectory(new File(fileName));
+	}
+	
+	public static File directory(String fileName) throws ParameterException{
+		Validate.notNull(fileName);
+		Validate.notEmpty(fileName);
+		return Validate.directory(new File(fileName));
+	}
+	
+	public static File exists(String fileName) throws ParameterException{
+		Validate.notNull(fileName);
+		Validate.notEmpty(fileName);
+		return Validate.exists(new File(fileName));
+	}
+	
+	public static File notExists(String fileName) throws ParameterException{
+		Validate.notNull(fileName);
+		Validate.notEmpty(fileName);
+		return Validate.notExists(new File(fileName));
+	}
+	
+	public static File noDirectory(File file) throws ParameterException{
+		Validate.notNull(file);
+		if(file.isDirectory())
+			throw new ParameterException("\""+file+"\" is a directory!");
+		return file;
+	}
+	
+	public static File directory(File file) throws ParameterException{
+		Validate.notNull(file);
+		if(!file.isDirectory())
+			throw new ParameterException("\""+file+"\" is not a directory!");
+		return file;
+	}
+	
+	public static File exists(File file) throws ParameterException{
+		Validate.notNull(file);
+		if(!file.exists())
+			throw new ParameterException("\""+file+"\" does not exist!");
+		return file;
+	}
+	
+	public static File notExists(File file) throws ParameterException{
+		Validate.notNull(file);
+		if(file.exists())
+			throw new ParameterException("\""+file+"\" exists!");
+		return file;
 	}
 	
 	public static void main(String[] args) throws Exception {
