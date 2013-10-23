@@ -61,6 +61,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		keys.remove(index);
 		limits.remove(index);
 		probabilities.remove(index);
+		isValid = (1.0-getSum()) <= tolerance;
 	}
 	
 	/**
@@ -88,8 +89,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 			limits.add(getSum() + p);
 		}
 		
-		if((1.0-getSum())<=tolerance)
-			isValid = true;
+		isValid = (1.0-getSum()) <= tolerance;
 		probabilities.put(o, p);
 		return true;
 	}
@@ -178,4 +178,15 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		return builder.toString();
 	}
 	
+	
+	public static void main(String[] args) throws ParameterException {
+		StochasticValueGenerator<String> vg = new StochasticValueGenerator<String>(1000);
+		vg.addProbability("a", 0.3);
+		vg.addProbability("b", 0.7);
+		System.out.println(vg);
+		System.out.println(vg.isValid());
+		vg.removeElement("b");
+		System.out.println(vg);
+		System.out.println(vg.isValid());
+	}
 }

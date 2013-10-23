@@ -2,17 +2,18 @@ package de.invation.code.toval.time;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public enum Weekday {
-	
-	SUNDAY("Sunday"), 
+public enum Weekday implements Comparable<Weekday>{
+
 	MONDAY("Monday"), 
 	TUESDAY("Tuesday"), 
 	WEDNESDAY("Wednesday"), 
 	THURSDAY("Thursday"), 
 	FRIDAY("Friday"), 
-	SATURDAY("Saturday");
+	SATURDAY("Saturday"),
+	SUNDAY("Sunday");
 	
 	private static final String[] descriptors = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	
