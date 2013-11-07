@@ -2,12 +2,14 @@ package de.invation.code.toval.misc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class Allocation {
 	
-	private HashMap<Object, Object> exclusions = new HashMap<Object, Object>();
+	private HashMap<Object, Set<Object>> exclusions = new HashMap<Object, Set<Object>>();
 	private HashMap<Object, ArrayList<Object>> mapping = new HashMap<Object, ArrayList<Object>>();
 	private HashMap<Object, Integer> insertStat = new HashMap<Object, Integer>();
 	private Object[] subjects;
@@ -21,7 +23,10 @@ public class Allocation {
 	}
 	
 	public void addExclusion(Object key, Object value) {
-		exclusions.put(key, value);
+		if(!exclusions.containsKey(key)){
+			exclusions.put(key, new HashSet<Object>());
+		}
+		exclusions.get(key).add(value);
 	}
 	
 	public void setAllocationCount(int count) {
@@ -45,7 +50,7 @@ public class Allocation {
 			possibleObjects.clear();
 			while(insertStat.containsKey((nextObject = objects[rand.nextInt(objects.length)])) && insertStat.get(nextObject)==allocationCount) {}
 			for(Object a:subjects)
-				if((mapping.get(a) == null || !mapping.get(a).contains(nextObject)) && (!exclusions.containsKey(a) || !exclusions.get(a).equals(nextObject)))
+				if((mapping.get(a) == null || !mapping.get(a).contains(nextObject)) && (!exclusions.containsKey(a) || !exclusions.get(a).contains(nextObject)))
 					possibleObjects.add(a);
 			if(possibleObjects.isEmpty()) {
 				removeMapping();
@@ -86,6 +91,22 @@ public class Allocation {
 		if(insertStat.get(value)<=1)
 			insertStat.remove(value);
 		else insertStat.put(value, insertStat.get(value)-1);
+	}
+	
+	public static void main(String[] args) {
+		String[] personen = {"Fritz","Ingrid","Simon","Miriam","Deborah","Thomas"};
+		Allocation alloc = new Allocation(personen, personen);
+		alloc.addExclusion("Fritz", "Fritz");
+		alloc.addExclusion("Ingrid", "Ingrid");
+		alloc.addExclusion("Simon", "Simon");
+		alloc.addExclusion("Miriam", "Miriam");
+		alloc.addExclusion("Deborah", "Deborah");
+		alloc.addExclusion("Thomas", "Thomas");
+		alloc.addExclusion("Thomas", "Deborah");
+		alloc.addExclusion("Deborah", "Thomas");
+		alloc.addExclusion("Fritz", "Ingrid");
+		alloc.addExclusion("Ingrid", "Fritz");
+		System.out.println(alloc.getMapping());
 	}
 
 }

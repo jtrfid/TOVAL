@@ -54,6 +54,13 @@ public class StringUtils {
 		return removeEnding(result, character);
 	}
 	
+	public static String createString(char character, int occurrences){
+		char[] arr = new char[occurrences];
+		for(int i=0; i<occurrences; i++)
+			arr[i] = character;
+		return new String(arr);
+	}
+	
 	public static String convertToHTML(String string) throws ParameterException{
 		Validate.notNull(string);
 		String htmlString = "<html>"+string.replace("\n", "<br>")+"</html>";

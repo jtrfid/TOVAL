@@ -1,18 +1,21 @@
 package de.invation.code.toval.types;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import de.invation.code.toval.misc.CollectionUtils;
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 
 
 
@@ -27,7 +30,7 @@ import de.invation.code.toval.validate.ParameterException.ErrorCode;
  * @author Thomas Stocker
  *
  */
-public class Multiset<O extends Object> {
+public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	
 	/**
 	 * Map for managing the multiplicity of objects.
@@ -155,7 +158,6 @@ public class Multiset<O extends Object> {
 	 * @param object The object whose multiplicity is set.
 	 * @param multiplicity The multiplicity for the given object to set.
 	 */
-	@SuppressWarnings("unchecked")
 	public void setMultiplicity(O object, int multiplicity) {
 		if(!contains(object) && multiplicity < 1){
 			return;
@@ -499,8 +501,63 @@ public class Multiset<O extends Object> {
 	}
 	
 	@Override
+	public int compareTo(Multiset<O> o) {
+		return size() - o.size();
+	}
+	
+	@Override
 	public String toString(){
-		return multiplicities.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append('{');
+		int count = 0;
+		List<O> supportList = new ArrayList<O>(multiplicities.keySet());
+		Collections.sort(supportList, new ElementComparator<O>());
+		for(O object: multiplicities.keySet()){
+			int mult = multiplicities.get(object);
+			builder.append(object);
+			if(mult > 1){
+				builder.append("("+mult+")");
+			}
+			if(++count < multiplicities.keySet().size()){
+				builder.append(", ");
+			}
+		}
+		builder.append('}');
+		return builder.toString();
+//		return multiplicities.toString();
+	}
+	
+	private class ElementComparator<OO> implements Comparator<OO>{
+		@Override
+		public int compare(OO o1, OO o2) {
+			if(o1 instanceof Number && o2 instanceof Number){
+				Double o1Number = ((Number) o1).doubleValue();
+				Double o2Number = ((Number) o2).doubleValue();
+				return o1Number.compareTo(o2Number);
+			} else {
+				return o1.toString().compareTo(o2.toString());
+			}
+		}
+	}
+	
+	public static <T extends Multiset<?>> String toString(Collection<T> multisets, String collName){
+		StringBuilder builder = new StringBuilder();
+		List<T> multisetList = new ArrayList<T>(multisets);
+		Collections.sort(multisetList);
+		builder.append(collName);
+		builder.append(" {");
+//		String fill = StringUtils.createString(' ', collName.length()+2);
+		builder.append('\n');
+		for(T multiset: multisetList){
+//			builder.append(fill);
+			builder.append(multiset);
+			builder.append('\n');
+		}
+//		builder.append(fill);
+		builder.append('}');
+		builder.append('\n');
+		return builder.toString();
+		
 	}
 
 }

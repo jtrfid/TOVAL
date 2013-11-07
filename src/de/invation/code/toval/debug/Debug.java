@@ -23,7 +23,7 @@ public class Debug {
 	/**
 	 * Debug mode
 	 */
-	private static DebugMode debugMode = DebugMode.EXTENDED;
+	private static DebugMode debugMode = DebugMode.SILENT;
 	
 	private static PrintStream printStream = System.out;
 	
@@ -32,6 +32,8 @@ public class Debug {
 	private static FileWriter fileWriter = null;
 	
 	private static OutputMode outputMode = OutputMode.SYSOUT;
+	
+	private static boolean includeHeader = true;
 	
 	public static void setOutputMode(OutputMode mode){
 		outputMode = mode;
@@ -45,6 +47,11 @@ public class Debug {
 	}
 	
 	
+	
+	public static void setIncludeHeader(boolean includeHeader) {
+		Debug.includeHeader = includeHeader;
+	}
+
 	/**
 	 * Sets the debug mode
 	 * @param mode New debug mode
@@ -81,7 +88,7 @@ public class Debug {
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
-			if(withHeader){
+			if(withHeader && includeHeader){
 				println(getTime()+" Message:   "+prepareMessage(message));
 			} else {
 				println(prepareMessage(message));
