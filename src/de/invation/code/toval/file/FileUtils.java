@@ -1,21 +1,27 @@
 package de.invation.code.toval.file;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 
 
 public class FileUtils {
 	
 	public static List<File> getFilesInDirectory(String directory) throws IOException, ParameterException{
-		return getFilesInDirectory(directory, true, true);
+		return getFilesInDirectory(directory, null);
 	}
 	
-	public static List<File> getFilesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles) throws IOException, ParameterException{
+	public static List<File> getFilesInDirectory(String directory, String acceptedEnding) throws IOException, ParameterException{
+		return getFilesInDirectory(directory, true, true, acceptedEnding);
+	}
+	
+	public static List<File> getFilesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, final String acceptedEnding) throws IOException, ParameterException{
 		File dir = new File(directory);
 		if(!dir.exists())
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing file path.");
@@ -23,7 +29,16 @@ public class FileUtils {
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "File is not a directory.");
 		
 		List<File> result = new ArrayList<File>();
-		File[] files = dir.listFiles();
+		File[] files = dir.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String fileName) {
+				if(acceptedEnding != null){
+					return (fileName.endsWith(".".concat(acceptedEnding)));
+				} else {
+					return true;
+				}
+			}
+		});
 		for (int i = 0; i < files.length; i++) {
 			if(onlyFiles && !files[i].isFile())
 				continue;
@@ -38,12 +53,20 @@ public class FileUtils {
 		return getFileNamesInDirectory(directory, false);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath) throws IOException, ParameterException{
-		return getFileNamesInDirectory(directory, true, true, absolutePath);
+	public static List<String> getFileNamesInDirectory(String directory, String acceptedEnding) throws IOException, ParameterException{
+		return getFileNamesInDirectory(directory, false, acceptedEnding);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, boolean absolutePath) throws IOException, ParameterException{
-		List<File> files = getFilesInDirectory(directory, onlyFiles, onlyVisibleFiles);
+	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath) throws IOException, ParameterException{
+		return getFileNamesInDirectory(directory, true, true, absolutePath, null);
+	}
+	
+	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath, String acceptedEnding) throws IOException, ParameterException{
+		return getFileNamesInDirectory(directory, true, true, absolutePath, acceptedEnding);
+	}
+	
+	public static List<String> getFileNamesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, boolean absolutePath, String acceptedEnding) throws IOException, ParameterException{
+		List<File> files = getFilesInDirectory(directory, onlyFiles, onlyVisibleFiles, acceptedEnding);
 		List<String> result = new ArrayList<String>();
 		for(File file: files){
 			if(absolutePath){
@@ -51,6 +74,22 @@ public class FileUtils {
 			} else {
 				result.add(file.getName());
 			}
+		}
+		return result;
+	}
+	
+	public static List<File> getSubdirectories(String directory) throws IOException, ParameterException{
+		Validate.directory(directory);
+		File dir = new File(directory);
+		if(!dir.exists())
+			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing directory.");
+		
+		List<File> result = new ArrayList<File>();
+		File[] files = dir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if(!files[i].isDirectory())
+				continue;
+			result.add(files[i]);
 		}
 		return result;
 	}
