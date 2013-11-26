@@ -111,6 +111,8 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	 * @return The sum of all maintained probabilities.
 	 */
 	private Double getSum(){
+		if(limits.isEmpty())
+			return 0.0;
 		return limits.get(limits.size()-1);
 	}
 	

@@ -1,7 +1,8 @@
 package de.invation.code.toval.file;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -33,12 +34,14 @@ public class CharacterReplaceParser extends LineBasedFileTransformer{
 	}
 
 	@Override
-	protected void writeOutputLine(String inputLine) throws IOException {
+	protected Set<String> transformLine(String line) {
+		Set<String> result = new HashSet<String>();
 		if(replaceString != null && replacementString != null){
-			output.writeLine(inputLine.replace(replaceString, replacementString));
+			result.add(line.replace(replaceString, replacementString));
 		} else {
-			output.writeLine(inputLine);
+			result.add(line);
 		}
+		return result;
 	}
 
 	public static void main(String[] args) throws Exception{

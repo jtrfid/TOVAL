@@ -1,7 +1,8 @@
 package de.invation.code.toval.file;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
 
@@ -17,8 +18,10 @@ public class HMDFileParser extends LineBasedFileTransformer {
 	}
 
 	@Override
-	protected void writeOutputLine(String inputLine) throws IOException {
-		super.writeOutputLine(inputLine.substring(1, inputLine.length()));
+	protected Set<String> transformLine(String line) {
+		Set<String> result = new HashSet<String>();
+		result.add(line.substring(1, line.length()));
+		return result;
 	}
 
 	public static void main(String[] args) throws Exception{

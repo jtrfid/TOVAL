@@ -3,6 +3,9 @@ package de.invation.code.toval.file;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
@@ -17,6 +20,8 @@ public class LineBasedFileTransformer {
 
 	protected FileReader input = null;
 	protected FileWriter output = null;
+	
+	private String fileExtension = null;
 	
 	
 	//------- Constructors -------------------------------------------------------------------
@@ -53,6 +58,18 @@ public class LineBasedFileTransformer {
 		this.omitFirstLine = omitFirstLine;
 	}
 	
+	public String getFileExtension(){
+		return fileExtension;
+	}
+	
+	public void setFileExtension(String extension){
+		this.fileExtension = extension;
+	}
+	
+	protected String getHeaderLine() {
+		return null;
+	}
+	
 	
 	//------- Methods for setting up the parser ----------------------------------------------
 	
@@ -60,13 +77,20 @@ public class LineBasedFileTransformer {
 		Validate.notNull(fileName);
 		input = new FileReader(fileName, inputCharset);
 		String inputName = input.getFile().getAbsolutePath();
-		String outputFileName = inputName.substring(0, inputName.lastIndexOf('.'))+"_output."+inputName.substring(inputName.lastIndexOf('.')+1, inputName.length());
+		String outputFileName = inputName.substring(0, inputName.indexOf('.'))+"_output";
 		output = new FileWriter(outputFileName, outputCharset);
+		if(fileExtension != null){
+			output.setFileExtension(getFileExtension());
+		}
 	}
 		
 	
 	public void parseFile(String fileName) throws IOException, ParameterException{
 		initialize(fileName);
+		
+		String headerLine = getHeaderLine();
+		if(headerLine != null)
+			output.writeLine(headerLine);
 		
 		String line = null;
 		int lineCount = 0;
@@ -78,13 +102,24 @@ public class LineBasedFileTransformer {
 				writeOutputLine(line);
 				lineCount++;
 			}
+			if(!continueParsing(lineCount))
+				break;
 		}
 		input.closeFile();
 		output.closeFile();
 	}
+
+	protected boolean continueParsing(int lineCount){
+		return true;
+	}
 	
-	protected void writeOutputLine(String outputLine) throws IOException{
-		output.writeLine(outputLine);
+	private void writeOutputLine(String outputLine) throws IOException{
+		for(String line: transformLine(outputLine))
+			output.writeLine(line);
+	}
+	
+	protected Set<String> transformLine(String line){
+		return new HashSet<String>(Arrays.asList(line));
 	}
 
 }

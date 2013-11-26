@@ -82,6 +82,5 @@ public class IndexCounter<T> implements Iterator<Map<T, Integer>> {
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-	
 
 }

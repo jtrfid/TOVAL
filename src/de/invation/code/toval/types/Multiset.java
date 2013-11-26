@@ -68,7 +68,7 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 * @return The set of member objects of this multiset.
 	 */
 	public Set<O> support(){
-		return multiplicities.keySet();
+		return Collections.unmodifiableSet(multiplicities.keySet());
 	}
 	
 	/**

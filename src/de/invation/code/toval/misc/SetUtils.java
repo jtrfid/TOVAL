@@ -245,13 +245,5 @@ public class SetUtils {
 		}
 		return false;
 	}
-	
-	public static void fancy(Collection<Set<String>> sets){
-		
-	}
-	
-	public static void fancy(Set<String>... sets){
-		fancy(Arrays.asList(sets));
-	}
 
 }
