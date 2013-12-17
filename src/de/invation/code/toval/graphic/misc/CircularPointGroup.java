@@ -1,10 +1,11 @@
-package de.invation.code.toval.graphic;
+package de.invation.code.toval.graphic.misc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import de.invation.code.toval.graphic.component.VisualCircularPointGroupPanel;
 import de.invation.code.toval.misc.CollectionUtils;
 
 
@@ -619,7 +620,7 @@ public class CircularPointGroup {
 		CircularPointGroup g = new CircularPointGroup(5, 10);
 		g.addPoints(PColor.black, 1);
 		g.addPoints(PColor.blue, 5);
-		VisualCircularPointGroup vg = new VisualCircularPointGroup(g);
+		VisualCircularPointGroupPanel vg = new VisualCircularPointGroupPanel(g);
 		vg.asFrame();
 	}
 	

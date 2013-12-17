@@ -11,10 +11,10 @@ import java.util.HashMap;
 
 import javax.swing.JPanel;
 
-import de.invation.code.toval.graphic.DisplayFrame;
-import de.invation.code.toval.graphic.GraphicUtils;
+import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.diagrams.models.ChartModel;
 import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
+import de.invation.code.toval.graphic.util.GraphicUtils;
 
 
 

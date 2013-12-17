@@ -1,4 +1,4 @@
-package de.invation.code.toval.graphic;
+package de.invation.code.toval.graphic.util;
 
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.

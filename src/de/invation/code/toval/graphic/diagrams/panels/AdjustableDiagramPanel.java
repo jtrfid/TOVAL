@@ -15,9 +15,9 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import de.invation.code.toval.graphic.DisplayFrame;
-import de.invation.code.toval.graphic.SpringUtilities;
+import de.invation.code.toval.graphic.component.DisplayFrame;
 import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
+import de.invation.code.toval.graphic.util.SpringUtilities;
 
 
 @SuppressWarnings("serial")

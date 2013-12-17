@@ -1,18 +1,18 @@
-package de.invation.code.toval.graphic;
+package de.invation.code.toval.graphic.dialog;
 
 import java.awt.Window;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
-public class FileNameChooser extends ConditionalInputDialog {
+public class FileNameDialog extends ConditionalInputDialog {
 	
 	private static final String errorMessageFormat = "Invalid file name:\n%s";
 	private static final String spacesError = "File name contains spaces";
 	protected String errorMessage = "";
 	private boolean allowSpaces = false;
 
-	public FileNameChooser(Window parent, String message, String title, boolean allowSpaces) {
+	public FileNameDialog(Window parent, String message, String title, boolean allowSpaces) {
 		super(parent, message, title);
 		this.allowSpaces = allowSpaces;
 	}
@@ -35,10 +35,6 @@ public class FileNameChooser extends ConditionalInputDialog {
 			return false;
 		}
 		return true;
-	}
-	
-	public static void main(String[] args) {
-		new FileNameChooser(null, "Please choose a name", "Testtitle", false).requestInput();
 	}
 
 }

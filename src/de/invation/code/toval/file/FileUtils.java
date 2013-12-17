@@ -169,4 +169,11 @@ public class FileUtils {
 		return name;
 	}
 	
+	public static String getName(String file){
+		if(file.contains(".")){
+			return file.substring(0, file.lastIndexOf('.'));
+		}
+		return file;
+	}
+	
 }

@@ -48,12 +48,12 @@ public class ValueStat<U extends Number & Comparable<? super U>> {
 	}
 	
 	public void update(U number) {
-		if(number == null)
+		if(number == null){
 			if(acceptNulls==true) {
 				valueCount++;
 				return;
 			} else throw new NullPointerException();
-	
+		}
 		min = min==null ? number : (number.compareTo(min)<0 ? number : min);
 		max = max==null ? number : (number.compareTo(max)>0 ? number : max);
 		setRange();

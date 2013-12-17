@@ -5,9 +5,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import de.invation.code.toval.graphic.GraphicUtils;
 import de.invation.code.toval.graphic.diagrams.models.DotChartModel;
 import de.invation.code.toval.graphic.diagrams.models.ChartModel.ValueDimension;
+import de.invation.code.toval.graphic.util.GraphicUtils;
 
 @SuppressWarnings("serial")
 public class DotChartPanel extends ScatterChartPanel {

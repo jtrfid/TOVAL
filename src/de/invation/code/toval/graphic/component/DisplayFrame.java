@@ -1,4 +1,4 @@
-package de.invation.code.toval.graphic;
+package de.invation.code.toval.graphic.component;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;

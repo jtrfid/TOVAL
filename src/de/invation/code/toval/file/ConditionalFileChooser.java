@@ -1,4 +1,4 @@
-package de.invation.code.toval.graphic;
+package de.invation.code.toval.file;
 
 import java.awt.Window;
 import java.io.File;

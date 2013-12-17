@@ -274,6 +274,11 @@ public class Validate {
 		return intValue;
 	}
 	
+	public static void positive(Integer value) throws ParameterException{
+		if(value <= 0)
+			throw new ParameterException(ErrorCode.NOTPOSITIVE);
+	}
+	
 	public static Double positiveDouble(String value) throws ParameterException{
 		Double doubleValue = Validate.isDouble(value);
 		Validate.bigger(doubleValue, 0.0);
@@ -370,7 +375,7 @@ public class Validate {
 	
 	public static void main(String[] args) throws Exception {
 		Double d = 1.0;
-		Validate.notNegative(d);
+		Validate.type(d, String.class);
 	}
 
 }
