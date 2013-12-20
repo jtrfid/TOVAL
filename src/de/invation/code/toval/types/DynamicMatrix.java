@@ -2,7 +2,6 @@ package de.invation.code.toval.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -189,11 +188,13 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 		builder.append("  ");
 		builder.append(Arrays.toString(colKeys.keySet().toArray()));
 		builder.append('\n');
-		Iterator<E> iter = rowKeys.keySet().iterator();
-		for (ArrayList<T> list : this) {
-			builder.append(iter.next());
+		for(E rowKey : rowKeys.keySet()){
+			builder.append(rowKey);
 			builder.append(" ");
-			builder.append(Arrays.toString(list.toArray()));
+			for(E colKey: colKeys.keySet()){
+				builder.append(getValue(rowKey, colKey));
+				builder.append(" ");
+			}
 			builder.append('\n');
 		}
 		return builder.toString();
