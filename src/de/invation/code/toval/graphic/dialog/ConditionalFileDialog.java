@@ -1,4 +1,4 @@
-package de.invation.code.toval.file;
+package de.invation.code.toval.graphic.dialog;
 
 import java.awt.Window;
 import java.io.File;
@@ -13,12 +13,12 @@ import javax.swing.JOptionPane;
  * 
  * @author Thomas Stocker
  */
-public abstract class ConditionalFileChooser {
+public abstract class ConditionalFileDialog {
 	
 	private JFileChooser fileChooser = null;
 	private Window parent = null;
 
-	public ConditionalFileChooser(Window parent, FileChooserType type, String title) {
+	public ConditionalFileDialog(Window parent, FileChooserType type, String title) {
 		this.parent = parent;
 		fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle(title);
