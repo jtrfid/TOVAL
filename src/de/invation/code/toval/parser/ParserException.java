@@ -63,6 +63,8 @@ public class ParserException extends Exception {
 	
 	protected StringBuffer checkErrorCode(){
 		StringBuffer buffer = new StringBuffer();
+		if(errorCode == null)
+			return buffer;
 		
 		switch (errorCode) {
 		case UNSUPPORTED_FORMAT:

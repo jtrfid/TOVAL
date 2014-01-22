@@ -13,11 +13,13 @@ public class Validate {
 	}
 	
 	public static <O extends Object> void notNull(O o, String message) throws ParameterException{
+		notNull(message);
 		if(o == null)
 			throw new ParameterException(ErrorCode.NULLPOINTER, message);
 	}
 	
 	public static <O extends Object> void noNullElements(Iterable<O> coll) throws ParameterException {
+		notNull(coll);
 		for(O o: coll){
 			try{
 				notNull(o);
@@ -28,6 +30,7 @@ public class Validate {
 	}
 	
 	public static <O extends Object> void noNullElements(O[] arr) throws ParameterException {
+		notNull(arr);
 		for(int i=0; i<arr.length; i++){
 			try{
 				notNull(arr[i]);
@@ -38,22 +41,28 @@ public class Validate {
 	}
 	
 	public static <O extends Object> void notEmpty(Iterable<O> coll) throws ParameterException {
+		notNull(coll);
 		if(!coll.iterator().hasNext())
 			throw new ParameterException(ErrorCode.EMPTY);
 	}
 	
 	public static <O extends Object> void notEmpty(O[] arr) throws ParameterException {
+		notNull(arr);
 		if(arr.length == 0)
 			throw new ParameterException(ErrorCode.EMPTY);
 	}
 	
 	public static void notEmpty(String string) throws ParameterException {
+		notNull(string);
 		if(string.length() == 0)
 			throw new ParameterException(ErrorCode.EMPTY);
 	}
 	
 	
 	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value) throws ParameterException {
+		Validate.notNull(start);
+		Validate.notNull(end);
+		Validate.notNull(value);
 		if(value.compareTo(start) < 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is not in range ["+start+";"+end+"]");
 		if(value.compareTo(end) > 0)
@@ -61,6 +70,10 @@ public class Validate {
 	}
 	
 	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value, String message) throws ParameterException {
+		Validate.notNull(start);
+		Validate.notNull(end);
+		Validate.notNull(value);
+		Validate.notNull(message);
 		if(value.compareTo(start) < 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, message);
 		if(value.compareTo(end) > 0)
@@ -68,111 +81,152 @@ public class Validate {
 	}
 	
 	public static void negative(Integer value) throws ParameterException{
+		Validate.notNull(value);
 		if(value >= 0)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE);
 	}
 	
 	public static void negative(Integer value, String message) throws ParameterException{
+		Validate.notNull(value);
+		Validate.notNull(message);
 		if(value >= 0)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE, message);
 	}
 	
 	public static void negative(Double value) throws ParameterException{
+		Validate.notNull(value);
 		if(value >= 0.0)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE);
 	}
 	
 	public static void negative(Double value, String message) throws ParameterException{
+		Validate.notNull(value);
+		Validate.notNull(message);
 		if(value >= 0.0)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE, message);
 	}
 	
 	public static void negative(Long value) throws ParameterException{
+		Validate.notNull(value);
 		if(value >= 0L)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE);
 	}
 	
 	public static void negative(Long value, String message) throws ParameterException{
+		Validate.notNull(value);
+		Validate.notNull(message);
 		if(value >= 0L)
 			throw new ParameterException(ErrorCode.NOTNEGATIVE, message);
 	}
 	
 	public static void notNegative(Integer value) throws ParameterException{
+		Validate.notNull(value);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE);
 	}
 	
 	public static void notNegative(Integer value, String message) throws ParameterException{
+		notNull(value);
+		notNull(message);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE, message);
 	}
 	
 	public static void notNegative(Double value) throws ParameterException{
+		notNull(value);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE);
 	}
 	
 	public static void notNegative(Double value, String message) throws ParameterException{
+		notNull(value);
+		notNull(message);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE, message);
 	}
 	
 	public static void notNegative(Long value) throws ParameterException{
+		notNull(value);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE);
 	}
 	
 	public static void notNegative(Long value, String message) throws ParameterException{
+		notNull(value);
+		notNull(message);
 		if(value < 0)
 			throw new ParameterException(ErrorCode.NEGATIVE, message);
 	}
 	
 	public static void notTrue(Boolean expression) throws ParameterException{
+		notNull(expression);
 		if(expression)
 			throw new ParameterException(ErrorCode.CONSTRAINT);
 	}
 	
 	public static void notTrue(Boolean expression, String constraint) throws ParameterException{
+		notNull(expression);
+		notNull(constraint);
 		if(!expression)
 			throw new ParameterException(ErrorCode.CONSTRAINT, "Parameter does not fulfill constraint \""+constraint+"\"");
 	}
 	
 	public static <T extends Object> void bigger(Comparable<T> value, T reference) throws ParameterException {
+		Validate.notNull(value);
+		Validate.notNull(reference);
 		if(value.compareTo(reference) <= 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is smaller or equal "+reference);
 	}
 	
 	public static <T extends Object> void bigger(Comparable<T> value, T reference, String message) throws ParameterException {
+		Validate.notNull(value);
+		Validate.notNull(reference);
+		Validate.notNull(message);
 		if(value.compareTo(reference) <= 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, message);
 	}
 	
 	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference) throws ParameterException {
+		Validate.notNull(value);
+		Validate.notNull(reference);
 		if(value.compareTo(reference) < 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is smaller than "+reference);
 	}
 	
 	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference, String message) throws ParameterException {
+		Validate.notNull(value);
+		Validate.notNull(reference);
+		Validate.notNull(message);
 		if(value.compareTo(reference) < 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, message);
 	}
 	
 	public static <T extends Object> void smaller(Comparable<T> value, T reference) throws ParameterException {
+		notNull(value);
+		notNull(reference);
 		if(value.compareTo(reference) >= 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is bigger or equal "+reference);
 	}
 	
 	public static <T extends Object> void smaller(Comparable<T> value, T reference, String message) throws ParameterException {
+		notNull(value);
+		notNull(reference);
+		notNull(message);
 		if(value.compareTo(reference) >= 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, message);
 	}
 	
 	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference) throws ParameterException {
+		notNull(value);
+		notNull(reference);
 		if(value.compareTo(reference) > 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is bigger "+reference);
 	}
 	
 	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference, String message) throws ParameterException {
+		notNull(value);
+		notNull(reference);
+		notNull(message);
 		if(value.compareTo(reference) > 0)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, message);
 	}
@@ -184,7 +238,7 @@ public class Validate {
 	}
 	
 	public static void probability(Double value) throws ParameterException{
-		Validate.inclusiveBetween(0.0, 1.0, value);
+		inclusiveBetween(0.0, 1.0, value);
 	}
 	
 	public static Double probability(String value, String message) throws ParameterException{
@@ -204,11 +258,11 @@ public class Validate {
 	}
 	
 	public static void percentage(Double value) throws ParameterException{
-		Validate.inclusiveBetween(0.0, 100.0, value);
+		inclusiveBetween(0.0, 100.0, value);
 	}
 	
 	public static void percentage(Double value, String message) throws ParameterException{
-		Validate.inclusiveBetween(0.0, 100.0, value, message);
+		inclusiveBetween(0.0, 100.0, value, message);
 	}
 	
 	public static Double percentage(String value, String message) throws ParameterException{
@@ -217,12 +271,16 @@ public class Validate {
 		return doubleValue;
 	}
 	
-	public static void minMax(int min, int max) throws ParameterException{
+	public static void minMax(Integer min, Integer max) throws ParameterException{
+		Validate.notNull(min);
+		Validate.notNull(max);
 		if(min > max)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Minumum is bigger than maximum.");
 	}
 	
-	public static void minMax(long min, long max) throws ParameterException{
+	public static void minMax(Long min, Long max) throws ParameterException{
+		Validate.notNull(min);
+		Validate.notNull(max);
 		if(min > max)
 			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Minumum is bigger than maximum.");
 	}
@@ -231,9 +289,11 @@ public class Validate {
 	 * Check if a given value has a specific type.
 	 * @param value
 	 * @param type
-	 * @throws TypeException 
+	 * @throws ParameterException 
 	 */
-	public static <T,V extends Object> void type(V value, Class<T> type) throws TypeException{
+	public static <T,V extends Object> void type(V value, Class<T> type) throws ParameterException{
+		notNull(value);
+		notNull(type);
 		if(!type.isAssignableFrom(value.getClass())){
 			throw new TypeException(type.getCanonicalName());
 		}
@@ -265,6 +325,7 @@ public class Validate {
 	
 	public static Integer isInteger(String value) throws ParameterException{
 		Validate.notNull(value);
+		Validate.notEmpty(value);
 		Integer intValue = null;
 		try{
 			intValue = 	Integer.parseInt(value);
@@ -275,6 +336,13 @@ public class Validate {
 	}
 	
 	public static void positive(Integer value) throws ParameterException{
+		notNull(value);
+		if(value <= 0)
+			throw new ParameterException(ErrorCode.NOTPOSITIVE);
+	}
+	
+	public static void positive(Long value) throws ParameterException{
+		notNull(value);
 		if(value <= 0)
 			throw new ParameterException(ErrorCode.NOTPOSITIVE);
 	}
@@ -305,9 +373,10 @@ public class Validate {
 	
 	public static Double isDouble(String value) throws ParameterException{
 		Validate.notNull(value);
+		Validate.notEmpty(value);
 		Double doubleValue = null;
 		try{
-			doubleValue = 	Double.parseDouble(value);
+			doubleValue = Double.parseDouble(value);
 		} catch(NumberFormatException e){
 			throw new TypeException("Double");
 		}
@@ -346,14 +415,14 @@ public class Validate {
 	}
 	
 	public static File noDirectory(File file) throws ParameterException{
-		Validate.notNull(file);
+		Validate.exists(file);
 		if(file.isDirectory())
 			throw new ParameterException("\""+file+"\" is a directory!");
 		return file;
 	}
 	
 	public static File directory(File file) throws ParameterException{
-		Validate.notNull(file);
+		Validate.exists(file);
 		if(!file.isDirectory())
 			throw new ParameterException("\""+file+"\" is not a directory!");
 		return file;
@@ -371,11 +440,6 @@ public class Validate {
 		if(file.exists())
 			throw new ParameterException("\""+file+"\" exists!");
 		return file;
-	}
-	
-	public static void main(String[] args) throws Exception {
-		Double d = 1.0;
-		Validate.type(d, String.class);
 	}
 
 }
