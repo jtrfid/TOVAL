@@ -157,7 +157,10 @@ public class FileUtils {
     }
 	
 	public static String getPath(File f){
-		String absolutePath = f.getAbsolutePath();
+		return getPath(f.getAbsolutePath());
+	}
+	
+	public static String getPath(String absolutePath){
 		return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator)+1);
 	}
 	

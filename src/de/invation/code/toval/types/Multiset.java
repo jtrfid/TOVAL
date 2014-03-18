@@ -11,13 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.invation.code.toval.misc.CollectionUtils;
 import de.invation.code.toval.misc.SetUtils;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
-
-
 
 /**
  * Class for modeling multisets.<br>
@@ -37,13 +33,21 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 */
 	protected Map<O,Integer> multiplicities= new HashMap<O,Integer>();
 	
+	protected Map<Integer,Integer> multiplicityCount = new HashMap<Integer,Integer>();
+	
 	/**
 	 * Creates a new empty multiset.
 	 */
 	public Multiset(){}
 	
+	public Multiset(Collection<O> objects) throws ParameterException{
+		Validate.notNull(objects);
+		for(O o: objects)
+			incMultiplicity(o);
+	}
+	
 	public Multiset(O... objects) throws ParameterException{
-		Validate.notEmpty(objects);
+		Validate.notNull(objects);
 		for(O o: objects)
 			incMultiplicity(o);
 	}
@@ -55,9 +59,7 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	public int size(){
 		int result = 0;
 		for(O o: multiplicities.keySet()){
-			try {
-				result += multiplicity(o);
-			} catch (ParameterException e) {}
+			result += multiplicity(o);
 		}
 		return result;
 	}
@@ -69,6 +71,16 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 */
 	public Set<O> support(){
 		return Collections.unmodifiableSet(multiplicities.keySet());
+	}
+	
+	public boolean equalMultiplicities(){
+		return multiplicityCount.isEmpty() || multiplicityCount.keySet().size() == 1;
+	}
+	
+	public int getEqualMultiplicity(){
+		if(isEmpty() || !equalMultiplicities())
+			return -1;
+		return multiplicityCount.keySet().iterator().next();
 	}
 	
 	/**
@@ -110,9 +122,34 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 * <code>false</code> if the multiset does not contain the given object.
 	 */
 	public boolean remove(O object){
+		Integer multiplicity = multiplicities.get(object);
 		if(multiplicities.remove(object) == null)
 			return false;
+		decMultiplicityCount(multiplicity);
 		return true;
+	}
+	
+	private void decMultiplicityCount(Integer multiplicity){
+//		System.out.println("dec count of mult " + multiplicity);
+//		System.out.println(multiplicityCount);
+		int actualCount = multiplicityCount.get(multiplicity);
+		if(actualCount == 1){
+			multiplicityCount.remove(multiplicity);
+		} else {
+			multiplicityCount.put(multiplicity, actualCount - 1);
+		}
+//		System.out.println(multiplicityCount);
+	}
+	
+	private void incMultiplicityCount(Integer multiplicity){
+//		System.out.println("inc count of mult " + multiplicity);
+//		System.out.println(multiplicityCount);
+		if(!multiplicityCount.containsKey(multiplicity)){
+			multiplicityCount.put(multiplicity, 1);
+		} else {
+			multiplicityCount.put(multiplicity, multiplicityCount.get(multiplicity) + 1);
+		}
+//		System.out.println(multiplicityCount);
 	}
 	
 	/**
@@ -120,6 +157,11 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 */
 	public void clear(){
 		multiplicities.clear();
+		multiplicityCount.clear();
+	}
+	
+	public void printMultiplicityCount(){
+		System.out.println(multiplicityCount);
 	}
 	
 	/**
@@ -133,16 +175,6 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	}
 	
 	/**
-	 * Checks if the support of this multiset contains the given object.
-	 * @param object The object to check.
-	 * @return <code>true</code> if the support contains the oject;<br>
-	 * <code>false</code> otherwise.
-	 */
-	public boolean contains(O object){
-		return multiplicities.keySet().contains(object);
-	}
-	
-	/**
 	 * Checks if the support of this multiset contains all given objects.
 	 * @param objects The objects to check.
 	 * @return <code>true</code> if the support contains all ojects;<br>
@@ -152,6 +184,16 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 		return multiplicities.keySet().containsAll(objects);
 	}
 	
+	/**
+	 * Checks if the support of this multiset contains the given object.
+	 * @param object The object to check.
+	 * @return <code>true</code> if the support contains the oject;<br>
+	 * <code>false</code> otherwise.
+	 */
+	public boolean contains(O object){
+		return multiplicities.keySet().contains(object);
+	}
+
 	/**
 	 * Sets the multiplicity of the given object to the given number.<br>
 	 * In case the multiplicity is 0 or negative, the given object is removed from the multiset.
@@ -166,6 +208,11 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 			remove(object);
 			return;
 		}
+		if(multiplicities.containsKey(object)){
+			int oldMultiplicity = multiplicities.get(object);
+			decMultiplicityCount(oldMultiplicity);
+		}
+		incMultiplicityCount(multiplicity);
 		multiplicities.put(object, multiplicity);
 	}
 	
@@ -180,8 +227,12 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 		Validate.notNull(object);
 		if(!multiplicities.containsKey(object)){
 			multiplicities.put(object, 1);
+			incMultiplicityCount(1);
 		} else {
-			multiplicities.put(object, multiplicities.get(object) + 1);
+			Integer oldMultiplicity = multiplicities.get(object);
+			multiplicities.put(object, oldMultiplicity + 1);
+			decMultiplicityCount(oldMultiplicity);
+			incMultiplicityCount(oldMultiplicity + 1);
 		}
 		return multiplicity(object);
 	}
@@ -197,10 +248,13 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 		if(!multiplicities.containsKey(object))
 			return 0;
 		if(multiplicity(object) > 1){
-			multiplicities.put(object, multiplicities.get(object) - 1);
+			Integer oldMultiplicity = multiplicities.get(object);
+			multiplicities.put(object, oldMultiplicity - 1);
+			decMultiplicityCount(oldMultiplicity);
+			incMultiplicityCount(oldMultiplicity - 1);
 			return multiplicity(object);
 		} else {
-			multiplicities.remove(object);
+			remove(object);
 			return 0;
 		}
 	}
@@ -212,8 +266,7 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 * 0 if there is no multiplicity for the given object.
 	 * @throws ParameterException 
 	 */
-	public int multiplicity(O object) throws ParameterException{
-		Validate.notNull(object);
+	public int multiplicity(O object) {
 		if(multiplicities.containsKey(object))
 			return multiplicities.get(object);
 		return 0;
@@ -245,26 +298,6 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	}
 	
 	/**
-	 * Checks if this multiset is trivial.<br>
-	 * A multiset is considered trivial if the multiplicity for every object s of a related set S is equal.
-	 * @param basicSet The basic set for operation
-	 * @return <code>true</code> if the multiset is trivial;<br>
-	 * <code>false</code> otherwise.
-	 * @throws ParameterException 
-	 */
-	public boolean isTrivial(Collection<O> basicSet) throws ParameterException{
-		Validate.notNull(basicSet);
-		Validate.notEmpty(basicSet);
-		Validate.noNullElements(basicSet);
-		if(!basicSet.containsAll(multiplicities.keySet()))
-			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Incompatible set");
-		
-		if(!multiplicities.keySet().containsAll(basicSet))
-			return false;
-		return CollectionUtils.isTrivial(multiplicities.values());
-	}
-	
-	/**
 	 * Checks if this multiset id k-bounded.<br>
 	 * A multiset is k-bounded if there is no object whose multiplicity is greater than k.
 	 * @param k The maximum multiplicity of an object.
@@ -288,17 +321,14 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	public void addScalar(int k){
 		Set<O> remove = new HashSet<O>();
 		for(O o: multiplicities.keySet()){
-			try {
-				multiplicities.put(o, multiplicity(o) + k);
-				if(multiplicity(o) < 1){
-					remove.add(o);
-				}
-			} catch (ParameterException e) {
-				// Cannot happen, since the objects are taken from the keyset.
-				e.printStackTrace();
+			setMultiplicity(o, multiplicity(o) + k);
+			if(multiplicity(o) < 1){
+				remove.add(o);
 			}
 		}
-		multiplicities.keySet().removeAll(remove);
+		for(O o: remove){
+			remove(o);
+		}
 	}
 	
 	/**
@@ -310,17 +340,14 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	public void multiplyScalar(int k){
 		Set<O> remove = new HashSet<O>();
 		for(O o: multiplicities.keySet()){
-			multiplicities.put(o, multiplicities.get(o) * k);
-			try {
-				if(multiplicity(o) < 1){
-					remove.add(o);
-				}
-			} catch (ParameterException e) {
-				// Cannot happen, since the objects are taken from the keyset.
-				e.printStackTrace();
+			setMultiplicity(o, multiplicity(o) * k);
+			if(multiplicity(o) < 1){
+				remove.add(o);
 			}
 		}
-		multiplicities.keySet().removeAll(remove);
+		for(O o: remove){
+			remove(o);
+		}
 	}
 	
 	/**
@@ -401,7 +428,7 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 			if(multiset.multiplicity(o)>0){
 				setMultiplicity(o, Math.min(multiplicity(o), multiset.multiplicity(o)));
 			} else {
-				multiplicities.remove(o);
+				remove(o);
 			}
 		}
 	}
@@ -490,12 +517,7 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	public Multiset<O> clone(){
 		Multiset<O> result = new Multiset<O>();
 		for(O o: support()){
-			try {
-				result.setMultiplicity(o, multiplicity(o));
-			} catch (ParameterException e) {
-				// Cannot happen, since the objects are taken from the keyset.
-				e.printStackTrace();
-			}
+			result.setMultiplicity(o, multiplicity(o));
 		}
 		return result;
 	}
@@ -558,6 +580,24 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 		builder.append('\n');
 		return builder.toString();
 		
+	}
+	
+	public static void main(String[] args) throws ParameterException {
+		Multiset<Integer> m = new Multiset<Integer>();
+		System.out.println(m.equalMultiplicities());
+		m.incMultiplicity(1);
+		System.out.println(m.equalMultiplicities());
+		m.incMultiplicity(1);
+		System.out.println(m.equalMultiplicities());
+		m.incMultiplicity(2);
+		System.out.println(m.equalMultiplicities());
+		m.decMultiplicity(1);
+		System.out.println(m);
+		System.out.println(m.equalMultiplicities());
+		m.setMultiplicity(4, 1);
+		System.out.println(m.equalMultiplicities());
+		m.setMultiplicity(4, 2);
+		System.out.println(m.equalMultiplicities());
 	}
 
 }

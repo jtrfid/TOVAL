@@ -124,6 +124,17 @@ public class CollectionUtils {
 		return String.format(getFormat(coll, 0, valueSeparation, start, end), coll.toArray());
 	}
 	
+	public static <T> void print(Collection<T> coll){
+		if(coll == null)
+			throw new NullPointerException();
+		if(coll.isEmpty())
+			return;
+		for(T t: coll){
+			System.out.println(t);
+		}
+	}
+	
+	
 	/**
 	 * Checks if the given list is trivial.<br>
 	 * A list is considered trivial if all its elements are equal (according to T.equals()).

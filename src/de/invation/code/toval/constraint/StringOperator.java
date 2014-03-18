@@ -44,7 +44,7 @@ public enum StringOperator implements Operator<String> {
 		validateValueType(value);
 		Validate.notNull(parameters);
 		Validate.noNullElements(parameters);
-		Validate.notTrue(parameters.length + 1 != getRequiredArguments());
+		Validate.isFalse(parameters.length + 1 != getRequiredArguments());
 		
 		switch(this){
 		case EQUAL:			return value.equals(parameters[0]);

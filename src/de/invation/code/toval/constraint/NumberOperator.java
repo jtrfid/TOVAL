@@ -51,7 +51,7 @@ public enum NumberOperator implements Operator<Number>{
 		validateValueType(value);
 		Validate.notNull(parameters);
 		Validate.noNullElements(parameters);
-		Validate.notTrue(parameters.length + 1 != getRequiredArguments());
+		Validate.isFalse(parameters.length + 1 != getRequiredArguments());
 		
 		double numberValue = ((Number) value).doubleValue();
 		

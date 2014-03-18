@@ -46,6 +46,14 @@ public class ArrayUtils {
 		return result;
 	}
 	
+	public static short[] createArray(int size, short defaultValue){
+		short[] result = new short[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = defaultValue;
+		}
+		return result;
+	}
+	
 	/**
 	 * Returns a random element of the given array.
 	 * @param <T> Type of array elements

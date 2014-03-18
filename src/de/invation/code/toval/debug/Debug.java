@@ -47,7 +47,6 @@ public class Debug {
 	}
 	
 	
-	
 	public static void setIncludeHeader(boolean includeHeader) {
 		Debug.includeHeader = includeHeader;
 	}
@@ -60,6 +59,14 @@ public class Debug {
 	public static void setDebugMode(DebugMode mode){
 		debugMode = mode;
 	} 
+	
+	public static boolean isActive(){
+		return debugMode != DebugMode.SILENT;
+	}
+	
+	public static void deactivate(){
+		setDebugMode(DebugMode.SILENT);
+	}
 	
 	public static void closeFile(){
 		try {

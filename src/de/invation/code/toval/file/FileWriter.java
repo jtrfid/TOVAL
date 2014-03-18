@@ -302,6 +302,8 @@ public class FileWriter {
 	private void checkPath(String logPath) throws ParameterException {
 		Validate.notNull(path);
 		File cPath = new File(logPath);
+		if(!cPath.exists())
+			cPath.mkdirs();
 		if(!cPath.isDirectory())
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, logPath + " is not a valid path!");
 	}
