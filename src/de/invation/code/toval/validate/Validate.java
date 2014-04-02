@@ -21,9 +21,9 @@ public class Validate {
 	/**
 	 * Checks if the given object is <code>null</code>
 	 * @param o The object to validate.
-	 * @throws ParameterException if the given object is <code>null</code>.
+	 * @ if the given object is <code>null</code>.
 	 */
-	public static <O extends Object> void notNull(O o) throws ParameterException{
+	public static <O extends Object> void notNull(O o) {
 		if(!validation) return;
 		if(o == null)
 			throw new ParameterException(ErrorCode.NULLPOINTER);
@@ -33,9 +33,9 @@ public class Validate {
 	 * Checks if the given object is <code>null</code>
 	 * @param o The object to validate.
 	 * @param message The error message to include in the Exception in case the validation fails.
-	 * @throws ParameterException if the given object is <code>null</code>.
+	 * @ if the given object is <code>null</code>.
 	 */
-	public static <O extends Object> void notNull(O o, String message) throws ParameterException{
+	public static <O extends Object> void notNull(O o, String message) {
 		if(!validation) return;
 		notNull(message);
 		if(o == null)
@@ -45,9 +45,9 @@ public class Validate {
 	/**
 	 * Checks if the given iterable object contains <code>null</code> values.
 	 * @param coll The iterable object to validate.
-	 * @throws ParameterException if the given object contains any <code>null</code> values.
+	 * @ if the given object contains any <code>null</code> values.
 	 */
-	public static <O extends Object> void noNullElements(Iterable<O> coll) throws ParameterException {
+	public static <O extends Object> void noNullElements(Iterable<O> coll)  {
 		if(!validation) return;
 		notNull(coll);
 		for(O o: coll){
@@ -62,9 +62,9 @@ public class Validate {
 	/**
 	 * Checks if the given array contains <code>null</code> values.
 	 * @param coll The array to validate.
-	 * @throws ParameterException if the given array contains any <code>null</code> values.
+	 * @ if the given array contains any <code>null</code> values.
 	 */
-	public static <O extends Object> void noNullElements(O[] arr) throws ParameterException {
+	public static <O extends Object> void noNullElements(O[] arr)  {
 		if(!validation) return;
 		notNull(arr);
 		for(int i=0; i<arr.length; i++){
@@ -79,9 +79,9 @@ public class Validate {
 	/**
 	 * Checks if the given iterable object is empty.
 	 * @param coll The iterable object to validate.
-	 * @throws ParameterException if the given object is empty.
+	 * @ if the given object is empty.
 	 */
-	public static <O extends Object> void notEmpty(Iterable<O> coll) throws ParameterException {
+	public static <O extends Object> void notEmpty(Iterable<O> coll)  {
 		if(!validation) return;
 		notNull(coll);
 		if(!coll.iterator().hasNext())
@@ -91,9 +91,9 @@ public class Validate {
 	/**
 	 * Checks if the given array is empty.
 	 * @param coll The array to validate.
-	 * @throws ParameterException if the given array is empty.
+	 * @ if the given array is empty.
 	 */
-	public static <O extends Object> void notEmpty(O[] arr) throws ParameterException {
+	public static <O extends Object> void notEmpty(O[] arr)  {
 		if(!validation) return;
 		notNull(arr);
 		if(arr.length == 0)
@@ -103,9 +103,9 @@ public class Validate {
 	/**
 	 * Checks if the given Strign is empty.
 	 * @param coll The String to validate.
-	 * @throws ParameterException if the given String is empty.
+	 * @ if the given String is empty.
 	 */
-	public static void notEmpty(String string) throws ParameterException {
+	public static void notEmpty(String string)  {
 		if(!validation) return;
 		notNull(string);
 		if(string.length() == 0)
@@ -117,9 +117,9 @@ public class Validate {
 	/**
 	 * Checks if the given boolean expression evaluates to <code>true</code>.
 	 * @param expression The expression to evaluate.
-	 * @throws ParameterException if the given expression does not evaluate to <code>true</code>.
+	 * @ if the given expression does not evaluate to <code>true</code>.
 	 */
-	public static void isTrue(Boolean expression) throws ParameterException{
+	public static void isTrue(Boolean expression) {
 		if(!validation) return;
 		notNull(expression);
 		if(expression)
@@ -130,9 +130,9 @@ public class Validate {
 	 * Checks if the given boolean expression evaluates to <code>true</code>.
 	 * @param expression The expression to evaluate.
 	 * @param constraint Textual description of the expression to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given expression does not evaluate to <code>true</code>.
+	 * @ if the given expression does not evaluate to <code>true</code>.
 	 */
-	public static void isTrue(Boolean expression, String constraint) throws ParameterException{
+	public static void isTrue(Boolean expression, String constraint) {
 		if(!validation) return;
 		notNull(expression);
 		notNull(constraint);
@@ -143,9 +143,9 @@ public class Validate {
 	/**
 	 * Checks if the given boolean expression evaluates to <code>false</code>.
 	 * @param expression The expression to evaluate.
-	 * @throws ParameterException if the given expression does not evaluate to <code>false</code>.
+	 * @ if the given expression does not evaluate to <code>false</code>.
 	 */
-	public static void isFalse(Boolean expression) throws ParameterException{
+	public static void isFalse(Boolean expression) {
 		if(!validation) return;
 		notNull(expression);
 		if(expression)
@@ -156,9 +156,9 @@ public class Validate {
 	 * Checks if the given boolean expression evaluates to <code>false</code>.
 	 * @param expression The expression to evaluate.
 	 * @param constraint Textual description of the expression to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given expression does not evaluate to <code>false</code>.
+	 * @ if the given expression does not evaluate to <code>false</code>.
 	 */
-	public static void isFalse(Boolean expression, String constraint) throws ParameterException{
+	public static void isFalse(Boolean expression, String constraint) {
 		if(!validation) return;
 		notNull(expression);
 		notNull(constraint);
@@ -173,9 +173,9 @@ public class Validate {
 	 * Checks if the given parameters can be used as min/max bounds.
 	 * @param min The minimum value.
 	 * @param max The maximum value.
-	 * @throws ParameterException if the maximum is bigger than the minimum.
+	 * @ if the maximum is bigger than the minimum.
 	 */
-	public static void minMax(Integer min, Integer max) throws ParameterException{
+	public static void minMax(Integer min, Integer max) {
 		if(!validation) return;
 		Validate.notNull(min);
 		Validate.notNull(max);
@@ -187,9 +187,9 @@ public class Validate {
 	 * Checks if the given parameters can be used as min/max bounds.
 	 * @param min The minimum value.
 	 * @param max The maximum value.
-	 * @throws ParameterException if the maximum is bigger than the minimum.
+	 * @ if the maximum is bigger than the minimum.
 	 */
-	public static void minMax(Long min, Long max) throws ParameterException{
+	public static void minMax(Long min, Long max) {
 		if(!validation) return;
 		Validate.notNull(min);
 		Validate.notNull(max);
@@ -201,9 +201,9 @@ public class Validate {
 	 * Checks if the given parameters can be used as min/max bounds.
 	 * @param min The minimum value.
 	 * @param max The maximum value.
-	 * @throws ParameterException if the maximum is bigger than the minimum.
+	 * @ if the maximum is bigger than the minimum.
 	 */
-	public static void minMax(Double min, Double max) throws ParameterException{
+	public static void minMax(Double min, Double max) {
 		if(!validation) return;
 		Validate.notNull(min);
 		Validate.notNull(max);
@@ -217,9 +217,9 @@ public class Validate {
 	 * Checks if the given value is bigger than the reference value.
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is smaller or equal to the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is smaller or equal to the reference value.
 	 */
-	public static <T extends Object> void bigger(Comparable<T> value, T reference) throws ParameterException {
+	public static <T extends Object> void bigger(Comparable<T> value, T reference)  {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(reference);
@@ -232,9 +232,9 @@ public class Validate {
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
 	 * @param message The error message to include into the Exception in case the validation fails.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is smaller or equal to the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is smaller or equal to the reference value.
 	 */
-	public static <T extends Object> void bigger(Comparable<T> value, T reference, String message) throws ParameterException {
+	public static <T extends Object> void bigger(Comparable<T> value, T reference, String message)  {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(reference);
@@ -247,9 +247,9 @@ public class Validate {
 	 * Checks if the given value is bigger or equal to the reference value.
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is smaller than the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is smaller than the reference value.
 	 */
-	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference) throws ParameterException {
+	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference)  {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(reference);
@@ -262,9 +262,9 @@ public class Validate {
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
 	 * @param message The error message to include into the Exception in case the validation fails.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is smaller than the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is smaller than the reference value.
 	 */
-	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference, String message) throws ParameterException {
+	public static <T extends Object> void biggerEqual(Comparable<T> value, T reference, String message)  {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(reference);
@@ -277,9 +277,9 @@ public class Validate {
 	 * Checks if the given value is smaller than the reference value.
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is bigger or equal to the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is bigger or equal to the reference value.
 	 */
-	public static <T extends Object> void smaller(Comparable<T> value, T reference) throws ParameterException {
+	public static <T extends Object> void smaller(Comparable<T> value, T reference)  {
 		if(!validation) return;
 		notNull(value);
 		notNull(reference);
@@ -292,9 +292,9 @@ public class Validate {
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
 	 * @param message The error message to include into the Exception in case the validation fails.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is bigger or equal to the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is bigger or equal to the reference value.
 	 */
-	public static <T extends Object> void smaller(Comparable<T> value, T reference, String message) throws ParameterException {
+	public static <T extends Object> void smaller(Comparable<T> value, T reference, String message)  {
 		if(!validation) return;
 		notNull(value);
 		notNull(reference);
@@ -307,9 +307,9 @@ public class Validate {
 	 * Checks if the given value is smaller or equal to the reference value.
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is bigger than the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is bigger than the reference value.
 	 */
-	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference) throws ParameterException {
+	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference)  {
 		if(!validation) return;
 		notNull(value);
 		notNull(reference);
@@ -322,9 +322,9 @@ public class Validate {
 	 * @param value The value to validate.
 	 * @param reference The reference value to check against.
 	 * @param message The error message to include into the Exception in case the validation fails.
-	 * @throws ParameterException if one of the parameters is <code>null</code> of the value is bigger than the reference value.
+	 * @ if one of the parameters is <code>null</code> of the value is bigger than the reference value.
 	 */
-	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference, String message) throws ParameterException {
+	public static <T extends Object> void smallerEqual(Comparable<T> value, T reference, String message)  {
 		if(!validation) return;
 		notNull(value);
 		notNull(reference);
@@ -338,9 +338,9 @@ public class Validate {
 	 * @param start The start value (lower bound).
 	 * @param end The end value (upper bound).
 	 * @param value The comparable value to validate.
-	 * @throws ParameterException if some parameters are <code>null</code>, the given value lies not between the start and end values. 
+	 * @ if some parameters are <code>null</code>, the given value lies not between the start and end values. 
 	 */
-	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value) throws ParameterException {
+	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value)  {
 		if(!validation) return;
 		Validate.notNull(start);
 		Validate.notNull(end);
@@ -357,9 +357,9 @@ public class Validate {
 	 * @param end The end value (upper bound).
 	 * @param value The comparable value to validate.
 	 * @param message The error message to include into the Exception in case the validation fails.
-	 * @throws ParameterException if some parameters are <code>null</code>, the given value lies not between the start and end values. 
+	 * @ if some parameters are <code>null</code>, the given value lies not between the start and end values. 
 	 */
-	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value, String message) throws ParameterException {
+	public static <T extends Object> void inclusiveBetween(T start, T end, Comparable<T> value, String message)  {
 		if(!validation) return;
 		Validate.notNull(start);
 		Validate.notNull(end);
@@ -378,9 +378,9 @@ public class Validate {
 	 * Checks if a given value has a specific type.
 	 * @param value The value to validate.
 	 * @param type The target type for the given value.
-	 * @throws ParameterException if the type of the given value is not a valid subclass of the target type.
+	 * @ if the type of the given value is not a valid subclass of the target type.
 	 */
-	public static <T,V extends Object> void type(V value, Class<T> type) throws ParameterException{
+	public static <T,V extends Object> void type(V value, Class<T> type) {
 		if(!validation) return;
 		notNull(value);
 		notNull(type);
@@ -396,9 +396,9 @@ public class Validate {
 	/**
 	 * Checks if the given integer is positive.
 	 * @param value The integer value to validate.
-	 * @throws ParameterException if the given integer value is <code>null</code> or smaller/equal to 0.
+	 * @ if the given integer value is <code>null</code> or smaller/equal to 0.
 	 */
-	public static void positive(Integer value) throws ParameterException{
+	public static void positive(Integer value) {
 		if(!validation) return;
 		notNull(value);
 		if(value <= 0)
@@ -408,9 +408,9 @@ public class Validate {
 	/**
 	 * Checks if the given integer is NOT positive.
 	 * @param value The integer value to validate.
-	 * @throws ParameterException if the given integer value is <code>null</code> or bigger than 0.
+	 * @ if the given integer value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Integer value) throws ParameterException{
+	public static void notPositive(Integer value) {
 		if(!validation) return;
 		notNull(value);
 		if(value > 0)
@@ -421,9 +421,9 @@ public class Validate {
 	 * Checks if the given integer value is NOT positive.
 	 * @param value The integer value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given integer value is <code>null</code> or bigger than 0.
+	 * @ if the given integer value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Integer value, String message) throws ParameterException{
+	public static void notPositive(Integer value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -434,9 +434,9 @@ public class Validate {
 	/**
 	 * Checks if the given integer is negative.
 	 * @param value The integer value to validate.
-	 * @throws ParameterException if the given integer value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given integer value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Integer value) throws ParameterException{
+	public static void negative(Integer value) {
 		if(!validation) return;
 		Validate.notNull(value);
 		if(value >= 0)
@@ -447,9 +447,9 @@ public class Validate {
 	 * Checks if the given integer is negative.
 	 * @param value The integer value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given integer value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given integer value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Integer value, String message) throws ParameterException{
+	public static void negative(Integer value, String message) {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(message);
@@ -460,9 +460,9 @@ public class Validate {
 	/**
 	 * Checks if the given integer is NOT negative.
 	 * @param value The integer value to validate.
-	 * @throws ParameterException if the given integer value is <code>null</code> or smaller than 0.
+	 * @ if the given integer value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Integer value) throws ParameterException{
+	public static void notNegative(Integer value) {
 		if(!validation) return;
 		Validate.notNull(value);
 		if(value < 0)
@@ -473,9 +473,9 @@ public class Validate {
 	 * Checks if the given integer is NOT negative.
 	 * @param value The integer value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given integer value is <code>null</code> or smaller than 0.
+	 * @ if the given integer value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Integer value, String message) throws ParameterException{
+	public static void notNegative(Integer value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -488,9 +488,9 @@ public class Validate {
 	/**
 	 * Checks if the given long value is positive.
 	 * @param value The long value to validate.
-	 * @throws ParameterException if the given long value is <code>null</code> or smaller/equal to 0.
+	 * @ if the given long value is <code>null</code> or smaller/equal to 0.
 	 */
-	public static void positive(Long value) throws ParameterException{
+	public static void positive(Long value) {
 		if(!validation) return;
 		notNull(value);
 		if(value <= 0)
@@ -500,9 +500,9 @@ public class Validate {
 	/**
 	 * Checks if the given long is NOT positive.
 	 * @param value The long value to validate.
-	 * @throws ParameterException if the given long value is <code>null</code> or bigger than 0.
+	 * @ if the given long value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Long value) throws ParameterException{
+	public static void notPositive(Long value) {
 		if(!validation) return;
 		notNull(value);
 		if(value > 0)
@@ -513,9 +513,9 @@ public class Validate {
 	 * Checks if the given long value is NOT positive.
 	 * @param value The long value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given long value is <code>null</code> or bigger than 0.
+	 * @ if the given long value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Long value, String message) throws ParameterException{
+	public static void notPositive(Long value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -526,9 +526,9 @@ public class Validate {
 	/**
 	 * Checks if the given long value is negative.
 	 * @param value The long value to validate.
-	 * @throws ParameterException if the given long value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given long value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Long value) throws ParameterException{
+	public static void negative(Long value) {
 		if(!validation) return;
 		Validate.notNull(value);
 		if(value >= 0L)
@@ -539,9 +539,9 @@ public class Validate {
 	 * Checks if the given long value is negative.
 	 * @param value The long value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given long value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given long value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Long value, String message) throws ParameterException{
+	public static void negative(Long value, String message) {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(message);
@@ -552,9 +552,9 @@ public class Validate {
 	/**
 	 * Checks if the given long value is NOT negative.
 	 * @param value The long value to validate.
-	 * @throws ParameterException if the given long value is <code>null</code> or smaller than 0.
+	 * @ if the given long value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Long value) throws ParameterException{
+	public static void notNegative(Long value) {
 		if(!validation) return;
 		notNull(value);
 		if(value < 0)
@@ -565,9 +565,9 @@ public class Validate {
 	 * Checks if the given long value is NOT negative.
 	 * @param value The long value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given long value is <code>null</code> or smaller than 0.
+	 * @ if the given long value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Long value, String message) throws ParameterException{
+	public static void notNegative(Long value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -580,9 +580,9 @@ public class Validate {
 	/**
 	 * Checks if the given double value is positive.
 	 * @param value The double value to validate.
-	 * @throws ParameterException if the given double value is <code>null</code> or smaller/equal to 0.
+	 * @ if the given double value is <code>null</code> or smaller/equal to 0.
 	 */
-	public static void positive(Double value) throws ParameterException{
+	public static void positive(Double value) {
 		if(!validation) return;
 		notNull(value);
 		if(value <= 0)
@@ -592,9 +592,9 @@ public class Validate {
 	/**
 	 * Checks if the given double is NOT positive.
 	 * @param value The double value to validate.
-	 * @throws ParameterException if the given double value is <code>null</code> or bigger than 0.
+	 * @ if the given double value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Double value) throws ParameterException{
+	public static void notPositive(Double value) {
 		if(!validation) return;
 		notNull(value);
 		if(value > 0)
@@ -605,9 +605,9 @@ public class Validate {
 	 * Checks if the given double is NOT positive.
 	 * @param value The double value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given double value is <code>null</code> or bigger than 0.
+	 * @ if the given double value is <code>null</code> or bigger than 0.
 	 */
-	public static void notPositive(Double value, String message) throws ParameterException{
+	public static void notPositive(Double value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -618,9 +618,9 @@ public class Validate {
 	/**
 	 * Checks if the given double is negative.
 	 * @param value The double value to validate.
-	 * @throws ParameterException if the given double value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given double value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Double value) throws ParameterException{
+	public static void negative(Double value) {
 		if(!validation) return;
 		Validate.notNull(value);
 		if(value >= 0.0)
@@ -631,9 +631,9 @@ public class Validate {
 	 * Checks if the given double is negative.
 	 * @param value The double value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given double value is <code>null</code> or bigger/equal to 0.
+	 * @ if the given double value is <code>null</code> or bigger/equal to 0.
 	 */
-	public static void negative(Double value, String message) throws ParameterException{
+	public static void negative(Double value, String message) {
 		if(!validation) return;
 		Validate.notNull(value);
 		Validate.notNull(message);
@@ -644,9 +644,9 @@ public class Validate {
 	/**
 	 * Checks if the given double is NOT negative.
 	 * @param value The double value to validate.
-	 * @throws ParameterException if the given double value is <code>null</code> or smaller than 0.
+	 * @ if the given double value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Double value) throws ParameterException{
+	public static void notNegative(Double value) {
 		if(!validation) return;
 		notNull(value);
 		if(value < 0)
@@ -657,9 +657,9 @@ public class Validate {
 	 * Checks if the given double is NOT negative.
 	 * @param value The double value to validate.
 	 * @param The error message to include in the exception in case the validation fails.
-	 * @throws ParameterException if the given double value is <code>null</code> or smaller than 0.
+	 * @ if the given double value is <code>null</code> or smaller than 0.
 	 */
-	public static void notNegative(Double value, String message) throws ParameterException{
+	public static void notNegative(Double value, String message) {
 		if(!validation) return;
 		notNull(value);
 		notNull(message);
@@ -673,9 +673,9 @@ public class Validate {
 	 * Checks if the given String is an integer value.
 	 * @param value The String value to validate.
 	 * @return The parsed integer value.
-	 * @throws ParameterException if the given String value cannot be parsed as integer.
+	 * @ if the given String value cannot be parsed as integer.
 	 */
-	public static Integer isInteger(String value) throws ParameterException{
+	public static Integer isInteger(String value) {
 		Validate.notNull(value);
 		Validate.notEmpty(value);
 		Integer intValue = null;
@@ -691,9 +691,9 @@ public class Validate {
 	 * Checks if the given String is a double value.
 	 * @param value The String value to validate.
 	 * @return The parsed double value.
-	 * @throws ParameterException if the given String value cannot be parsed as double.
+	 * @ if the given String value cannot be parsed as double.
 	 */
-	public static Double isDouble(String value) throws ParameterException{
+	public static Double isDouble(String value) {
 		Validate.notNull(value);
 		Validate.notEmpty(value);
 		Double doubleValue = null;
@@ -713,9 +713,9 @@ public class Validate {
 	 * This method tries to parse an integer value and then checks if it is bigger than 0.
 	 * @param value The String value to validate.
 	 * @return The parsed integer value
-	 * @throws ParameterException if the given String value cannot be parsed as integer or its value is smaller or equal to 0.
+	 * @ if the given String value cannot be parsed as integer or its value is smaller or equal to 0.
 	 */
-	public static Integer positiveInteger(String value) throws ParameterException{
+	public static Integer positiveInteger(String value) {
 		Integer intValue = Validate.isInteger(value);
 		positive(intValue);
 		return intValue;
@@ -726,9 +726,9 @@ public class Validate {
 	 * This method tries to parse an integer value and then checks if it is smaller or equal to 0.
 	 * @param value The String value to validate.
 	 * @return The parsed integer value
-	 * @throws ParameterException if the given String value cannot be parsed as integer or its value is bigger than 0.
+	 * @ if the given String value cannot be parsed as integer or its value is bigger than 0.
 	 */
-	public static Integer notPositiveInteger(String value) throws ParameterException{
+	public static Integer notPositiveInteger(String value) {
 		Integer intValue = Validate.isInteger(value);
 		notPositive(intValue);
 		return intValue;
@@ -739,9 +739,9 @@ public class Validate {
 	 * This method tries to parse an integer value and then checks if it is smaller than 0.
 	 * @param value The String value to validate.
 	 * @return The parsed integer value
-	 * @throws ParameterException if the given String value cannot be parsed as integer or its value is bigger or equal to 0.
+	 * @ if the given String value cannot be parsed as integer or its value is bigger or equal to 0.
 	 */
-	public static Integer negativeInteger(String value) throws ParameterException{
+	public static Integer negativeInteger(String value) {
 		Integer intValue = Validate.isInteger(value);
 		negative(intValue);
 		return intValue;
@@ -752,9 +752,9 @@ public class Validate {
 	 * This method tries to parse an integer value and then checks if it is bigger or equal to 0.
 	 * @param value The String value to validate.
 	 * @return The parsed integer value
-	 * @throws ParameterException if the given String value cannot be parsed as integer or its value is smaller than 0.
+	 * @ if the given String value cannot be parsed as integer or its value is smaller than 0.
 	 */
-	public static Integer notNegativeInteger(String value) throws ParameterException{
+	public static Integer notNegativeInteger(String value) {
 		Integer intValue = Validate.isInteger(value);
 		notNegative(intValue);
 		return intValue;
@@ -768,9 +768,9 @@ public class Validate {
 	 * This method tries to parse a double value and then checks if it is bigger than 0.
 	 * @param value The String value to validate.
 	 * @return The parsed double value
-	 * @throws ParameterException if the given String value cannot be parsed as double or its value is smaller or equal to 0.
+	 * @ if the given String value cannot be parsed as double or its value is smaller or equal to 0.
 	 */
-	public static Double positiveDouble(String value) throws ParameterException{
+	public static Double positiveDouble(String value) {
 		Double doubleValue = Validate.isDouble(value);
 		positive(doubleValue);
 		return doubleValue;
@@ -781,9 +781,9 @@ public class Validate {
 	 * This method tries to parse a double value and then checks if it is smaller or equal to 0.
 	 * @param value The String value to validate.
 	 * @return The parsed double value
-	 * @throws ParameterException if the given String value cannot be parsed as double or its value is bigger than 0.
+	 * @ if the given String value cannot be parsed as double or its value is bigger than 0.
 	 */
-	public static Double notPositiveDouble(String value) throws ParameterException{
+	public static Double notPositiveDouble(String value) {
 		Double doubleValue = Validate.isDouble(value);
 		notPositive(doubleValue);
 		return doubleValue;
@@ -794,9 +794,9 @@ public class Validate {
 	 * This method tries to parse a double value and then checks if it is smaller than 0.
 	 * @param value The String value to validate.
 	 * @return The parsed double value
-	 * @throws ParameterException if the given String value cannot be parsed as double or its value is bigger or equal to 0.
+	 * @ if the given String value cannot be parsed as double or its value is bigger or equal to 0.
 	 */
-	public static Double negativeDouble(String value) throws ParameterException{
+	public static Double negativeDouble(String value) {
 		Double doubleValue = Validate.isDouble(value);
 		negative(doubleValue);
 		return doubleValue;
@@ -807,9 +807,9 @@ public class Validate {
 	 * This method tries to parse a double value and then checks if it is bigger or equal to 0.
 	 * @param value The String value to validate.
 	 * @return The parsed double value
-	 * @throws ParameterException if the given String value cannot be parsed as double or its value is smaller than 0.
+	 * @ if the given String value cannot be parsed as double or its value is smaller than 0.
 	 */
-	public static Double notNegativeDouble(String value) throws ParameterException{
+	public static Double notNegativeDouble(String value) {
 		Double doubleValue = Validate.isDouble(value);
 		notNegative(doubleValue);
 		return doubleValue;
@@ -822,9 +822,9 @@ public class Validate {
 	 * Checks if the given double is a probability (lies between 0.0 and 1.0, inclusive).
 	 * @param value The double value to validate.
 	 * @return The validated double value.
-	 * @throws ParameterException if the given double value lies outside the bounds.
+	 * @ if the given double value lies outside the bounds.
 	 */
-	public static void probability(Double value) throws ParameterException{
+	public static void probability(Double value) {
 		if(!validation) return;
 		inclusiveBetween(0.0, 1.0, value);
 	}
@@ -834,9 +834,9 @@ public class Validate {
 	 * @param value The double value to validate.
 	 * @param message The error message to include in the exception in case the validation fails.
 	 * @return The validated double value.
-	 * @throws ParameterException if the given double value lies outside the bounds.
+	 * @ if the given double value lies outside the bounds.
 	 */
-	public static void probability(Double value, String message) throws ParameterException{
+	public static void probability(Double value, String message) {
 		if(!validation) return;
 		Validate.inclusiveBetween(0.0, 1.0, value, message);
 	}
@@ -845,9 +845,9 @@ public class Validate {
 	 * Checks if the given String value is a probability (double value between 0.0 and 1.0, inclusive).
 	 * @param value The String value to validate.
 	 * @return The parsed double value.
-	 * @throws ParameterException if the given String value cannot be parsed to a double or lies outside the bounds.
+	 * @ if the given String value cannot be parsed to a double or lies outside the bounds.
 	 */
-	public static Double probability(String value) throws ParameterException{
+	public static Double probability(String value) {
 		Double doubleValue = notNegativeDouble(value);
 		Validate.inclusiveBetween(0.0, 1.0, doubleValue);
 		return doubleValue;
@@ -858,9 +858,9 @@ public class Validate {
 	 * @param value The String value to validate.
 	 * @param message The error message to include in the exception in case the validation fails.
 	 * @return The parsed double value.
-	 * @throws ParameterException if the given String value cannot be parsed to a double or lies outside the bounds.
+	 * @ if the given String value cannot be parsed to a double or lies outside the bounds.
 	 */
-	public static Double probability(String value, String message) throws ParameterException{
+	public static Double probability(String value, String message) {
 		Double doubleValue = notNegativeDouble(value);
 		Validate.inclusiveBetween(0.0, 1.0, doubleValue, message);
 		return doubleValue;
@@ -870,9 +870,9 @@ public class Validate {
 	 * Checks if the given double is a percentage (lies between 0.0 and 100.0, inclusive).
 	 * @param value The double value to validate.
 	 * @return The validated double value.
-	 * @throws ParameterException if the given double value lies outside the bounds.
+	 * @ if the given double value lies outside the bounds.
 	 */
-	public static void percentage(Double value) throws ParameterException{
+	public static void percentage(Double value) {
 		if(!validation) return;
 		inclusiveBetween(0.0, 100.0, value);
 	}
@@ -882,9 +882,9 @@ public class Validate {
 	 * @param value The double value to validate.
 	 * @param message The error message to include in the exception in case the validation fails.
 	 * @return The validated double value.
-	 * @throws ParameterException if the given double value lies outside the bounds.
+	 * @ if the given double value lies outside the bounds.
 	 */
-	public static void percentage(Double value, String message) throws ParameterException{
+	public static void percentage(Double value, String message) {
 		if(!validation) return;
 		inclusiveBetween(0.0, 100.0, value, message);
 	}
@@ -893,9 +893,9 @@ public class Validate {
 	 * Checks if the given String value is a percentage (double value between 0.0 and 100.0, inclusive).
 	 * @param value The String value to validate.
 	 * @return The parsed double value.
-	 * @throws ParameterException if the given String value cannot be parsed to a double or lies outside the bounds.
+	 * @ if the given String value cannot be parsed to a double or lies outside the bounds.
 	 */
-	public static Double percentage(String value) throws ParameterException{
+	public static Double percentage(String value) {
 		Double doubleValue = notNegativeDouble(value);
 		Validate.inclusiveBetween(0.0, 100.0, doubleValue);
 		return doubleValue;
@@ -906,9 +906,9 @@ public class Validate {
 	 * @param value The String value to validate.
 	 * @param message The error message to include in the exception in case the validation fails.
 	 * @return The parsed double value.
-	 * @throws ParameterException if the given String value cannot be parsed to a double or lies outside the bounds.
+	 * @ if the given String value cannot be parsed to a double or lies outside the bounds.
 	 */
-	public static Double percentage(String value, String message) throws ParameterException{
+	public static Double percentage(String value, String message) {
 		Double doubleValue = notNegativeDouble(value);
 		Validate.inclusiveBetween(0.0, 100.0, doubleValue, message);
 		return doubleValue;
@@ -922,9 +922,9 @@ public class Validate {
 	 * This method assumes that the String does not contain any path information but just the file name.<br>
 	 * file names must neither be <code>null</code> nor empty or contain file separators.
 	 * @param fileName The file name to validate.
-	 * @throws ParameterException If the given String is not a valid file name.
+	 * @ If the given String is not a valid file name.
 	 */
-	public static void fileName(String fileName) throws ParameterException{
+	public static void fileName(String fileName) {
 		if(!validation) return;
 		Validate.notNull(fileName);
 		Validate.notEmpty(fileName);
@@ -938,9 +938,9 @@ public class Validate {
 	 * This method assumes that the given String contains the complete file path.
 	 * @param fileName The file name (+path) to validate.
 	 * @return A file reference for the given file name.
-	 * @throws ParameterException if such a file does not exist or is not a directory.
+	 * @ if such a file does not exist or is not a directory.
 	 */
-	public static File directory(String fileName) throws ParameterException{
+	public static File directory(String fileName) {
 		Validate.notNull(fileName);
 		Validate.notEmpty(fileName);
 		return Validate.directory(new File(fileName));
@@ -950,9 +950,9 @@ public class Validate {
 	 * Checks if the given file exists and is a directory.
 	 * @param file The file to validate.
 	 * @return The validated file reference.
-	 * @throws ParameterException if the file does not exist or is not a directory.
+	 * @ if the file does not exist or is not a directory.
 	 */
-	public static File directory(File file) throws ParameterException{
+	public static File directory(File file) {
 		Validate.exists(file);
 		if(!file.isDirectory())
 			throw new ParameterException("\""+file+"\" is not a directory!");
@@ -964,9 +964,9 @@ public class Validate {
 	 * This method assumes that the given String contains the complete file path.
 	 * @param fileName The file name (+path) to validate.
 	 * @return A file reference for the given file name.
-	 * @throws ParameterException if such a file does not exist or is a directory.
+	 * @ if such a file does not exist or is a directory.
 	 */
-	public static File noDirectory(String fileName) throws ParameterException{
+	public static File noDirectory(String fileName) {
 		Validate.notNull(fileName);
 		Validate.notEmpty(fileName);
 		return Validate.noDirectory(new File(fileName));
@@ -976,9 +976,9 @@ public class Validate {
 	 * Checks if the given file exists and is not a directory.
 	 * @param file The file to validate.
 	 * @return The validated file reference.
-	 * @throws ParameterException if the file exists or is a directory.
+	 * @ if the file exists or is a directory.
 	 */
-	public static File noDirectory(File file) throws ParameterException{
+	public static File noDirectory(File file) {
 		Validate.exists(file);
 		if(file.isDirectory())
 			throw new ParameterException("\""+file+"\" is a directory!");
@@ -990,9 +990,9 @@ public class Validate {
 	 * This method assumes that the given String contains the complete file path.
 	 * @param fileName The file name (+path) to validate.
 	 * @return A file reference for the given file name.
-	 * @throws ParameterException if such a file does not exist.
+	 * @ if such a file does not exist.
 	 */
-	public static File exists(String fileName) throws ParameterException{
+	public static File exists(String fileName) {
 		Validate.notNull(fileName);
 		Validate.notEmpty(fileName);
 		return Validate.exists(new File(fileName));
@@ -1002,9 +1002,9 @@ public class Validate {
 	 * Checks if the given file exists.<br>
 	 * @param fileName The file to validate.
 	 * @return The validated file reference.
-	 * @throws ParameterException if the file does not exist.
+	 * @ if the file does not exist.
 	 */
-	public static File exists(File file) throws ParameterException{
+	public static File exists(File file) {
 		Validate.notNull(file);
 		if(!file.exists())
 			throw new ParameterException("\""+file+"\" does not exist!");
@@ -1016,9 +1016,9 @@ public class Validate {
 	 * This method assumes that the given String contains the complete file path.
 	 * @param fileName The file name (+path) to validate.
 	 * @return A file reference for the given file name.
-	 * @throws ParameterException if such a file exists.
+	 * @ if such a file exists.
 	 */
-	public static File notExists(String fileName) throws ParameterException{
+	public static File notExists(String fileName) {
 		Validate.notNull(fileName);
 		Validate.notEmpty(fileName);
 		return Validate.notExists(new File(fileName));
@@ -1028,16 +1028,16 @@ public class Validate {
 	 * Checks if the given file does not exist.<br>
 	 * @param fileName The file to validate.
 	 * @return The validated file reference.
-	 * @throws ParameterException if the file exists.
+	 * @ if the file exists.
 	 */
-	public static File notExists(File file) throws ParameterException{
+	public static File notExists(File file) {
 		Validate.notNull(file);
 		if(file.exists())
 			throw new ParameterException("\""+file+"\" exists!");
 		return file;
 	}
 	
-	public static void main(String[] args) throws ParameterException {
+	public static void main(String[] args)  {
 		File f = new File("/Users/stocker/testDirectory/");
 		System.out.println(f.isDirectory());
 	}

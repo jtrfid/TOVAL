@@ -1,6 +1,6 @@
 package de.invation.code.toval.validate;
 
-public class ParameterException extends Exception{
+public class ParameterException extends IllegalArgumentException {
 
 	private static final long serialVersionUID = 3432333417522563960L;
 	
