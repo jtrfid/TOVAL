@@ -41,10 +41,15 @@ public class AdjustableDiagramPanel extends JPanel {
 	
 	public AdjustableDiagramPanel(ScatterChartPanel _chart) {
 		setContent();
-		setChart(_chart, false);
+		setChart(_chart, false, false);
 	}
 	
-	public void setChart(ScatterChartPanel _chart, boolean repaint){
+	public void setChart(ScatterChartPanel _chart, boolean repaint, boolean takeOverTickSpacing){
+		if(takeOverTickSpacing && chart != null){
+			_chart.setTickSpacing(ValueDimension.X, chart.getTickInfo(ValueDimension.X).getMinorTickLength(), false);
+			_chart.setTickSpacing(ValueDimension.Y, chart.getTickInfo(ValueDimension.Y).getMinorTickLength(), false);
+		}
+		
 		chart = _chart;
 		diagramPanel.removeAll();
 		diagramPanel.add(new JScrollPane(chart, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);

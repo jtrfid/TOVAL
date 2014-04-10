@@ -203,6 +203,10 @@ public class ScatterChartPanel extends JPanel {
 		return tickInfo.get(dim);
 	}
 	
+	public void getTickSpacing(ValueDimension dim){
+		
+	}
+	
 	/**
 	 * Sets the tick spacing for the coordinate axis of the given dimension.<br>
 	 * {@link minorTickSpacing} sets the minor tick spacing,

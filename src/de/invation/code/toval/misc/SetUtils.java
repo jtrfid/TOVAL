@@ -94,7 +94,7 @@ public class SetUtils {
 		return result;
 	}
 	
-	public static <T> List<List<T>> getKElementarySets(Set<T> set, int k) {
+	public static synchronized <T> List<List<T>> getKElementarySets(Set<T> set, int k) {
 		return ListUtils.getKElementaryLists(new ArrayList<T>(set), k);
 	}
 	

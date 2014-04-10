@@ -57,7 +57,7 @@ public class IndexCounter<T> implements Iterator<Map<T, Integer>> {
 		return null;
 	}
 	
-	public void addNewIndex(T key, int maxIndex){ 
+	public synchronized void addNewIndex(T key, int maxIndex){ 
 		if(acceptsNewIndexes){
 			currentIndexes.put(key, -1);
 			if(!order.isEmpty()){
