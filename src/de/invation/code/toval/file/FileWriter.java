@@ -283,7 +283,7 @@ public class FileWriter {
 	 * @throws ParameterException if some parameters are <code>null</code>, <br>
 	 * the file path is not a directory or the file name is an empty string.
 	 */
-	private void initialize(String fileName, String path) throws ParameterException {
+	private synchronized void initialize(String fileName, String path) throws ParameterException {
 		if(!path.equals(this.path)){
 			checkPath(path);
 			this.path = path;
@@ -299,7 +299,7 @@ public class FileWriter {
 	 * @param logPath Desired log path.
 	 * @throws ParameterException if the given path is <code>null</null> or not a directory.
 	 */
-	private void checkPath(String logPath) throws ParameterException {
+	private synchronized void checkPath(String logPath) throws ParameterException {
 		Validate.notNull(path);
 		File cPath = new File(logPath);
 		if(!cPath.exists())
@@ -313,7 +313,7 @@ public class FileWriter {
 	 * @param fileName Desired file name.
 	 * @throws IllegalArgumentException if the given file name is empty.
 	 */
-	private void checkFileName(String fileName) throws ParameterException{
+	private synchronized void checkFileName(String fileName) throws ParameterException{
 		Validate.notNull(fileName);
 		File cFile = new File(fileName);
 		if(cFile.getName().length()==0)
@@ -324,7 +324,7 @@ public class FileWriter {
 	 * Creates the output file on the file system.
 	 * @throws IOException if the output file is a directory or not writable.
 	 */
-	private void prepareFile() throws IOException{
+	private synchronized void prepareFile() throws IOException{
 		outputFile = new File(getFileName());
 		if(outputFile.exists()) 
 			outputFile.delete();
@@ -339,7 +339,7 @@ public class FileWriter {
 	 * Creates a buffered writer for writing content into the output file.
 	 * @throws IOException if the file cannot be found.
 	 */
-	private void prepareWriter() throws IOException{
+	private synchronized void prepareWriter() throws IOException{
 		output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputFile), charset));
 	}
 	
@@ -349,7 +349,7 @@ public class FileWriter {
 	 * @see #prepareFile()
 	 * @see #prepareWriter()
 	 */
-	protected void prepare() throws IOException{
+	protected synchronized void prepare() throws IOException{
 		if(output == null){
 			prepareFile();
 			prepareWriter();
@@ -359,23 +359,25 @@ public class FileWriter {
 	
 	//------- Functionality ------------------------------------------------------------------
 	
-	public void write(String str) throws IOException{
+	public synchronized void write(String str) throws IOException{
 		prepare();
 		output.write(str);
 	}
 	
-	public void writeLine(String line) throws IOException{
+	public synchronized void writeLine(String line) throws IOException{
 		prepare();
 		output.write(line);
 		output.write(eolString);
+		output.flush();
 	}
 	
-	public void newLine() throws IOException{
+	public synchronized void newLine() throws IOException{
 		prepare();
 		output.newLine();
+		output.flush();
 	}
 	
-	public void closeFile() throws IOException {
+	public synchronized void closeFile() throws IOException {
 		if(output != null){
 			output.close();
 		}

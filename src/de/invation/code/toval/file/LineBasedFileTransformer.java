@@ -1,6 +1,5 @@
 package de.invation.code.toval.file;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -15,13 +14,16 @@ public class LineBasedFileTransformer {
 	
 	protected Charset inputCharset = Charset.forName("UTF-8");
 	protected Charset outputCharset = Charset.forName("UTF-8");
-	protected File outputFile = null;
+
 	protected boolean omitFirstLine = false;
 
 	protected FileReader input = null;
 	protected FileWriter output = null;
 	
 	private String fileExtension = null;
+	
+	private int inputLines = 0;
+	private int outputLines = 0;
 	
 	
 	//------- Constructors -------------------------------------------------------------------
@@ -70,11 +72,18 @@ public class LineBasedFileTransformer {
 		return null;
 	}
 	
+	public int getInputLines() {
+		return inputLines;
+	}
+
+	public int getOutputLines() {
+		return outputLines;
+	}
 	
 	//------- Methods for setting up the parser ----------------------------------------------
-	
-	protected void initialize(String fileName) throws IOException, ParameterException {
-		Validate.notNull(fileName);
+
+	protected synchronized void initialize(String fileName) throws IOException, ParameterException {
+		Validate.notNull(fileName, "File Name must not be null");
 		input = new FileReader(fileName, inputCharset);
 		String inputName = input.getFile().getAbsolutePath();
 		String outputFileName = inputName.substring(0, inputName.indexOf('.'))+"_output";
@@ -105,6 +114,7 @@ public class LineBasedFileTransformer {
 			if(!continueParsing(lineCount))
 				break;
 		}
+		inputLines = lineCount;
 		input.closeFile();
 		output.closeFile();
 	}
@@ -113,12 +123,18 @@ public class LineBasedFileTransformer {
 		return true;
 	}
 	
-	private void writeOutputLine(String outputLine) throws IOException{
-		for(String line: transformLine(outputLine))
+	private synchronized void writeOutputLine(String outputLine) throws IOException{
+		Set<String> lines = transformLine(outputLine);
+		if(lines == null || lines.isEmpty())
+			return;
+		for(String line: lines){
 			output.writeLine(line);
+			outputLines++;
+		}
+		
 	}
 	
-	protected Set<String> transformLine(String line){
+	protected synchronized Set<String> transformLine(String line){
 		return new HashSet<String>(Arrays.asList(line));
 	}
 

@@ -2,12 +2,14 @@ package de.invation.code.toval.misc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
 import de.invation.code.toval.math.Permutations;
 import de.invation.code.toval.reflect.GenericReflection;
+import de.invation.code.toval.validate.Validate;
 
 
 
@@ -46,8 +48,40 @@ public class ArrayUtils {
 		return result;
 	}
 	
+	public static byte[] createArray(int size, byte defaultValue){
+		byte[] result = new byte[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = defaultValue;
+		}
+		return result;
+	}
+	
 	public static short[] createArray(int size, short defaultValue){
 		short[] result = new short[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = defaultValue;
+		}
+		return result;
+	}
+	
+	public static double[] createArray(int size, double defaultValue){
+		double[] result = new double[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = defaultValue;
+		}
+		return result;
+	}
+	
+	public static short[] createRandomArray(int size, short maxValue){
+		short[] result = new short[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = (short) (rand.nextInt(maxValue) + 1);
+		}
+		return result;
+	}
+	
+	public static int[] createArray(int size, int defaultValue){
+		int[] result = new int[size];
 		for(int i=0; i<result.length; i++){
 			result[i] = defaultValue;
 		}
@@ -265,6 +299,163 @@ public class ArrayUtils {
 		return builder.toString();
 	}
 	
+	/**
+	 * Checks if all given arrays contain the same values.<br>
+	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
+	 * @param arrs
+	 * @return
+	 */
+	public static boolean containSameElementsSorted(short[]... arrs){
+		Validate.notNull(arrs);
+		if(arrs.length == 1)
+			return true;
+		
+		int firstSize = arrs[0].length;
+		for(int i=1; i<arrs.length; i++){
+			if(arrs[i].length != firstSize){
+				return false;
+			}
+		}
+		
+		for(int j=0; j<firstSize; j++){
+			short firstValue = arrs[0][j];
+			for(int k=1; k<arrs.length; k++){
+				if(arrs[k][j] != firstValue)
+					return false;
+			}
+		}
+		return true;
+	}
 	
+	
+	/**
+	 * Determines the intersection of the given arrays.<br>
+	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
+	 * @param arrs
+	 * @return
+	 */
+	public static short[] intersectionSorted(short[]... arrs){
+		if(arrs.length == 0)
+			return new short[0];
+		if(arrs.length == 1)
+			return arrs[0];
+		
+		short[][] arrList = new short[arrs.length-1][];
+		short[] minLengthArray = arrs[0];
+		for(int i=1; i<arrs.length; i++){
+			short[] arr = arrs[i];
+			if(arr.length < minLengthArray.length){
+				arrList[i-1] = minLengthArray;
+				minLengthArray = arr;
+			} else {
+				arrList[i-1] = arr;
+			}
+		}
+		
+		short[] pointer = ArrayUtils.createArray(arrs.length-1, (short) 0);
+		
+		List<Short> commonIndices = new ArrayList<Short>(minLengthArray.length);
+		for(short i=0; i<minLengthArray.length; i++){
+			short stateIndex = minLengthArray[i];
+			boolean insert = true;
+			for(short j=0; j<pointer.length; j++){
+				for(short k=pointer[j]; k<arrList[j].length; k++){
+					if(stateIndex < arrList[j][k]){
+						// Array does not contain the state-index
+						break;
+					} else if(stateIndex > arrList[j][k]){
+						if(k < arrList[j].length - 1){
+							pointer[j] = (short) (pointer[j] + 1);
+						} else {
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+				if(arrList[j][pointer[j]] != stateIndex){
+					insert = false;
+					break;
+				}
+			}
+			if(insert){
+				commonIndices.add(stateIndex);
+			}
+		}
+		
+		short[] result = new short[commonIndices.size()];
+		for(int l=0; l<commonIndices.size(); l++){
+			result[l] = commonIndices.get(l);
+		}
+		return result;
+	}
+	
+	public static byte max(byte[] arr){
+		byte maxValue = Byte.MIN_VALUE;
+		for(byte value: arr){
+			if(value > maxValue){
+				maxValue = value;
+			}
+		}
+		return maxValue;
+	}
+	
+	public static byte min(byte[] arr){
+		byte minValue = Byte.MAX_VALUE;
+		for(byte value: arr){
+			if(value < minValue){
+				minValue = value;
+			}
+		}
+		return minValue;
+	}
+	
+	public static MinMaxByte minMax(byte[] arr){
+		byte minValue = Byte.MAX_VALUE;
+		byte maxValue = Byte.MIN_VALUE;
+		for(byte value: arr){
+			if(value < minValue){
+				minValue = value;
+			}
+			if(value > maxValue){
+				maxValue = value;
+			}
+		}
+		return new MinMaxByte(minValue, maxValue);
+	}
+	
+	public static short max(short[] arr){
+		short maxValue = Short.MIN_VALUE;
+		for(short value: arr){
+			if(value > maxValue){
+				maxValue = value;
+			}
+		}
+		return maxValue;
+	}
+	
+	public static short min(short[] arr){
+		short minValue = Short.MAX_VALUE;
+		for(short value: arr){
+			if(value < minValue){
+				minValue = value;
+			}
+		}
+		return minValue;
+	}
+	
+	public static MinMaxShort minMax(short[] arr){
+		short minValue = Short.MAX_VALUE;
+		short maxValue = Short.MIN_VALUE;
+		for(short value: arr){
+			if(value < minValue){
+				minValue = value;
+			}
+			if(value > maxValue){
+				maxValue = value;
+			}
+		}
+		return new MinMaxShort(minValue, maxValue);
+	}
 
 }

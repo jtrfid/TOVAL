@@ -18,8 +18,12 @@ public class NetDiagramModel extends RegularPolygon{
 	protected Map<Object, Integer> objectIndexes = new HashMap<Object,Integer>();
 	protected Map<Integer, Object> indexObjects = new HashMap<Integer, Object>();
 	protected double maxArea = 0.0;
+	
+	public NetDiagramModel(int radius, int numPoints) throws ParameterException {
+		super(radius, numPoints);
+	}
 
-	public NetDiagramModel(int radius, Object... objects) throws ParameterException{
+	public NetDiagramModel(int radius, Object... objects) {
 		super(radius, objects.length);
 		percentages = new ArrayList<Double>();
 		int index = 0;
@@ -36,7 +40,7 @@ public class NetDiagramModel extends RegularPolygon{
 		return new Position((int) (origin.getX() + percentages.get(pointIndex) * radius * Math.cos(pointIndex * 2 * Math.PI / numPoints)), (int) (origin.getY() + percentages.get(pointIndex) * radius * Math.sin(pointIndex * 2 * Math.PI / numPoints)));
 	}
 	
-	public void addObject(Object object) throws ParameterException{
+	public void addObject(Object object) {
 		if(objectIndexes.keySet().contains(object))
 			throw new ParameterException("Known object: " + object);
 		super.addPoint();
@@ -45,7 +49,7 @@ public class NetDiagramModel extends RegularPolygon{
 		percentages.add(1.0);
 	}
 	
-	public void removeObject(Object object) throws ParameterException{
+	public void removeObject(Object object) {
 		if(!objectIndexes.keySet().contains(object))
 			throw new ParameterException("Unknown object: " + object);
 
@@ -69,11 +73,11 @@ public class NetDiagramModel extends RegularPolygon{
 	}
 
 	@Override
-	public void removePoint() throws ParameterException {
+	public void removePoint() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setPointPercentage(Object object, double percentage) throws ParameterException{
+	public void setPointPercentage(Object object, double percentage) {
 		if(!objectIndexes.keySet().contains(object))
 			throw new ParameterException("Unknown object: " + object);
 		Validate.probability(percentage);
@@ -108,7 +112,7 @@ public class NetDiagramModel extends RegularPolygon{
 		return getArea() / maxArea;
 	}
 	
-	public static void main(String[] args) throws ParameterException {
+	public static void main(String[] args) {
 		NetDiagramModel c = new NetDiagramModel(100, "a","b","c","d","e","f");
 		System.out.println(c.getCoordinates());
 		System.out.println(c.getArea());
