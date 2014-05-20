@@ -1,5 +1,6 @@
 package de.invation.code.toval.time;
 
+@SuppressWarnings("rawtypes")
 public class Test implements OverlapListener{
 	
 	public void startTest(){

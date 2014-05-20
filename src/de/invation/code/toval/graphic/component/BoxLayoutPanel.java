@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 
 public class BoxLayoutPanel extends JPanel {
 
+	private static final long serialVersionUID = 3858209653770136507L;
+
 	public BoxLayoutPanel() {
 		super();
 		setLayout(BoxLayout.LINE_AXIS);

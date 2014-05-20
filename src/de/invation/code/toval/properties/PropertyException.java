@@ -2,6 +2,8 @@ package de.invation.code.toval.properties;
 
 
 public class PropertyException extends Exception {
+
+	private static final long serialVersionUID = 1555494643930159891L;
 	
 	private final String messageFormat = "Invalid property [%s]: %s";
 	private final String extendedMessageFormat = "Invalid property [%s]: %s, %s";

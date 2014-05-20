@@ -111,6 +111,7 @@ public abstract class AbstractConstraint<T extends Object> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		AbstractConstraint other = (AbstractConstraint) obj;
 		if (element == null) {
 			if (other.element != null)

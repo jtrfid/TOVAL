@@ -40,6 +40,7 @@ public class ArrayUtils {
 	 * @param defaultValue The default value to use
 	 * @return The created array
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T[] createArray(int size, T defaultValue){
 		T[] result = (T[]) GenericReflection.newArray(defaultValue.getClass(), size);
 		for(int i=0; i<result.length; i++){

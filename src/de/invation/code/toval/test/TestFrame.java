@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 
 public class TestFrame extends JFrame {
 
+	private static final long serialVersionUID = 3042808150443175251L;
+
 	public TestFrame() {
 		setLayout(new FlowLayout());
 		final JPanel panel = new JPanel();

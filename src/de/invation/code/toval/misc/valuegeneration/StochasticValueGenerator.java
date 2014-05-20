@@ -144,6 +144,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 		return null;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Class getValueClass() throws InconsistencyException{
 		if(keys.isEmpty())

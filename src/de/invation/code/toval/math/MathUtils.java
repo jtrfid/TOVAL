@@ -1,7 +1,6 @@
 package de.invation.code.toval.math;
 
 import java.math.BigInteger;
-import java.util.Set;
 
 public class MathUtils {
 

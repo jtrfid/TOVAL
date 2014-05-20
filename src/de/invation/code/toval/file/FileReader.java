@@ -64,6 +64,7 @@ public class FileReader {
 	
 	protected void adjustSystemProperties() throws IOException{
 		systemLineSeparatorBackup = System.getProperty("line.separator");
+		@SuppressWarnings("resource")
 		InputStreamReader reader = new InputStreamReader(new FileInputStream(inputFile), charset);
 		String lineSeparator = null;
 		int next;

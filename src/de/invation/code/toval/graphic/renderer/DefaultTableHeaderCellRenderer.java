@@ -79,7 +79,8 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
    * @param column the column index.
    * @return the sort icon, or null if the column is unsorted.
    */
-  protected Icon getIcon(JTable table, int column) {
+  @SuppressWarnings("incomplete-switch")
+protected Icon getIcon(JTable table, int column) {
     SortKey sortKey = getSortKey(table, column);
     if (sortKey != null && table.convertColumnIndexToView(sortKey.getColumn()) == column) {
       switch (sortKey.getSortOrder()) {
@@ -99,7 +100,8 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
    * @param column the column index
    * @return the SortKey, or null if the column is unsorted
    */
-  protected SortKey getSortKey(JTable table, int column) {
+  @SuppressWarnings("rawtypes")
+protected SortKey getSortKey(JTable table, int column) {
     RowSorter rowSorter = table.getRowSorter();
     if (rowSorter == null) {
       return null;

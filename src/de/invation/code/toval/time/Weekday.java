@@ -2,7 +2,6 @@ package de.invation.code.toval.time;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public enum Weekday implements Comparable<Weekday>{

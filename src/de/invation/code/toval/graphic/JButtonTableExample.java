@@ -21,6 +21,8 @@ import javax.swing.table.TableCellRenderer;
 
 public class JButtonTableExample extends JFrame {
 
+	private static final long serialVersionUID = 2716384526964971176L;
+
 	public JButtonTableExample() {
 		super("JButtonTable Example");
 
@@ -50,6 +52,8 @@ public class JButtonTableExample extends JFrame {
 
 	class PanelRenderer extends JPanel implements TableCellRenderer {
 
+		private static final long serialVersionUID = 7883251235116715370L;
+
 		public PanelRenderer() {
 			setOpaque(true);
 			init();
@@ -76,10 +80,11 @@ public class JButtonTableExample extends JFrame {
 	}
 
 	class PanelEditor extends DefaultCellEditor {
+
+		private static final long serialVersionUID = 3193987605258632958L;
+
 		protected JPanel panel;
-
 		protected JButton button1;
-
 		protected JButton button2;
 
 		public PanelEditor(JCheckBox checkBox) {

@@ -405,7 +405,6 @@ public class ListUtils {
 	}
 	
 	public static class Partition<T> {
-		private static final long serialVersionUID = 1L;
 		
 		private List<T> basicSet = null;
 		private List<List<T>> subsets = new ArrayList<List<T>>();
