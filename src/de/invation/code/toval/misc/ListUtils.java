@@ -454,5 +454,58 @@ public class ListUtils {
 		}
 		return result;
 	}
+	
+	public static <T> List<Partition<T>> getBiPartitions(List<T> input, int sizeOfFirstPartition){
+		List<Partition<T>> result = new ArrayList<Partition<T>>();
+		boolean reverse = input.size()-sizeOfFirstPartition<sizeOfFirstPartition;
+		List<List<T>> r = rek(input, 0, input.size()-1-sizeOfFirstPartition, Math.min(sizeOfFirstPartition, input.size()-sizeOfFirstPartition)-1,"");
+		for(List<T> l: r){
+			Partition<T> part = new Partition<T>(input);
+			if(reverse){
+				part.addSubset(ListUtils.getListWithout(input, l));
+				part.addSubset(l);
+			} else {
+				part.addSubset(l);
+				part.addSubset(ListUtils.getListWithout(input, l));
+			}
+			result.add(part);
+		}
+		return result;
+	}
+	
+	public static <T> List<List<T>> rek(List<T> input, int startIndex, int endIndex, int number, String header){
+//		System.out.println(header+"call("+startIndex+", "+endIndex+", "+number+")");
+//		System.out.println(header+"start: "+startIndex+", end: "+endIndex+", number: "+number);
+//		System.out.println(input + " " + itemIndex);
+		List<List<T>> result = new ArrayList<List<T>>();
+		
+			if(number==0){
+//				System.out.println(header+"return trivial result");
+				for(int i=startIndex; i<input.size(); i++){
+					List<T> newList = new ArrayList<T>();
+					newList.add(input.get(i));
+					result.add(newList);
+//					System.out.println(header+"add: "+newList);
+				}
+			} else {
+				//
+//				System.out.println(header+"go deeper");
+				for(int i=startIndex; i<=endIndex; i++){
+//					System.out.println(header+"i = "+i);
+					T head = input.get(i);
+//					System.out.println(header+"head: "+head);
+						List<List<T>> rekResult = rek(input, i+1, endIndex+1, number-1, header+"   ");
+						for(List<T> list: rekResult){
+							List<T> newList = new ArrayList<T>(Collections.singletonList(head));
+							newList.addAll(list);
+							result.add(newList);
+//							System.out.println(header+"add: "+newList);
+						}
+				}
+			}
+
+//		System.out.println(header+"return "+result);
+		return result;		
+	}
 
 }
