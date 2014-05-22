@@ -89,6 +89,14 @@ public class ArrayUtils {
 		return result;
 	}
 	
+	public static int[] createAndInitializeArray(int size, int begin){
+		int[] result = new int[size];
+		int c=0;
+		for(int i=begin; i<size+begin; i++)
+			result[c++] = i;
+		return result;
+	}
+	
 	/**
 	 * Returns a random element of the given array.
 	 * @param <T> Type of array elements
@@ -458,5 +466,4 @@ public class ArrayUtils {
 		}
 		return new MinMaxShort(minValue, maxValue);
 	}
-
 }
