@@ -45,9 +45,9 @@
 	<target name="package" depends="compile" description="Packages the project to JAR files">
 		<echo message="${ant.project.name}: ${ant.file}" />
 		<echo>Deleting old JARs...</echo>
-		<delete file="${target.dir}/${jar.file.name}.jar" />
-		<delete file="${target.dir}/${jar.sources.file.name}.jar" />
-		<delete file="${target.dir}/${jar.javadoc.file.name}.jar" />
+		<delete file="${target.dir.jar}/${jar.file.name}.jar" />
+		<delete file="${target.dir.jar}/${jar.sources.file.name}.jar" />
+		<delete file="${target.dir.jar}/${jar.javadoc.file.name}.jar" />
 
 		<echo>Generating javadoc files...</echo>
 		<javadoc sourcepath="${src.dir}" destdir="${docs.temp.dir}">
