@@ -60,6 +60,10 @@ public class Debug {
 		debugMode = mode;
 	} 
 	
+	public static DebugMode getDebugMode(){
+		return debugMode;
+	}
+	
 	public static boolean isActive(){
 		return debugMode != DebugMode.SILENT;
 	}

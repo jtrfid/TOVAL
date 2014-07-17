@@ -1,5 +1,6 @@
 package de.invation.code.toval.time;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -7,9 +8,12 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
-public class TimeValue implements Comparable<TimeValue>{
+public class TimeValue implements Comparable<TimeValue>, Serializable{
 	
+	private static final long serialVersionUID = -7827974152969997391L;
+
 	private final String toStringFormat = "%s %s";
+	private final String toStringFormatShort = "%s%s";
 	
 	protected static final long FACTOR_SECONDS = 1000;
 	protected static final long FACTOR_MINUTES = FACTOR_SECONDS*60;
@@ -37,6 +41,14 @@ public class TimeValue implements Comparable<TimeValue>{
 	
 	public TimeValue(Long value, TimeScale scale) throws ParameterException{
 		this(value.doubleValue(), scale);
+	}
+	
+	public void activateShortDescriptorMode(){
+		this.scale.activateShortDescriptorMode();
+	}
+	
+	public void activateLongDescriptorMode(){
+		this.scale.activateLongDescriptorMode();
 	}
 
 	public Double getValue() {
@@ -193,6 +205,8 @@ public class TimeValue implements Comparable<TimeValue>{
 		}
 	}
 	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -224,6 +238,8 @@ public class TimeValue implements Comparable<TimeValue>{
 	@Override
 	public String toString(){
 		NumberFormat nf = new DecimalFormat("0.##");
+		if(scale.isShortDesctiptorMode())
+			return String.format(toStringFormatShort, nf.format(value), scale);
 		return String.format(toStringFormat, nf.format(value), scale);
 	}
 

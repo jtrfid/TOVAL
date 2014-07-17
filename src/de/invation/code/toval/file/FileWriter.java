@@ -359,14 +359,14 @@ public class FileWriter {
 	
 	//------- Functionality ------------------------------------------------------------------
 	
-	public synchronized void write(String str) throws IOException{
+	public synchronized void write(Object obj) throws IOException{
 		prepare();
-		output.write(str);
+		output.write(obj.toString());
 	}
 	
-	public synchronized void writeLine(String line) throws IOException{
+	public synchronized void writeLine(Object obj) throws IOException{
 		prepare();
-		output.write(line);
+		output.write(obj.toString());
 		output.write(eolString);
 		output.flush();
 	}

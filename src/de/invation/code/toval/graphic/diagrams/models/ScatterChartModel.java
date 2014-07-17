@@ -18,6 +18,10 @@ public class ScatterChartModel<S extends Number & Comparable<? super S>,T extend
 	public ScatterChartModel() {}
 
 	public ScatterChartModel(List<S> xValues, List<T> yValues, boolean equalSizes) {
+		setValues(xValues, yValues, equalSizes);
+	}
+	
+	protected void setValues(List<S> xValues, List<T> yValues, boolean equalSizes){
 		if(xValues == null || yValues == null)
 			throw new NullPointerException();
 		if(equalSizes)

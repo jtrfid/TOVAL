@@ -19,11 +19,11 @@ public class DotChartPanel extends ScatterChartPanel {
 	}
 	
 	public DotChartPanel(DotChartModel<?> dotChart, boolean zeroBased) {
-		this(dotChart, zeroBased, false);
+		this(dotChart, zeroBased, false, false);
 	}
 	
-	public DotChartPanel(DotChartModel<?> dotChart, boolean zeroBased, boolean onlyIntegerTicks) {
-		super(dotChart, zeroBased, onlyIntegerTicks, true, false);
+	public DotChartPanel(DotChartModel<?> dotChart, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		super(dotChart, zeroBased, onlyIntegerTicksX, onlyIntegerTicksY, true, false);
 	}
 	
 	@Override

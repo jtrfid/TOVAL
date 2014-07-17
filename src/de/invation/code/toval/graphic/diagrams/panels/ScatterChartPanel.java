@@ -53,7 +53,7 @@ public class ScatterChartPanel extends JPanel {
 	 * Indicates what kind of tick values are valid.<br>
 	 * The default behavior is to use floating-point values.
 	 */
-	private boolean onlyIntegerTicks = false;
+	private HashMap<ValueDimension, Boolean> onlyIntegerTicks = new HashMap<ValueDimension, Boolean>();
 	/**
 	 * Defines the painting region of the diagram (where axes and values are drawed on).<br>
 	 * It is calculated out of the available space of the diagram panel and its spacing.
@@ -95,7 +95,7 @@ public class ScatterChartPanel extends JPanel {
 	 * @see #zeroBased
 	 */
 	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased) {
-		this(diagram, zeroBased, false);
+		this(diagram, zeroBased, false, false);
 	}
 	
 	/**
@@ -106,8 +106,8 @@ public class ScatterChartPanel extends JPanel {
 	 * @param onlyIntegerTicks If true only integers are allowed as tick values
 	 * @see #zeroBased
 	 */
-	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicks) {
-		this(diagram, zeroBased, onlyIntegerTicks, true, true);
+	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		this(diagram, zeroBased, onlyIntegerTicksX, onlyIntegerTicksY, true, true);
 	}
 	
 	/**
@@ -120,16 +120,19 @@ public class ScatterChartPanel extends JPanel {
 	 * @param onlyIntegerTicks If true only integers are allowed as tick values
 	 * @see #zeroBased
 	 */
-	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicks, boolean paintDimAxisX, boolean paintDimAxisY) {
+	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY, boolean paintDimAxisX, boolean paintDimAxisY) {
 		this.diagram = diagram;
 		this.zeroBased = zeroBased;
-		this.onlyIntegerTicks = onlyIntegerTicks;
+		onlyIntegerTicks.put(ValueDimension.X, onlyIntegerTicksX);
+		onlyIntegerTicks.put(ValueDimension.Y, onlyIntegerTicksY);
 		tickInfo.put(ValueDimension.X, new TickInfo(diagram.getValues(ValueDimension.X).min().doubleValue(), diagram.getValues(ValueDimension.X).max().doubleValue(), zeroBased));
 		tickInfo.put(ValueDimension.Y, new TickInfo(diagram.getValues(ValueDimension.Y).min().doubleValue(), diagram.getValues(ValueDimension.Y).max().doubleValue(), zeroBased));
 		paintDimAxis.put(ValueDimension.X, paintDimAxisX);
 		paintDimAxis.put(ValueDimension.Y, paintDimAxisY);
-		if(onlyIntegerTicks){
+		if(onlyIntegerTicksX){
 			setTickSpacing(ValueDimension.X, 1, false);
+		}
+		if(onlyIntegerTicksY){
 			setTickSpacing(ValueDimension.Y, 1, false);
 		}
 		setBackground(getBackground());
@@ -203,10 +206,6 @@ public class ScatterChartPanel extends JPanel {
 		return tickInfo.get(dim);
 	}
 	
-	public void getTickSpacing(ValueDimension dim){
-		
-	}
-	
 	/**
 	 * Sets the tick spacing for the coordinate axis of the given dimension.<br>
 	 * {@link minorTickSpacing} sets the minor tick spacing,
@@ -229,7 +228,7 @@ public class ScatterChartPanel extends JPanel {
 	 */
 	public void setTickSpacing(ValueDimension dim, double minorTickSpacing, int multiplicator, boolean repaint) {
 		double tickSpacing = minorTickSpacing;
-		if(onlyIntegerTicks) {
+		if(onlyIntegerTicks.get(dim)) {
 			tickSpacing = (int) tickSpacing;
 			if (tickSpacing == 0) tickSpacing = 1;
 		}

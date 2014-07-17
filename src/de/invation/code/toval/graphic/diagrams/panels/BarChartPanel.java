@@ -20,8 +20,8 @@ public class BarChartPanel extends ScatterChartPanel {
 		super(diagram, zeroBased);
 	}
 	
-	public BarChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicks) {
-		super(diagram, zeroBased, onlyIntegerTicks);
+	public BarChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		super(diagram, zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ public class ValueStat<U extends Number & Comparable<? super U>> {
 	protected int valueCount = 0;
 	protected final String toStringFormat = "[values: %s; min: %s; max: %s; range: %s; valid: %s]";
 	protected boolean acceptNulls = true;
+	protected int nullCount = 0;
 
 	public ValueStat(boolean acceptNulls){
 		this.acceptNulls = acceptNulls;
@@ -51,6 +52,7 @@ public class ValueStat<U extends Number & Comparable<? super U>> {
 		if(number == null){
 			if(acceptNulls==true) {
 				valueCount++;
+				nullCount++;
 				return;
 			} else throw new NullPointerException();
 		}
@@ -61,18 +63,19 @@ public class ValueStat<U extends Number & Comparable<? super U>> {
 	}
 	
 	public void reset() {
-		reset(null, null, 0);
+		reset(null, null, 0, 0);
 	}
 	
 	public boolean isValid(){
 		return min != null;
 	}
 	
-	protected void reset(U min, U max, int valueCount) {
+	protected void reset(U min, U max, int valueCount, int nullCount) {
 		this.min = min;
 		this.max = max;
 		setRange();
 		this.valueCount = valueCount;
+		this.nullCount = nullCount;
 	}
 	
 	protected void setRange() {
@@ -87,5 +90,20 @@ public class ValueStat<U extends Number & Comparable<? super U>> {
 		return String.format(toStringFormat, valueCount, min, max, range, isValid());
 	}
 
+	public double significance(){
+		if(!containsNulls() || containsOnlyNulls())
+			return 1.0;
+		return (valueCount() - nullCount + 0.0) / (valueCount() + 0.0);
+	}
+	
+	public boolean containsNulls(){
+		return nullCount > 0;
+	}
+	
+	public boolean containsOnlyNulls(){
+		if(!containsNulls())
+			return false;
+		return valueCount == nullCount;
+	}
 
 }

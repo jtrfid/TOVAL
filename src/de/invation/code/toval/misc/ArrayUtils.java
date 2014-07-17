@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import de.invation.code.toval.math.MathUtils;
 import de.invation.code.toval.math.Permutations;
 import de.invation.code.toval.reflect.GenericReflection;
 import de.invation.code.toval.validate.Validate;
@@ -45,6 +46,21 @@ public class ArrayUtils {
 		T[] result = (T[]) GenericReflection.newArray(defaultValue.getClass(), size);
 		for(int i=0; i<result.length; i++){
 			result[i] = defaultValue;
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns a new array with the given size containing the default value at each index.
+	 * @param size The desired size of the array.
+	 * @param defaultValue The default value to use
+	 * @return The created array
+	 */
+	@SuppressWarnings("unchecked")
+	public static Integer[] createAndInitializeArray(int size, Integer start){
+		Integer[] result = new Integer[size];
+		for(int i=0; i<result.length; i++){
+			result[i] = start++;
 		}
 		return result;
 	}
@@ -360,6 +376,13 @@ public class ArrayUtils {
 				arrList[i-1] = arr;
 			}
 		}
+//		
+//		System.out.println("--");
+//		System.out.println(Arrays.toString(minLengthArray));
+//		for(short[] otherArr: arrList){
+//			System.out.println(Arrays.toString(otherArr));
+//		}
+//		System.out.println("--");
 		
 		short[] pointer = ArrayUtils.createArray(arrs.length-1, (short) 0);
 		
@@ -466,4 +489,5 @@ public class ArrayUtils {
 		}
 		return new MinMaxShort(minValue, maxValue);
 	}
+
 }

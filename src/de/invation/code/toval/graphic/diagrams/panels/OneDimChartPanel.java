@@ -19,11 +19,11 @@ public class OneDimChartPanel extends ScatterChartPanel {
 	}
 	
 	public OneDimChartPanel(OneDimChartModel<?> values, boolean zeroBased) {
-		this(values, zeroBased, false);
+		this(values, zeroBased, false, false);
 	}
 	
-	public OneDimChartPanel(OneDimChartModel<?> values, boolean zeroBased, boolean onlyIntegerTicks) {
-		super(values, zeroBased, onlyIntegerTicks, true, false);
+	public OneDimChartPanel(OneDimChartModel<?> values, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		super(values, zeroBased, onlyIntegerTicksX, onlyIntegerTicksY, true, false);
 	}
 	
 	@Override

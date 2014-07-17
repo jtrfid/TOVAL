@@ -1,13 +1,20 @@
 package de.invation.code.toval.misc;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import de.invation.code.toval.file.FileWriter;
+import de.invation.code.toval.math.CombinationsCalculator;
 import de.invation.code.toval.math.Permutations;
+import de.invation.code.toval.time.TimeScale;
+import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.types.HashList;
 
 
@@ -302,6 +309,17 @@ public class ListUtils {
 		return result;
 	}
 	
+	public static String toString(List<?> coll, char delimiter){
+		StringBuilder builder = new StringBuilder();
+		for(int i=0; i<coll.size(); i++){
+			builder.append(coll.get(i));
+			if(i<coll.size()-1)
+				builder.append(delimiter);
+		}
+		return builder.toString();
+	}
+	
+	
 	/**
 	 * Returns an Iterator for all possible permutations of the given list.
 	 * @param <T> Type of list elements
@@ -437,20 +455,30 @@ public class ListUtils {
 	}
 	
 	public static <T> List<List<T>> getKElementaryLists(List<T> list, int k) {
-		if(list.size()<0)
-			throw new IllegalArgumentException("set size 0");
+//		OLD METHOD:
+//		Is way slower than the new one and needs bit count calculation
+//		The usage of integer or long restricts the applicability to input list sizes < 63!
+//		if(list.size()<0)
+//			throw new IllegalArgumentException("set size 0");
+//		List<List<T>> result = new ArrayList<List<T>>();
+//		for (int i = 0; i < Math.pow(2, list.size()); i++) {
+//			int setSize = Integer.bitCount(i);
+//			if(setSize == k){
+//				List<T> newList = new ArrayList<T>(setSize);
+//				result.add(newList);
+//				for (int j = 0; j < list.size(); j++) {
+//					if ((i & (1 << j)) != 0) {
+//						newList.add(list.get(j));
+//					}
+//				}
+//			}
+//		}
+//		return result;
+		
 		List<List<T>> result = new ArrayList<List<T>>();
-		for (int i = 0; i < Math.pow(2, list.size()); i++) {
-			int setSize = Integer.bitCount(i);
-			if(setSize == k){
-				List<T> newList = new ArrayList<T>(setSize);
-				result.add(newList);
-				for (int j = 0; j < list.size(); j++) {
-					if ((i & (1 << j)) != 0) {
-						newList.add(list.get(j));
-					}
-				}
-			}
+		CombinationsCalculator<T> calc = new CombinationsCalculator<T>(list, k);
+		while(calc.hasNext()){
+			result.add(Arrays.asList(calc.next()));
 		}
 		return result;
 	}
@@ -507,5 +535,40 @@ public class ListUtils {
 //		System.out.println(header+"return "+result);
 		return result;		
 	}
-
+	
+	private static void precompileBitCountNumbers() throws IOException{
+		int power = 63;
+		int maxBitCount = 5;
+		Map<Integer,FileWriter> writers = new HashMap<Integer,FileWriter>();
+		Map<Integer,Long> counters = new HashMap<Integer,Long>();
+		for(int i=2; i<=maxBitCount; i++){
+			FileWriter newWriter = new FileWriter(System.getProperty("user.dir") + "/bitCount" + i + "Numbers");
+//			newWriter.writeLine("long[] bitCount"+i+"Numbers = {");
+			writers.put(i, newWriter);
+			counters.put(i, 0L);
+		}
+		
+		for(long i=1L; i < Math.pow(2, power) - 1; i++){
+			long bitCount = Long.bitCount(i);
+			for(int j=2; j<=maxBitCount; j++){
+				if(j >= power)
+					break;
+				if(bitCount == j){
+					counters.put(j, counters.get(j) + 1);
+					writers.get(j).writeLine(i);
+//					if(counters.get(j) > 1 && counters.get(j) % 10 == 0){
+//						writers.get(j).writeLine('+');
+//					}
+					continue;
+				}
+			}
+			if(i % 10000000L == 0)
+				System.out.println(i / (Long.MAX_VALUE + 0.0));
+		}
+		for(FileWriter writer: writers.values()){
+//			writer.writeLine("};"); 
+			writer.closeFile();
+		}
+	}
+	
 }

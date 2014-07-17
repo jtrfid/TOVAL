@@ -12,7 +12,7 @@ public class Validate {
 		validation = false;
 	}
 	
-	public static void enableValidaiton(){
+	public static void enableValidation(){
 		validation = true;
 	}
 	
@@ -122,7 +122,7 @@ public class Validate {
 	public static void isTrue(Boolean expression) {
 		if(!validation) return;
 		notNull(expression);
-		if(expression)
+		if(!expression)
 			throw new ParameterException(ErrorCode.CONSTRAINT);
 	}
 	
@@ -346,9 +346,9 @@ public class Validate {
 		Validate.notNull(end);
 		Validate.notNull(value);
 		if(value.compareTo(start) < 0)
-			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is not in range ["+start+";"+end+"]");
+			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is not in range ["+start+";"+end+"]: " + value);
 		if(value.compareTo(end) > 0)
-			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is not in range ["+start+";"+end+"]");
+			throw new ParameterException(ErrorCode.RANGEVIOLATION, "Parameter is not in range ["+start+";"+end+"]: " + value);
 	}
 
 	/**

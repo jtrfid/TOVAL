@@ -32,25 +32,27 @@ public class ValueStatCancellableOnce<U extends Number & Comparable<? super U>> 
 	}
 	
 	public void updateCancel(U number) {
-		if(number == null)
+		if(number == null){
+			reset(min, lastMax, valueCount, nullCount-1);
 			return;
+		}
 		if(updateCancelled)
 			throw new UnsupportedOperationException();
 		int compMin = number.compareTo(min);
 		int compMax = number.compareTo(max);
 
 		if(compMax==0 && compMin==1) {
-			reset(min, lastMax, valueCount-1);
+			reset(min, lastMax, valueCount-1, nullCount);
 			updateCancelled = true;
 			return;
 		}
 		if (compMax==-1 && compMin==0) {
-			reset(lastMin, max, valueCount-1);
+			reset(lastMin, max, valueCount-1, nullCount);
 			updateCancelled = true;
 			return;
 		}
 		if (compMax==0 && compMin==0) {
-			reset(lastMin, lastMax, valueCount-1);
+			reset(lastMin, lastMax, valueCount-1, nullCount);
 			updateCancelled = true;
 			return;
 		}

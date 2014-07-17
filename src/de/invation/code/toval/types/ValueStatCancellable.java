@@ -23,7 +23,7 @@ public class ValueStatCancellable<U extends Number & Comparable<? super U>> exte
 	public void update(U number) {
 		super.update(number);
 		Integer support = valueSupport.get(number);
-		if(support==null){
+		if(support == null){
 			valueSupport.put(number, 1);
 		} else {
 			valueSupport.put(number, support+1);
@@ -32,22 +32,24 @@ public class ValueStatCancellable<U extends Number & Comparable<? super U>> exte
 	
 	public int getSupportFor(Number number){
 		Integer support = valueSupport.get(number);
-		if(support==null)
+		if(support == null)
 			return 0;
 		return support;
 	}
 	
 	public void updateCancel(U number) {
 		Integer support = valueSupport.get(number);
-		if(support==null){
+		if(support == null){
 			return;
 		}
-		if(support==1){
+		if(support == 1){
 			valueSupport.remove(number);
 		} else {
 			valueSupport.put(number, support-1);
 		}
 		valueCount--;
+		if(number == null)
+			nullCount--;
 		min = null;
 		max = null;
 		for(U u: valueSupport.keySet()){
@@ -69,8 +71,6 @@ public class ValueStatCancellable<U extends Number & Comparable<? super U>> exte
 		valueSupport.clear();
 		super.reset();
 	}
-	
-	
 
 
 }

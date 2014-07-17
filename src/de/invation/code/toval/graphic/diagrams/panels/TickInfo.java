@@ -87,7 +87,6 @@ import de.invation.code.toval.misc.FormatUtils;
 			minorTickSpacing = range/10.0;
 			setZeroBased(zeroBased);
 			setFormat();
-			
 		}
 		
 		/**

@@ -20,8 +20,8 @@ public class ChartFactory {
 	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> ScatterChartPanel createScatterChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased) {
 		return new ScatterChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased);
 	}
-	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> ScatterChartPanel createScatterChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased, boolean onlyIntegerTicks) {
-		return new ScatterChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased, onlyIntegerTicks);
+	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> ScatterChartPanel createScatterChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		return new ScatterChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 	
 	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(Map<S, Integer> statistic) {
@@ -30,8 +30,8 @@ public class ChartFactory {
 	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(Map<S, Integer> statistic, boolean zeroBased) {
 		return new DotChartPanel(new DotChartModel<S>(statistic), zeroBased);
 	}
-	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(Map<S, Integer> statistic, boolean zeroBased, boolean onlyIntegerTicks) {
-		return new DotChartPanel(new DotChartModel<S>(statistic), zeroBased, onlyIntegerTicks);
+	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(Map<S, Integer> statistic, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		return new DotChartPanel(new DotChartModel<S>(statistic), zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(List<S> values, List<Integer> counts) {
 		return new DotChartPanel(new DotChartModel<S>(values, counts));
@@ -39,8 +39,8 @@ public class ChartFactory {
 	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(List<S> values, List<Integer> counts, boolean zeroBased) {
 		return new DotChartPanel(new DotChartModel<S>(values, counts), zeroBased);
 	}
-	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(List<S> values, List<Integer> counts, boolean zeroBased, boolean onlyIntegerTicks) {
-		return new DotChartPanel(new DotChartModel<S>(values, counts), zeroBased, onlyIntegerTicks);
+	public static <S extends Number & Comparable<? super S>> DotChartPanel createDotChartPanel(List<S> values, List<Integer> counts, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		return new DotChartPanel(new DotChartModel<S>(values, counts), zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 	
 	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> BarChartPanel createBarChartPanel(List<S> xValues, List<T> yValues) {
@@ -49,8 +49,8 @@ public class ChartFactory {
 	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> BarChartPanel createBarChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased) {
 		return new BarChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased);
 	}
-	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> BarChartPanel createBarChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased, boolean onlyIntegerTicks) {
-		return new BarChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased, onlyIntegerTicks);
+	public static <S extends Number & Comparable<? super S>,T extends Number & Comparable<? super T>> BarChartPanel createBarChartPanel(List<S> xValues, List<T> yValues, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		return new BarChartPanel(new ScatterChartModel<S,T>(xValues, yValues, true), zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 	
 	public static <S extends Number & Comparable<? super S>> OneDimChartPanel createOneDimChartPanel(List<S> values) {
@@ -59,8 +59,8 @@ public class ChartFactory {
 	public static <S extends Number & Comparable<? super S>> OneDimChartPanel createOneDimChartPanel(List<S> values, boolean zeroBased) {
 		return new OneDimChartPanel(new OneDimChartModel<S>(values), zeroBased);
 	}
-	public static <S extends Number & Comparable<? super S>> OneDimChartPanel createOneDimChartPanel(List<S> values, boolean zeroBased, boolean onlyIntegerTicks) {
-		return new OneDimChartPanel(new OneDimChartModel<S>(values), zeroBased, onlyIntegerTicks);
+	public static <S extends Number & Comparable<? super S>> OneDimChartPanel createOneDimChartPanel(List<S> values, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
+		return new OneDimChartPanel(new OneDimChartModel<S>(values), zeroBased, onlyIntegerTicksX, onlyIntegerTicksY);
 	}
 	
 	
