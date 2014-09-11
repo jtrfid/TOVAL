@@ -1,4 +1,5 @@
 package de.invation.code.toval.statistic;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,9 @@ import de.invation.code.toval.misc.MapUtils;
  * 
  * @author Thomas Stocker
  */
-public class Observation {
+public class Observation implements Serializable {
+	
+	private static final long serialVersionUID = 55062028890455772L;
 	
 	protected int momentPrecision = 6;
 	protected int standardPrecision = 2;
@@ -75,7 +78,7 @@ public class Observation {
 	 * <li>...</li>
 	 * </ul>
 	 */
-	HashMap<Integer, Double> moments = new HashMap<Integer, Double>(momentDegrees.size());
+	protected HashMap<Integer, Double> moments = new HashMap<Integer, Double>(momentDegrees.size());
 	
 	/**
 	 * Controls the observations' update behavior.<br>
@@ -398,6 +401,12 @@ public class Observation {
 		if(moments.isEmpty())
 			setMoments();
 		return moments;
+	}
+	
+	public double getVariance(){
+		if(moments.isEmpty())
+			setMoments();
+		return moments.get(2);
 	}
 	
 	//-----FUNCTIONALITY--------------------------------------------------------------------------

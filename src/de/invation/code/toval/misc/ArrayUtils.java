@@ -352,6 +352,14 @@ public class ArrayUtils {
 		return true;
 	}
 	
+	public static <T> boolean contains(T[] arr, T element){
+		for(T val: arr){
+			if(val.equals(element))
+				return true;
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Determines the intersection of the given arrays.<br>

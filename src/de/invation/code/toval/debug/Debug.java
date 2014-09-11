@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.invation.code.toval.file.FileWriter;
 import de.invation.code.toval.validate.ParameterException;
@@ -35,6 +37,8 @@ public class Debug {
 	
 	private static boolean includeHeader = true;
 	
+	private static Map<Integer, StringBuilder> storedDebugInfo = new HashMap<Integer, StringBuilder>();
+	
 	public static void setOutputMode(OutputMode mode){
 		outputMode = mode;
 		if(outputMode == OutputMode.FILE && fileWriter == null){
@@ -46,6 +50,21 @@ public class Debug {
 		}
 	}
 	
+	public static int newStoredDebuggingInfo(){
+		int i=0;
+		while(storedDebugInfo.containsKey(i)){
+			i++;
+		}
+		storedDebugInfo.put(i, new StringBuilder());
+		return i;
+	}
+	
+	public static void addStoredDebuggingInfo(int key){
+		if(debugMode == DebugMode.SILENT)
+			return;
+		println(storedDebugInfo.get(key).toString());
+		storedDebugInfo.remove(key);
+	}
 	
 	public static void setIncludeHeader(boolean includeHeader) {
 		Debug.includeHeader = includeHeader;
@@ -79,7 +98,6 @@ public class Debug {
 			printStream.println("Cannot close file: I/O Exception");
 		}
 	}
-
 	
 	/**
 	 * Prints a debug message.
@@ -91,18 +109,40 @@ public class Debug {
 		message(message, DebugMode.EXTENDED);
 	}
 	
+	public static void message(Integer key, String message){
+		message(key, message, DebugMode.EXTENDED);
+	}
+	
 	public static void message(String message, DebugMode mode){
 		message(message, mode, true);
 	}
 	
+	public static void message(Integer key, String message, DebugMode mode){
+		message(key, message, mode, true);
+	}
+	
 	public static void message(String message, DebugMode mode, boolean withHeader){
+		message(null, message, mode, withHeader);
+	}
+	
+	public static void message(Integer key, String message, DebugMode mode, boolean withHeader){
 		if(debugMode == DebugMode.SILENT)
 			return;
 		if(mode.ordinal() >= debugMode.ordinal()){
 			if(withHeader && includeHeader){
-				println(getTime()+" Message:   "+prepareMessage(message));
+				if(key != null){
+					storedDebugInfo.get(key).append(getTime()+" Message:   "+prepareMessage(message));
+					storedDebugInfo.get(key).append('\n');
+				} else {
+					println(getTime()+" Message:   "+prepareMessage(message));
+				}
 			} else {
-				println(prepareMessage(message));
+				if(key != null){
+					storedDebugInfo.get(key).append(prepareMessage(message));
+					storedDebugInfo.get(key).append('\n');
+				} else {
+					println(prepareMessage(message));
+				}
 			}
 		}
 	}
