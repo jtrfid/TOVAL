@@ -99,21 +99,24 @@ public class FileUtils {
 	}
 	
 	public static void deleteFile(String fileName){
-	    File file = new File(fileName);
+	    deleteFile(new File(fileName));
+	}
+	
+	public static void deleteFile(File file){
 
 	    if(!file.exists())
-	    	throw new IllegalArgumentException("No such file or directory: " + fileName);
+	    	throw new IllegalArgumentException("No such file or directory: " + file.getAbsolutePath());
 
 	    if(!file.canWrite())
-	    	throw new IllegalArgumentException("Write protection: " + fileName);
+	    	throw new IllegalArgumentException("Write protection: " + file.getAbsolutePath());
 
 	    if(file.isDirectory())
-	    	throw new IllegalArgumentException("File is a directory: " + fileName);
+	    	throw new IllegalArgumentException("File is a directory: " + file.getAbsolutePath());
 
 	    boolean success = file.delete();
 
 	    if(!success)
-	    	throw new IllegalArgumentException("Unspecified deletion error: " + fileName);
+	    	throw new IllegalArgumentException("Unspecified deletion error: " + file.getAbsolutePath());
 	}
 	
 	public static void deleteDirectory(String dirName, boolean recursive){
@@ -181,6 +184,31 @@ public class FileUtils {
 			return file.substring(0, file.lastIndexOf('.'));
 		}
 		return file;
+	}
+	
+	public static String getDirName(String file){
+		File dir = new File(file);
+		Validate.directory(dir);
+		String sep = System.getProperty("file.separator");
+		if(file.endsWith(sep)){
+			if(file.length() == 1)
+				return "";
+			
+			char[] chars = file.toCharArray();
+			int index = file.length()-2;
+			while(index >= 0){
+				if(chars[index] == sep.charAt(0)){
+					break;
+				}
+				index--;
+			}
+			if(index == 0 && chars[0] != sep.charAt(0)){
+				return file.substring(0, file.length()-1);
+			}
+			return file.substring(index+1, file.length()-1);
+		} else {
+			return file.substring(file.lastIndexOf(sep)+1);
+		}
 	}
 	
 	public static void copy(File source, File dest) throws IOException {
