@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.invation.code.toval.misc.SystemUtils;
+import de.invation.code.toval.misc.SystemUtils.OperatingSystemType;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
@@ -53,23 +55,23 @@ public class FileUtils {
 		return result;
 	}
 
-	public static List<String> getFileNamesInDirectory(String directory) throws IOException, ParameterException{
+	public static List<String> getFileNamesInDirectory(String directory) throws IOException{
 		return getFileNamesInDirectory(directory, false);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, String acceptedEnding) throws IOException, ParameterException{
+	public static List<String> getFileNamesInDirectory(String directory, String acceptedEnding) throws IOException {
 		return getFileNamesInDirectory(directory, false, acceptedEnding);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath) throws IOException, ParameterException{
+	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath) throws IOException {
 		return getFileNamesInDirectory(directory, true, true, absolutePath, null);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath, String acceptedEnding) throws IOException, ParameterException{
+	public static List<String> getFileNamesInDirectory(String directory, boolean absolutePath, String acceptedEnding) throws IOException {
 		return getFileNamesInDirectory(directory, true, true, absolutePath, acceptedEnding);
 	}
 	
-	public static List<String> getFileNamesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, boolean absolutePath, String acceptedEnding) throws IOException, ParameterException{
+	public static List<String> getFileNamesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, boolean absolutePath, String acceptedEnding) throws IOException{
 		List<File> files = getFilesInDirectory(directory, onlyFiles, onlyVisibleFiles, acceptedEnding);
 		List<String> result = new ArrayList<String>();
 		for(File file: files){
@@ -103,6 +105,14 @@ public class FileUtils {
 	}
 	
 	public static void deleteFile(File file){
+		deleteFile(file, false);
+	}
+	
+	public static void deleteFile(String fileName, boolean followLinks){
+	    deleteFile(new File(fileName), followLinks);
+	}
+	
+	public static void deleteFile(File file, boolean followLinks){
 
 	    if(!file.exists())
 	    	throw new IllegalArgumentException("No such file or directory: " + file.getAbsolutePath());
@@ -113,13 +123,51 @@ public class FileUtils {
 	    if(file.isDirectory())
 	    	throw new IllegalArgumentException("File is a directory: " + file.getAbsolutePath());
 
-	    boolean success = file.delete();
+	    boolean success = false;
+	    if(followLinks){
+	    	success = file.delete();
+	    } else {
+	    	success = removeLinkOnly(file);
+	    }
 
 	    if(!success)
 	    	throw new IllegalArgumentException("Unspecified deletion error: " + file.getAbsolutePath());
 	}
 	
+	public static boolean removeLinkOnly(File file) {
+		if (file == null)
+			return false;
+
+		OperatingSystemType os = SystemUtils.getOperatingSystem();
+
+		String[] command = new String[3];
+		String path = file.getPath();
+		switch (os) {
+		case win:
+			command[0] = "cmd";
+			command[1] = "/C";
+			command[2] = "del \"" + path + "\"";
+			break;
+		case mac:
+			command[0] = "/bin/sh";
+			command[1] = "-c";
+			command[2] = "rm \"" + path + "\"";
+			break;
+		default:
+			command[0] = "/bin/sh";
+			command[1] = "-c";
+			command[2] = "rm \"" + path + "\"";
+			break;
+		}
+		SystemUtils.runCommand(command);
+		return true;
+	}
+
 	public static void deleteDirectory(String dirName, boolean recursive){
+		deleteDirectory(dirName, recursive, false);
+	}
+	
+	public static void deleteDirectory(String dirName, boolean recursive, boolean followLinks){
 		File file = new File(dirName);
 
 	    if(!file.exists())
@@ -139,9 +187,9 @@ public class FileUtils {
 	    	for(int i=0; i<files.length; i++){
 	    		File childFile = new File(file.getPath()+"/"+files[i]);
 	    		if(childFile.isDirectory()){
-	    			deleteDirectory(childFile.getAbsolutePath(), recursive);
+	    			deleteDirectory(childFile.getAbsolutePath(), recursive, followLinks);
 	    		} else {
-	    			deleteFile(childFile.getAbsolutePath());
+	    			deleteFile(childFile.getAbsolutePath(), followLinks);
 	    		}
 	    	}
 	    }
@@ -186,9 +234,14 @@ public class FileUtils {
 		return file;
 	}
 	
+	public static String getDirName(File dir){
+		return getDirName(dir.getAbsolutePath());
+	}
+	
 	public static String getDirName(String file){
 		File dir = new File(file);
 		Validate.directory(dir);
+		
 		String sep = System.getProperty("file.separator");
 		if(file.endsWith(sep)){
 			if(file.length() == 1)
@@ -210,6 +263,8 @@ public class FileUtils {
 			return file.substring(file.lastIndexOf(sep)+1);
 		}
 	}
+	
+	
 	
 	public static void copy(File source, File dest) throws IOException {
 	    InputStream is = null;
