@@ -7,16 +7,18 @@ import de.invation.code.toval.validate.Validate;
 
 public abstract class AbstractListenerSupport<L extends Object> implements Serializable {
 
+	private static final long serialVersionUID = -7522608459092207941L;
+	
 	protected HashSet<L> listeners = new HashSet<L>();
 	
-	public void addListener(L l) {
+	public boolean addListener(L l) {
 		Validate.notNull(l);
-		listeners.add(l);
+		return listeners.add(l);
 	}
 	
-	public void removeListener(L l) {
+	public boolean removeListener(L l) {
 		Validate.notNull(l);
-		listeners.remove(l);
+		return listeners.remove(l);
 	}
 
 }
