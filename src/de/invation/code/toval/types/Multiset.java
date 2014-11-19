@@ -40,13 +40,13 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	 */
 	public Multiset(){}
 	
-	public Multiset(Collection<O> objects) throws ParameterException{
+	public Multiset(Collection<O> objects) {
 		Validate.notNull(objects);
 		for(O o: objects)
 			incMultiplicity(o);
 	}
 	
-	public Multiset(O... objects) throws ParameterException{
+	public Multiset(O... objects) {
 		Validate.notNull(objects);
 		for(O o: objects)
 			incMultiplicity(o);

@@ -19,15 +19,15 @@ import de.invation.code.toval.validate.Validate;
 
 public class FileUtils {
 	
-	public static List<File> getFilesInDirectory(String directory) throws IOException, ParameterException{
+	public static List<File> getFilesInDirectory(String directory) throws IOException{
 		return getFilesInDirectory(directory, null);
 	}
 	
-	public static List<File> getFilesInDirectory(String directory, String acceptedEnding) throws IOException, ParameterException{
+	public static List<File> getFilesInDirectory(String directory, String acceptedEnding) throws IOException{
 		return getFilesInDirectory(directory, true, true, acceptedEnding);
 	}
 	
-	public static List<File> getFilesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, final String acceptedEnding) throws IOException, ParameterException{
+	public static List<File> getFilesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, final String acceptedEnding) throws IOException{
 		File dir = new File(directory);
 		if(!dir.exists())
 			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing file path.");
@@ -84,7 +84,7 @@ public class FileUtils {
 		return result;
 	}
 	
-	public static List<File> getSubdirectories(String directory) throws IOException, ParameterException{
+	public static List<File> getSubdirectories(String directory) throws IOException {
 		Validate.directory(directory);
 		File dir = new File(directory);
 		if(!dir.exists())
@@ -278,8 +278,10 @@ public class FileUtils {
 	            os.write(buffer, 0, length);
 	        }
 	    } finally {
-	        is.close();
-	        os.close();
+	    	if(is != null)
+	    		is.close();
+	    	if(os != null)
+	    		os.close();
 	    }
 	}
 	

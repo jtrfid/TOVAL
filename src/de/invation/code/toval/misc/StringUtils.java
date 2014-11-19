@@ -1,5 +1,7 @@
 package de.invation.code.toval.misc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -12,6 +14,45 @@ public class StringUtils {
 		array = array.replace("[", "");
 		array = array.replace("]", "");
 		return new StringTokenizer(array, delimiter);
+	}
+	
+	/**
+	 * Takes a string and splits it according to the quote character '.<b>
+	 * Use this method for splitting a string into several parts, where each part corresponds to a quoted substring in the input.<br>
+	 * A string "['stringA' 'stringB']" will result in the list (stringA,stringB) with ' being the character used for qouting.
+	 * @param array Input string, containing quoted character sets.
+	 * @param quoteChar The character used to quote strings in the input string.
+	 * @return  list, containing all quotes strings in the input string.
+	 */
+	public static List<String> splitArrayStringQuoted(String array, char quoteChar){
+		array = array.replace("[", "");
+		array = array.replace("]", "");
+		List<String> result = new ArrayList<String>();
+		Integer actStart = null;
+		for(int i=0; i<array.length(); i++){
+			if(array.charAt(i) == quoteChar){
+				if(actStart == null){
+					if(i<array.length()-1){
+						actStart = i+1;
+					}
+				} else {
+					result.add(array.substring(actStart, i));
+					actStart = null;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Takes a string and splits it according to the quote character.<b>
+	 * Use this method for splitting a string into several parts, where each part corresponds to a quoted substring in the input.<br>
+	 * A string "['stringA' 'stringB']" will result in the list (stringA,stringB) with ' being the character used for qouting.
+	 * @param array Input string, containing quoted character sets.
+	 * @return  list, containing all quotes strings in the input string.
+	 */
+	public static List<String> splitArrayStringQuoted(String array){
+		return splitArrayStringQuoted(array, '\'');
 	}
 	
 	public static int countOccurrences(String string, char character){
