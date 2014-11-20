@@ -35,9 +35,6 @@ public class Multiset<O extends Object> implements Comparable<Multiset<O>>{
 	
 	protected Map<Integer,Integer> multiplicityCount = new HashMap<Integer,Integer>();
 	
-	/**
-	 * Creates a new empty multiset.
-	 */
 	public Multiset(){}
 	
 	public Multiset(Collection<O> objects) {
