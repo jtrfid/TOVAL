@@ -92,21 +92,5 @@ public class Allocation {
 			insertStat.remove(value);
 		else insertStat.put(value, insertStat.get(value)-1);
 	}
-	
-	public static void main(String[] args) {
-		String[] personen = {"Fritz","Ingrid","Simon","Miriam","Deborah","Thomas"};
-		Allocation alloc = new Allocation(personen, personen);
-		alloc.addExclusion("Fritz", "Fritz");
-		alloc.addExclusion("Ingrid", "Ingrid");
-		alloc.addExclusion("Simon", "Simon");
-		alloc.addExclusion("Miriam", "Miriam");
-		alloc.addExclusion("Deborah", "Deborah");
-		alloc.addExclusion("Thomas", "Thomas");
-		alloc.addExclusion("Thomas", "Deborah");
-		alloc.addExclusion("Deborah", "Thomas");
-		alloc.addExclusion("Fritz", "Ingrid");
-		alloc.addExclusion("Ingrid", "Fritz");
-		System.out.println(alloc.getMapping());
-	}
 
 }
