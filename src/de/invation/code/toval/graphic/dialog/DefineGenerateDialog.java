@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -16,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -27,28 +25,17 @@ public class DefineGenerateDialog extends AbstractDialog {
 
 	private static final long serialVersionUID = -1396837102031308301L;
 	
-	public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	
 	private JList stringList;
 	private JButton btnDefine;
 	private JButton btnGenerate;
 	private DefaultListModel stringListModel;
 	
-	private Border border;
-	
-	public DefineGenerateDialog(Window owner, String title) throws Exception {
-		this(owner, title, DEFAULT_BORDER);
-	}
-	
-	public DefineGenerateDialog(Window owner, String title, Border border) throws Exception {
-		super(owner, new Object[]{title, border});
+	protected DefineGenerateDialog(Window owner, String title) {
+		super(owner, title);
+		initialize();
 	}
 
-	@Override
-	protected void initialize(Object... parameters) throws Exception {
-		validateParameters(parameters, String.class, Border.class);
-		setTitle((String) parameters[0]);
-		this.border = (Border) parameters[1];
+	protected void initialize() {
 		stringListModel = new DefaultListModel();
 	}
 
@@ -130,11 +117,6 @@ public class DefineGenerateDialog extends AbstractDialog {
 			JOptionPane.showMessageDialog(DefineGenerateDialog.this, "Activity list is empty.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
-	@Override
-	protected Border getBorder() {
-		return border;
-	}
 	
 	private JList getActivityList(){
 		if(stringList == null){
@@ -167,11 +149,8 @@ public class DefineGenerateDialog extends AbstractDialog {
 	
 	public static List<String> showDialog(Window owner, String title) throws Exception{
 		DefineGenerateDialog activityDialog = new DefineGenerateDialog(owner, title);
+		activityDialog.setUpGUI();
 		return activityDialog.getDialogObject();
 	}
 	
-	public static List<String> showDialog(Window owner, String title, Border border) throws Exception{
-		DefineGenerateDialog activityDialog = new DefineGenerateDialog(owner, title, border);
-		return activityDialog.getDialogObject();
-	}
 }

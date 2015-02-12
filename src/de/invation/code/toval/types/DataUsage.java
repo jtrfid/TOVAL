@@ -27,7 +27,7 @@ public enum DataUsage {
 		if(abbreviation.equals("W"))
 			return WRITE;
 		if(abbreviation.equals("C"))
-			return WRITE;
+			return CREATE;
 		if(abbreviation.equals("D"))
 			return DELETE;
 		return null;

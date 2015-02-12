@@ -12,6 +12,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,7 +22,6 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
-import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 public abstract class AbstractDialog extends JDialog {
@@ -29,6 +29,7 @@ public abstract class AbstractDialog extends JDialog {
 	private static final long serialVersionUID = -5864654213215817665L;
 	
 	private static final ButtonPanelLayout DEFAULT_BUTTON_LAYOUT = ButtonPanelLayout.LEFT_RIGHT;
+	public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	
 	private final JPanel panelContent = new JPanel();
 	protected JPanel panelButtons = null;
@@ -38,78 +39,53 @@ public abstract class AbstractDialog extends JDialog {
 	protected Object dialogObject;
 	protected boolean editMode;
 	protected ButtonPanelLayout buttonLayout = DEFAULT_BUTTON_LAYOUT;
+	protected Window owner = null;
 	
-	public AbstractDialog(Window owner) throws Exception {
-		this(owner, new Object[0]);
-	}
+	protected String okButtonText = "OK";
+	protected boolean includeCancelButton = true;
 	
-	public AbstractDialog(Window owner, ButtonPanelLayout buttonLayout) throws Exception{
-		this(owner, buttonLayout, new Object[0]);
-	}
-	
-	protected AbstractDialog(Window owner, Object[] parameters) throws Exception{
-		this(owner, false, parameters);
-	}
-	
-	protected AbstractDialog(Window owner, ButtonPanelLayout buttonLayout, Object[] parameters) throws Exception{
-		this(owner, false, buttonLayout, parameters);
-	}
-	
-	protected AbstractDialog(Window owner, boolean editMode, Object[] parameters) throws Exception{
-		this(owner, editMode, DEFAULT_BUTTON_LAYOUT, parameters);
-	}
-	
-	protected AbstractDialog(Window owner, Boolean editMode, ButtonPanelLayout buttonLayout, Object[] parameters) throws Exception{
+	protected AbstractDialog(Window owner) {
 		super(owner);
+		this.owner = owner;
+	}
+	
+	protected AbstractDialog(Window owner, String title) {
+		this(owner);
+		Validate.notNull(title);
+		setTitle(title);
+	}
+	
+	protected AbstractDialog(Window owner, ButtonPanelLayout buttonLayout) {
+		this(owner);
+		Validate.notNull(buttonLayout);
+		this.buttonLayout = buttonLayout;
+	}
+	
+	protected AbstractDialog(Window owner, boolean editMode) {
+		this(owner);
+		Validate.notNull(editMode);
+		this.editMode = editMode;
+	}
+	
+	protected AbstractDialog(Window owner, String title, boolean editMode) {
+		this(owner, title);
+		Validate.notNull(editMode);
+		this.editMode = editMode;
+	}
+	
+	protected AbstractDialog(Window owner, Boolean editMode, ButtonPanelLayout buttonLayout) {
+		this(owner);
 		Validate.notNull(editMode);
 		Validate.notNull(buttonLayout);
-		Validate.notNull(parameters);
+		this.editMode = editMode;
+		this.buttonLayout = buttonLayout;
+	}
+	
+	protected void setUpGUI() throws Exception{
 		this.setResizable(true);
 		this.setModal(true);
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-		
-		this.editMode = editMode;
-		
-		this.addWindowListener(new WindowListener() {
-			
-			@Override
-			public void windowOpened(WindowEvent e) {}
-			
-			@Override
-			public void windowIconified(WindowEvent e) {}
-			
-			@Override
-			public void windowDeiconified(WindowEvent e) {}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) {}
-			
-			@Override
-			public void windowClosing(WindowEvent e) {
-				closingProcedure();
-			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) {}
-			
-			@Override
-			public void windowActivated(WindowEvent e) {}
-			
-		});
-		
-		addComponentListener(new ComponentAdapter(){
-	        public void componentResized(ComponentEvent e){
-	            Dimension d = AbstractDialog.this.getSize();
-	            Dimension minD = AbstractDialog.this.getMinimumSize();
-	            if(d.width<minD.width)
-	            	d.width=minD.width;
-	            if(d.height<minD.height)
-	            	d.height=minD.height;
-	            AbstractDialog.this.setSize(d);
-	        }
-	    });
-		
-		initialize(parameters);
+		addListeners();
 		
 		setTitle();
 		
@@ -131,7 +107,54 @@ public abstract class AbstractDialog extends JDialog {
 		this.setVisible(true);
 	}
 	
-	protected abstract Border getBorder();
+	private void addListeners() {
+		addWindowListener(new WindowListener() {	
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				closingProcedure();
+			}
+			@Override
+			public void windowClosed(WindowEvent e) {}
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
+		
+		addComponentListener(new ComponentAdapter(){
+	        public void componentResized(ComponentEvent e){
+	            Dimension d = AbstractDialog.this.getSize();
+	            Dimension minD = AbstractDialog.this.getMinimumSize();
+	            if(d.width<minD.width)
+	            	d.width=minD.width;
+	            if(d.height<minD.height)
+	            	d.height=minD.height;
+	            AbstractDialog.this.setSize(d);
+	        }
+	    });
+	}
+	
+	public void setOKButtonText(String buttonText){
+		Validate.notNull(buttonText);
+		okButtonText = buttonText;
+		if(btnOK != null){
+			btnOK.setText(buttonText);
+		}
+	}
+	
+	public void setIncludeCancelButton(boolean includeCancelButton){
+		this.includeCancelButton = includeCancelButton;
+	}
+
+	protected Border getBorder(){
+		return DEFAULT_BORDER;
+	}
 	
 	@Override
 	public Dimension getMinimumSize() {
@@ -148,8 +171,6 @@ public abstract class AbstractDialog extends JDialog {
 	}
 	
 	protected void prepareEditing() throws Exception {};
-	
-	protected void initialize(Object... parameters) throws Exception {};
 	
 	protected abstract void addComponents() throws Exception;
 	
@@ -206,13 +227,14 @@ public abstract class AbstractDialog extends JDialog {
 	protected List<JButton> getRighthandButtons(){
 		ArrayList<JButton> result = new ArrayList<JButton>();
 		result.add(getOKButton());
-		result.add(getCancelButton());
+		if(includeCancelButton)
+			result.add(getCancelButton());
 		return result;
 	}
 	
 	protected JButton getOKButton(){
 		if(btnOK == null){
-			btnOK = new JButton("OK");
+			btnOK = new JButton(okButtonText);
 			btnOK.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					okProcedure();
@@ -257,21 +279,6 @@ public abstract class AbstractDialog extends JDialog {
 	
 	public enum ButtonPanelLayout {
 		CENTERED, LEFT_RIGHT;
-	}
-	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void validateParameters(Object[] parameters, Class... parameterTypes) throws ParameterException{
-		Validate.notNull(parameters);
-		Validate.notNull(parameterTypes);
-		Validate.notEmpty(parameters);
-		Validate.notEmpty(parameterTypes);
-		if(parameters.length < parameterTypes.length)
-			throw new ParameterException("Wrong number of parameters. Expected " + parameterTypes.length + " but got " + parameters.length);
-		Validate.noNullElements(parameters);
-		Validate.noNullElements(parameterTypes);
-		for(int i=0; i<parameterTypes.length; i++){
-			Validate.type(parameters[i], parameterTypes[i]);
-		}
 	}
 
 }

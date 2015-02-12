@@ -12,7 +12,7 @@ public class FileNameDialog extends ConditionalInputDialog {
 	protected String errorMessage = "";
 	private boolean allowSpaces = false;
 
-	public FileNameDialog(Window parent, String message, String title, boolean allowSpaces) {
+	protected FileNameDialog(Window parent, String message, String title, boolean allowSpaces) {
 		super(parent, message, title);
 		this.allowSpaces = allowSpaces;
 	}
@@ -35,6 +35,11 @@ public class FileNameDialog extends ConditionalInputDialog {
 			return false;
 		}
 		return true;
+	}
+	
+	public static String showDialog(Window parent, String message, String title, boolean allowSpaces){
+		FileNameDialog dialog = new FileNameDialog(parent, message, title, allowSpaces);
+		return dialog.requestInput();
 	}
 
 }

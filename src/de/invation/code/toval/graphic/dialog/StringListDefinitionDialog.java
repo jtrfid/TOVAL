@@ -23,21 +23,9 @@ public class StringListDefinitionDialog extends AbstractDialog {
 	public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	
 	private JTextField inputField;
-	private Border border;
 	
-	public StringListDefinitionDialog(Window owner, String title) throws Exception {
-		this(owner, title, DEFAULT_BORDER);
-	}
-	
-	public StringListDefinitionDialog(Window owner, String title, Border border) throws Exception {
-		super(owner, new Object[]{title, border});
-	}
-
-	@Override
-	protected void initialize(Object... parameters) throws Exception {
-		validateParameters(parameters, String.class, Border.class);
-		setTitle((String) parameters[0]);
-		this.border = (Border) parameters[1];
+	protected StringListDefinitionDialog(Window owner, String title) {
+		super(owner, title);
 	}
 
 	@Override
@@ -57,11 +45,6 @@ public class StringListDefinitionDialog extends AbstractDialog {
 			inputField.setColumns(10);
 		}
 		return inputField;
-	}
-
-	@Override
-	protected Border getBorder() {
-		return border;
 	}
 
 	@Override
@@ -104,6 +87,7 @@ public class StringListDefinitionDialog extends AbstractDialog {
 	
 	public static List<String> showDialog(Window owner, String title) throws Exception{
 		StringListDefinitionDialog dialog = new StringListDefinitionDialog(owner, title);
+		dialog.setUpGUI();
 		return dialog.getDialogObject();
 	}
 

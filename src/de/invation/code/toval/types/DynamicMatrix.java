@@ -1,6 +1,7 @@
 package de.invation.code.toval.types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,11 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 	/**
 	 * String format used for String representations of matrix entries.
 	 */
-	private static final String valueFormat = "[%s %s]: %s";
+	private static final String valueFormat = "%s";
+	/**
+	 * String format used for String representations of matrix entries.
+	 */
+	private static final String valueFormatWithHeading = "[%s %s]: %s";
 
 	/**
 	 * Creates a new DynamicMatrix.
@@ -76,7 +81,9 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 	 * @see #valueFormat
 	 * @see #getValue(Object, Object)
 	 */
-	public String getValueAsString(E row, E col) {
+	public String getValueAsString(E row, E col, boolean withHeading) {
+		if(withHeading)
+			return String.format(valueFormatWithHeading, row, col, getValue(row, col));
 		return String.format(valueFormat, row, col, getValue(row, col));
 	}
 	
@@ -89,7 +96,7 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 		StringBuilder builder = new StringBuilder();
 		for(E row: rowKeys.keySet())
 			for(E col: colKeys.keySet()) {
-				builder.append(getValueAsString(row, col));
+				builder.append(getValueAsString(row, col, true));
 				builder.append('\n');
 			}
 		return builder.toString();
@@ -194,6 +201,30 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 			for(E colKey: colKeys.keySet()){
 				builder.append(getValue(rowKey, colKey));
 				builder.append(" ");
+			}
+			builder.append('\n');
+		}
+		return builder.toString();
+	}
+	
+	public String toCSV(char separator){
+		List<E> rowKeys = new ArrayList<E>(rowKeys());
+		Collections.sort(rowKeys, new ToStringComparator<E>());
+		List<E> colKeys = new ArrayList<E>(colKeys());
+		Collections.sort(colKeys, new ToStringComparator<E>());
+		StringBuilder builder = new StringBuilder();
+		builder.append(separator);
+		for(E colKey: colKeys){
+			builder.append(colKey);
+			builder.append(separator);
+		}
+		builder.append('\n');
+		for(E rowKey: rowKeys){
+			builder.append(rowKey);
+			builder.append(separator);
+			for(E colKey: colKeys){
+				builder.append(getValue(rowKey, colKey));
+				builder.append(separator);
 			}
 			builder.append('\n');
 		}

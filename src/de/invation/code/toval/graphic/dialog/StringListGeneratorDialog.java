@@ -3,13 +3,11 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.util.SpringUtilities;
 
@@ -18,29 +16,14 @@ public class StringListGeneratorDialog extends AbstractDialog {
 
 	private static final long serialVersionUID = -3983005550619271102L;
 	
-	public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-	
 	private JTextField numberField;
 	private JTextField prefixField;
 	private JTextField postfixField;
 	
-	private Border border;
-	
-	public StringListGeneratorDialog(Window owner, String title) throws Exception {
-		this(owner, title, DEFAULT_BORDER);
+	protected StringListGeneratorDialog(Window owner, String title) {
+		super(owner, title);
 	}
 	
-	public StringListGeneratorDialog(Window owner, String title, Border border) throws Exception {
-		super(owner, new Object[]{title, border});
-	}
-	
-	@Override
-	protected void initialize(Object... parameters) throws Exception {
-		validateParameters(parameters, String.class, Border.class);
-		setTitle((String) parameters[0]);
-		this.border = (Border) parameters[1];
-	}
-
 	@Override
 	protected void addComponents() throws Exception {
 		mainPanel().setLayout(new SpringLayout());
@@ -82,11 +65,6 @@ public class StringListGeneratorDialog extends AbstractDialog {
 	}
 
 	@Override
-	protected Border getBorder() {
-		return border;
-	}
-
-	@Override
 	protected void setTitle() {}
 
 	@SuppressWarnings("unchecked")
@@ -110,11 +88,7 @@ public class StringListGeneratorDialog extends AbstractDialog {
 	
 	public static List<String> showDialog(Window owner, String title) throws Exception{
 		StringListGeneratorDialog dialog = new StringListGeneratorDialog(owner, title);
-		return dialog.getDialogObject();
-	}
-	
-	public static List<String> showDialog(Window owner, String title, Border border) throws Exception{
-		StringListGeneratorDialog dialog = new StringListGeneratorDialog(owner, title, border);
+		dialog.setUpGUI();
 		return dialog.getDialogObject();
 	}
 

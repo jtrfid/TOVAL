@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +27,7 @@ import javax.swing.border.Border;
 
 import de.invation.code.toval.graphic.component.BoxLayoutPanel;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
-import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
 
 
 public class ValueEditingDialog extends AbstractDialog {
@@ -41,35 +40,24 @@ public class ValueEditingDialog extends AbstractDialog {
 	private DefaultListModel listValueModel;
 	private JButton btnAdd;
 	private JButton btnRemove;
-	
-	private Border border;
 
-	public ValueEditingDialog(Window owner, String title) throws Exception {
-		this(owner, title, new ArrayList<String>());
+	protected ValueEditingDialog(Window owner, String title) {
+		super(owner, title);
 	}
 	
-	public ValueEditingDialog(Window owner, String title, Collection<String> initialValues) throws Exception {
-		this(owner, title, initialValues, DEFAULT_BORDER);
+	protected ValueEditingDialog(Window owner, String title, Collection<String> initialValues) {
+		super(owner, title);
+		setInitialValues(initialValues);
 	}
 	
-	public ValueEditingDialog(Window owner, String title, Border border) throws Exception {
-		this(owner, title, new ArrayList<String>(), border);
-	}
-	
-	public ValueEditingDialog(Window owner, String title, Collection<String> initialValues, Border border) throws Exception {
-		super(owner, new Object[]{title, initialValues, border});
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void initialize(Object... parameters) throws ParameterException {
-		validateParameters(parameters, String.class, Collection.class, Border.class);
-		setTitle((String) parameters[0]);
+	private void setInitialValues(Collection<String> initialValues){
+		Validate.notNull(initialValues);
+		Validate.notEmpty(initialValues);
+		Validate.noNullElements(initialValues);
 		
 		listValueModel = new DefaultListModel();
 		setDialogObject(new HashSet<String>());
-		getDialogObject().addAll((Collection<String>) parameters[1]);
-		this.border = (Border) parameters[2];
+		getDialogObject().addAll(initialValues);
 	}
 	
 	@Override
@@ -188,21 +176,13 @@ public class ValueEditingDialog extends AbstractDialog {
 
 	public static Set<String> showDialog(Window owner, String title) throws Exception{
 		ValueEditingDialog editingDialog = new ValueEditingDialog(owner, title);
+		editingDialog.setUpGUI();
 		return editingDialog.getDialogObject();
 	}
 	
 	public static Set<String> showDialog(Window owner, String title, Collection<String> values) throws Exception{
 		ValueEditingDialog editingDialog = new ValueEditingDialog(owner, title, values);
-		return editingDialog.getDialogObject();
-	}
-	
-	public static Set<String> showDialog(Window owner, String title, Border border) throws Exception{
-		ValueEditingDialog editingDialog = new ValueEditingDialog(owner, title, border);
-		return editingDialog.getDialogObject();
-	}
-	
-	public static Set<String> showDialog(Window owner, String title, Collection<String> values, Border border) throws Exception{
-		ValueEditingDialog editingDialog = new ValueEditingDialog(owner, title, values, border);
+		editingDialog.setUpGUI();
 		return editingDialog.getDialogObject();
 	}
 	
@@ -210,11 +190,6 @@ public class ValueEditingDialog extends AbstractDialog {
 	@Override
 	protected Set<String> getDialogObject() {
 		return (Set<String>) super.getDialogObject();
-	}
-
-	@Override
-	protected Border getBorder() {
-		return border;
 	}
 	
 	public static void main(String[] args) throws Exception {

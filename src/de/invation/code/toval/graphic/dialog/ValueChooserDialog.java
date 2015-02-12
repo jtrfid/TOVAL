@@ -28,55 +28,20 @@ public class ValueChooserDialog extends AbstractDialog {
 	public static final Border DEFAULT_BORDER = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 	public static final int DEFAULT_SELECTION_MODE = ListSelectionModel.SINGLE_SELECTION;
 
-	private DefaultListModel stringListModel;
+	private DefaultListModel stringListModel = new DefaultListModel();
 	private Collection<String> possibleValues;
 	private int selectionMode;
 	private JList stringList;
-	private Border border;
 	
-	public ValueChooserDialog(Window owner, String title, Collection<String> possibleValues) throws Exception {
-		this(owner, title, possibleValues, DEFAULT_SELECTION_MODE);
-	}
-	
-	public ValueChooserDialog(Window owner, String title, Collection<String> possibleValues, int selectionMode) throws Exception {
-		this(owner, title, possibleValues, selectionMode, DEFAULT_BORDER);
-	}
-	
-	public ValueChooserDialog(Window owner, String title, Collection<String> possibleValues, Border border) throws Exception {
-		this(owner, title, possibleValues, DEFAULT_SELECTION_MODE, border);
-	}
-	
-	public ValueChooserDialog(Window owner, String title, Collection<String> possibleValues, int selectionMode, Border border) throws Exception {
-		super(owner, new Object[]{title, possibleValues, selectionMode, border});
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void initialize(Object... parameters) throws Exception {
-		Validate.notNull(parameters);
-		Validate.notEmpty(parameters);
-		if(parameters.length != 4)
-			throw new ParameterException("Wrong number of parameters. Expected 4 but got " + parameters.length);
-
-		Validate.noNullElements(parameters);
-		Validate.type(parameters[0], String.class);
-		setTitle((String) parameters[0]);
-		Validate.type(parameters[1], Collection.class);
-		Collection<String> possibleValues = null;
-		try {
-			possibleValues = (Collection<String>) parameters[1];
-		}catch(Exception e){
-			throw new ParameterException("Wrong parameter type. Expected Collection<String> as second parameter.");
-		}
+	protected ValueChooserDialog(Window owner, String title, Collection<String> possibleValues) throws Exception {
+		super(owner, title);
 		setPossibleValues(possibleValues);
-		
-		Validate.type(parameters[2], Integer.class);
-		this.selectionMode = (Integer) parameters[2];
-
-		Validate.type(parameters[3], Border.class);
-		this.border = (Border) parameters[3];
-		
-		stringListModel = new DefaultListModel();
+	}
+	
+	protected ValueChooserDialog(Window owner, String title, Collection<String> possibleValues, int selectionMode) {
+		super(owner, title);
+		setPossibleValues(possibleValues);
+		this.selectionMode = selectionMode;
 	}
 	
 	private void setPossibleValues(Collection<String> possibleValues) throws ParameterException{
@@ -95,11 +60,6 @@ public class ValueChooserDialog extends AbstractDialog {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		mainPanel().add(scrollPane);
-	}
-
-	@Override
-	protected Border getBorder() {
-		return border;
 	}
 
 	@Override
@@ -141,23 +101,15 @@ public class ValueChooserDialog extends AbstractDialog {
 	}
 	
 	public static List<String> showDialog(Window owner, String title, Collection<String> values) throws Exception{
-		ValueChooserDialog activityDialog = new ValueChooserDialog(owner, title, values);
-		return activityDialog.getDialogObject();
+		ValueChooserDialog dialog = new ValueChooserDialog(owner, title, values);
+		dialog.setUpGUI();
+		return dialog.getDialogObject();
 	}
 	
 	public static List<String> showDialog(Window owner, String title, Collection<String> values, int selectionMode) throws Exception{
-		ValueChooserDialog activityDialog = new ValueChooserDialog(owner, title, values, selectionMode);
-		return activityDialog.getDialogObject();
-	}
-	
-	public static List<String> showDialog(Window owner, String title, Collection<String> values, Border border) throws Exception{
-		ValueChooserDialog activityDialog = new ValueChooserDialog(owner, title, values, border);
-		return activityDialog.getDialogObject();
-	}
-	
-	public static List<String> showDialog(Window owner, String title, Collection<String> values, int selectionMode, Border border) throws Exception{
-		ValueChooserDialog activityDialog = new ValueChooserDialog(owner, title, values, selectionMode, border);
-		return activityDialog.getDialogObject();
+		ValueChooserDialog dialog = new ValueChooserDialog(owner, title, values, selectionMode);
+		dialog.setUpGUI();
+		return dialog.getDialogObject();
 	}
 	
 }

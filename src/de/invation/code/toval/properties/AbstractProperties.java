@@ -64,11 +64,11 @@ public class AbstractProperties {
 	
 	//------- Helper methods --------------------------------------------------------------
 	
-	protected String[] encapsulateValues(Set<String> values){
+	protected <T extends Object> String[] encapsulateValues(Set<T> values){
 		String[] result = new String[values.size()];
 		int count = 0;
-		for(String value: values)
-			result[count++] = "'"+value+"'";
+		for(Object value: values)
+			result[count++] = "'"+value.toString()+"'";
 		return result;
 	}
 	
