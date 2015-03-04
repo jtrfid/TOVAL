@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="SERAM.package" default="package" basedir=".">
+<project name="TOVAL.package" default="package" basedir=".">
 
 	<!--
 	Apache Ant build file for the TOVAL project
