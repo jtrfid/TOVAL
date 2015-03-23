@@ -2,6 +2,7 @@ package de.invation.code.toval.misc.soabase;
 
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -202,6 +203,10 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 		setSubjects(subjects, true);
 	}
 	
+	public void setSubjects(String... subjects) {
+		setSubjects(Arrays.asList(subjects));
+	}
+	
 	public void setSubjects(Collection<String> subjects, boolean notifyListeners) {
 		Validate.notNull(subjects);
 		if(subjects.isEmpty()){
@@ -280,6 +285,10 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 	
 	public void setActivities(Collection<String> activities) {
 		setActivities(activities, true);
+	}
+	
+	public void setActivities(String... activities) {
+		setActivities(Arrays.asList(activities));
 	}
 	
 	public void setActivities(Collection<String> activities, boolean notifyListeners) {
@@ -388,6 +397,10 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 	
 	public void setObjects(Collection<String> objects) {
 		setObjects(objects, true);
+	}
+	
+	public void setObjects(String... objects) {
+		setObjects(Arrays.asList(objects));
 	}
 	
 	public void setObjects(Collection<String> objects, boolean notifyListeners) {
