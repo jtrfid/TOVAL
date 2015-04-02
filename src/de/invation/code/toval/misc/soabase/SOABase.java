@@ -1,6 +1,9 @@
 package de.invation.code.toval.misc.soabase;
 
 import java.awt.Window;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +17,7 @@ import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
+import de.invation.code.toval.validate.ParameterException.ErrorCode;
 
 public class SOABase implements Cloneable, SOABaseEditingInterface{
 	
@@ -568,13 +572,27 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 		}
 	}
 	
+	protected Class<?> getPropertiesClass(){
+		return SOABaseProperties.class;
+	}
+	
 	public SOABaseProperties getProperties() throws PropertyException {
-		SOABaseProperties result = new SOABaseProperties();
-		result.setName(getName());
-		result.setSubjects(getSubjects());
-		result.setObjects(getObjects());
-		result.setActivities(getActivities());
-		return result;
+		if(!isValid())
+			throw new ParameterException(ErrorCode.INCONSISTENCY, "Cannot extract properties in invalid state!");
+		
+		SOABaseProperties properties = null;
+		try{
+			properties = (SOABaseProperties) getPropertiesClass().getConstructor().newInstance();
+		} catch(Exception e){
+			throw new ParameterException(ErrorCode.TYPE, "Cannot create properties instance.\nReason: " + e.getMessage());
+		}
+
+		properties.setBaseClass(this.getClass());
+		properties.setName(getName());
+		properties.setSubjects(getSubjects());
+		properties.setObjects(getObjects());
+		properties.setActivities(getActivities());
+		return properties;
 	}
 	
 	public void takeoverValues(SOABase context, boolean notifyListeners) throws Exception {
@@ -723,19 +741,59 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 	public void showDialog(Window parent) throws Exception {
 		SOABaseDialog.showDialog(parent, this);
 	}
+	
+	public static <P extends SOABaseProperties> SOABase createFromFile(File file) throws Exception{
+		return createFromProperties(SOABaseProperties.loadPropertiesFromFile(file));
+	}
+	
+	public static <P extends SOABaseProperties> SOABase createFromProperties(P properties) throws Exception{
+		Validate.notNull(properties);
+		Class<?> baseClass = properties.getBaseClass();
+		// Try to get constructor
+		Constructor<?> constructor = null;	
+		try {
+			constructor = baseClass.getConstructor(properties.getClass());
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot extract SOABase constructor.\nReason: " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot extract SOABase constructor.\nReason: " + e.getMessage());
+		}
+
+
+		Object newInstance = null;
+		try {
+			newInstance = constructor.newInstance(properties);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		}
+		return (SOABase) newInstance;
+	}
 
 //	public static void main(String[] args) throws Exception {
-//		Context c = new Context("Context");
+//		SOABase c = new SOABase("Base");
 //		c.setSubjects(new HashSet<String>(Arrays.asList("subj1", "subj2", "subj3")));
 //		c.setObjects(new HashSet<String>(Arrays.asList("obj1", "obj2", "obj3")));
 //		c.setActivities(new HashSet<String>(Arrays.asList("t1", "t2", "t3")));
-//		c.getProperties().store("/Users/stocker/Desktop/Context");
+//		c.getProperties().store("/Users/stocker/Desktop/Base");
 //		
-//		ContextProperties properties = new ContextProperties();
-//		properties.load("/Users/stocker/Desktop/Context");
-//		Context c1 = new Context(properties);
+//		SOABaseProperties properties = new SOABaseProperties();
+//		properties.load("/Users/stocker/Desktop/Base");
+//		SOABase c1 = SOABaseProperties.createFromProperties(properties);
 //		System.out.println(c1);
 //		System.out.println(c1.equals(c));
+//		System.out.println(properties.getBaseClass());
 //	}
 
 }

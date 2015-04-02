@@ -1,5 +1,8 @@
 package de.invation.code.toval.misc.soabase;
 
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -21,6 +24,89 @@ public class SOABaseProperties extends AbstractProperties{
 	private String getProperty(SOABaseProperty contextProperty){
 		return props.getProperty(contextProperty.toString());
 	}
+	
+	//-- Properties class
+	
+	public void setPropertiesClass(Class<?> propertiesClass) {
+		Validate.notNull(propertiesClass);
+		setProperty(SOABaseProperty.PROPERTIES_CLASS, propertiesClass.getName());
+	}
+
+	public Class<?> getPropertiesClass() throws PropertyException {
+		String propertyValue = getProperty(SOABaseProperty.PROPERTIES_CLASS);
+		if (propertyValue == null)
+			throw new PropertyException(SOABaseProperty.PROPERTIES_CLASS, propertyValue);
+		Class<?> propertiesClass = null;
+		try {
+			propertiesClass = ClassLoader.getSystemClassLoader().loadClass(propertyValue);
+		} catch (Exception e) {
+			throw new PropertyException(SOABaseProperty.PROPERTIES_CLASS, "Cannot extract properties class.\nReason: " + e.getMessage());
+		}
+		return propertiesClass;
+	}
+	
+	public static SOABaseProperties loadPropertiesFromFile(File file) throws Exception {
+		Validate.notNull(file);
+		Validate.noDirectory(file);
+		Validate.exists(file);
+		SOABaseProperties testProperties = new SOABaseProperties();
+		testProperties.load(file.getAbsolutePath());
+		if(testProperties.getPropertiesClass().equals(testProperties.getClass()))
+			return testProperties;
+		// Try to get constructor
+		Constructor<?> constructor = null;
+		try {
+			constructor = testProperties.getPropertiesClass().getConstructor();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot extract SOABase constructor.\nReason: " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot extract SOABase constructor.\nReason: " + e.getMessage());
+		}
+		
+		Object newInstance = null;
+		try {
+			newInstance = constructor.newInstance();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
+		}
+		SOABaseProperties properties = (SOABaseProperties) newInstance;
+		properties.load(file.getAbsolutePath());
+		return properties;
+	}
+	
+	//-- Base class
+	
+	public void setBaseClass(Class<?> baseClass){
+		Validate.notNull(baseClass);
+		setProperty(SOABaseProperty.BASE_CLASS, baseClass.getName());
+	}
+	
+	public Class<?> getBaseClass() throws PropertyException {
+		String propertyValue = getProperty(SOABaseProperty.BASE_CLASS);
+		if(propertyValue == null)
+			throw new PropertyException(SOABaseProperty.BASE_CLASS, propertyValue);
+		Class<?> baseClass = null;
+		try{
+			baseClass = ClassLoader.getSystemClassLoader().loadClass(propertyValue);
+		} catch(Exception e){
+			throw new PropertyException(SOABaseProperty.BASE_CLASS, "Cannot extract base class.\nReason: " + e.getMessage());
+		}
+		return baseClass;
+	}
+	
+	
 	
 	//-- Context name
 	
