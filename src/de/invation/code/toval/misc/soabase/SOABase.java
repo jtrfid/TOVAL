@@ -550,12 +550,7 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 		builder.append("      name: ");
 		builder.append(getName());
 		builder.append('\n');
-		
-		if(containsActivities()){
-			builder.append(getActivityDescriptorPlural().toLowerCase() + ": ");
-			builder.append(getActivities());
-			builder.append('\n');
-		}
+
 		if(containsSubjects()){
 			builder.append("  " + getSubjectDescriptorPlural().toLowerCase() + ": ");
 			builder.append(getSubjects());
@@ -564,6 +559,11 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 		if(containsObjects()){
 			builder.append("   " + getObjectDescriptorPlural().toLowerCase() + ": ");
 			builder.append(getObjects());
+			builder.append('\n');
+		}
+		if(containsActivities()){
+			builder.append(getActivityDescriptorPlural().toLowerCase() + ": ");
+			builder.append(getActivities());
 			builder.append('\n');
 		}
 	}
