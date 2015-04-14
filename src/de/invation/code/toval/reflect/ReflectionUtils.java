@@ -42,7 +42,7 @@ public class ReflectionUtils {
 
 	/**
 	 * <p>
-	 * Returns a {@link List} of {@link Class} objects containing all classes of
+	 * Returns a {@link Set} of {@link Class} objects containing all classes of
 	 * a specified package (including subpackages) which implement the given
 	 * interface.
 	 * </p>
@@ -53,7 +53,7 @@ public class ReflectionUtils {
 	 * <pre>
 	 * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
 	 * Class&lt;?&gt; interf = PNParserInterface.class;
-	 * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
+	 * Set&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
 	 * for (Class&lt;?&gt; c : classes) {
 	 * 	System.out.println(c);
 	 * }
@@ -66,10 +66,10 @@ public class ReflectionUtils {
 	 *            Interface which should be implemented.
 	 * @param packageName
 	 *            Package to search for classes.
-	 * @return {@link List} of {@link Class} objects implementing the given
+	 * @return {@link Set} of {@link Class} objects implementing the given
 	 *         interface in the specified package.
 	 */
-	public static List<Class<?>> getInterfaceImplementations(Class<?> interfaze, String packageName) {
+	public static Set<Class<?>> getInterfaceImplementations(Class<?> interfaze, String packageName) {
 		Validate.notNull(interfaze);
 		Validate.notNull(packageName);
 		Validate.notEmpty(packageName);
@@ -81,7 +81,7 @@ public class ReflectionUtils {
 		String packagePath = PACKAGE_PATH_SEPARATOR + packageName.replaceAll("[" + PACKAGE_SEPARATOR + "]", PACKAGE_PATH_SEPARATOR);
 		URL packageURL = interfaze.getResource(packagePath);
 
-		List<Class<?>> classes = new ArrayList<Class<?>>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(packageURL.openStream()));
 			String line = null;
@@ -111,8 +111,31 @@ public class ReflectionUtils {
 	}
 
 	/**
+	 * The same method as
+	 * {@link ReflectionUtils#getInterfaceImplementations(Class, String)}, but
+	 * with the possibility to search in multiple packages. Since the result is
+	 * returned as a {@link Set}, there won't be any duplicates.
+	 */
+	public static Set<Class<?>> getInterfaceImplementations(Class<?> interfaze, List<String> packageNames) {
+		Validate.notNull(interfaze);
+		Validate.notNull(packageNames);
+
+		if (!interfaze.isInterface()) {
+			throw new ParameterException("Parameter is not an interface");
+		}
+
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+
+		for (String packageName : packageNames) {
+			classes.addAll(getInterfaceImplementations(interfaze, packageName));
+		}
+
+		return classes;
+	}
+
+	/**
 	 * <p>
-	 * Returns a {@link List} of {@link Class} objects containing all classes of
+	 * Returns a {@link Set} of {@link Class} objects containing all classes of
 	 * a specified package (including subpackages) which extend the given class.
 	 * </p>
 	 * <p>
@@ -140,10 +163,10 @@ public class ReflectionUtils {
 	 *            Class which should be extended.
 	 * @param packageName
 	 *            Package to search for subclasses.
-	 * @return {@link List} of {@link Class} objects extending the given class
-	 *         in the specified package.
+	 * @return {@link Set} of {@link Class} objects extending the given class in
+	 *         the specified package.
 	 */
-	public static List<Class<?>> getSubclasses(Class<?> clazz, String packageName) {
+	public static Set<Class<?>> getSubclasses(Class<?> clazz, String packageName) {
 		Validate.notNull(clazz);
 		Validate.notNull(packageName);
 		Validate.notEmpty(packageName);
@@ -155,7 +178,7 @@ public class ReflectionUtils {
 		String packagePath = PACKAGE_PATH_SEPARATOR + packageName.replaceAll("[" + PACKAGE_SEPARATOR + "]", PACKAGE_PATH_SEPARATOR);
 		URL packageURL = clazz.getResource(packagePath);
 
-		List<Class<?>> classes = new ArrayList<Class<?>>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(packageURL.openStream()));
 			String line = null;
@@ -179,6 +202,28 @@ public class ReflectionUtils {
 			}
 		} catch (IOException e) {
 			e.printStackTrace(); // shouldn't happen
+		}
+
+		return classes;
+	}
+
+	/**
+	 * The same method as {@link ReflectionUtils#getSubclasses(Class, String)},
+	 * but with the possibility to search in multiple packages. Since the result
+	 * is returned as a {@link Set}, there won't be any duplicates.
+	 */
+	public static Set<Class<?>> getSubclasses(Class<?> clazz, List<String> packageNames) {
+		Validate.notNull(clazz);
+		Validate.notNull(packageNames);
+
+		if (clazz.isInterface() || clazz.isEnum()) {
+			throw new ParameterException("Parameter is not a class");
+		}
+
+		Set<Class<?>> classes = new HashSet<Class<?>>();
+
+		for (String packageName : packageNames) {
+			classes.addAll(getSubclasses(clazz, packageName));
 		}
 
 		return classes;
