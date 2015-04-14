@@ -1038,8 +1038,10 @@ public class Validate {
 	}
 	
 	public static void main(String[] args)  {
-		File f = new File("/Users/stocker/testDirectory/");
-		System.out.println(f.isDirectory());
+		File f = new File("/Users/stocker/Eclipse/Workspace Uni/SWAT20/bin/classes/de/uni/freiburg/iig/telematik/swat/patterns/logic/patterns/ifnet");
+		System.out.println(f.exists());
+		File f2 = new File("/Users/stocker/Eclipse/Workspace%20Uni/SWAT20/bin/classes/de/uni/freiburg/iig/telematik/swat/patterns/logic/patterns/ifnet");
+		System.out.println(f2.exists());
 	}
 
 }

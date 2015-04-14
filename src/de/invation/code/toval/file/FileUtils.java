@@ -28,11 +28,12 @@ public class FileUtils {
 	}
 	
 	public static List<File> getFilesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, final String acceptedEnding) throws IOException{
-		File dir = new File(directory);
-		if(!dir.exists())
-			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing file path.");
-		if(!dir.isDirectory())
-			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "File is not a directory.");
+//		if(!dir.exists())
+//			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing file path.");
+//		if(!dir.isDirectory())
+//			throw new ParameterException(ErrorCode.INCOMPATIBILITY, "File is not a directory.");
+		
+		File dir = Validate.directory(directory);
 		
 		List<File> result = new ArrayList<File>();
 		File[] files = dir.listFiles(new FilenameFilter() {
@@ -264,8 +265,6 @@ public class FileUtils {
 		}
 	}
 	
-	
-	
 	public static void copy(File source, File dest) throws IOException {
 	    InputStream is = null;
 	    OutputStream os = null;
@@ -283,6 +282,35 @@ public class FileUtils {
 	    	if(os != null)
 	    		os.close();
 	    }
+	}
+	
+	public static File writeFile(String path, String fileName, String content) throws IOException{
+		FileWriter writer = new FileWriter(path, fileName);
+		writer.write(content);
+		writer.closeFile();
+		return writer.getFile();
+	}
+	
+	public static String readStringFromFile(String fileName) throws IOException{
+		FileReader reader = new FileReader(fileName);
+		StringBuffer stringBuffer = new StringBuffer();
+		String line = null;
+		while((line = reader.readLine()) != null){
+			stringBuffer.append(line).append(FileWriter.DEFAULT_EOL_STRING);
+		}
+		reader.closeFile();
+		return stringBuffer.toString();
+	}
+	
+	public static List<String> readLinesFromFile(String fileName) throws IOException{
+		FileReader reader = new FileReader(fileName);
+		List<String> lines = new ArrayList<String>();
+		String line = null;
+		while((line = reader.readLine()) != null){
+			lines.add(line);
+		}
+		reader.closeFile();
+		return lines;
 	}
 	
 }
