@@ -36,6 +36,8 @@ public abstract class ConditionalFileDialog {
 		while(fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION && !isValid(fileChooser.getSelectedFile())){
 			JOptionPane.showMessageDialog(parent, getErrorMessage(), "Invalid or corrupted file/directory", JOptionPane.ERROR_MESSAGE);
 		}
+		if(fileChooser.getSelectedFile() == null)
+			return null;
 		return fileChooser.getSelectedFile().getAbsolutePath();
 	}
 	
