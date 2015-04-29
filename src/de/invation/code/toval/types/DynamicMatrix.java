@@ -84,7 +84,8 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 	public String getValueAsString(E row, E col, boolean withHeading) {
 		if(withHeading)
 			return String.format(valueFormatWithHeading, row, col, getValue(row, col));
-		return String.format(valueFormat, row, col, getValue(row, col));
+//		return String.format(valueFormat, row, col, getValue(row, col));
+		return String.format(valueFormat, getValue(row, col));
 	}
 	
 	/**

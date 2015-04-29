@@ -7,12 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import de.invation.code.toval.math.MathUtils;
 import de.invation.code.toval.math.Permutations;
 import de.invation.code.toval.reflect.GenericReflection;
 import de.invation.code.toval.validate.Validate;
-
-
 
 public class ArrayUtils {
 	
@@ -56,7 +53,6 @@ public class ArrayUtils {
 	 * @param defaultValue The default value to use
 	 * @return The created array
 	 */
-	@SuppressWarnings("unchecked")
 	public static Integer[] createAndInitializeArray(int size, Integer start){
 		Integer[] result = new Integer[size];
 		for(int i=0; i<result.length; i++){

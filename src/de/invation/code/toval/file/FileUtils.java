@@ -46,7 +46,7 @@ public class FileUtils {
 				}
 			}
 		});
-		for (int i = 0; i < files.length; i++) {
+		for (int i = 0; files != null && i < files.length; i++) {
 			if(onlyFiles && !files[i].isFile())
 				continue;
 			if(onlyVisibleFiles && files[i].isHidden())
@@ -93,7 +93,7 @@ public class FileUtils {
 		
 		List<File> result = new ArrayList<File>();
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++) {
+		for (int i = 0; files != null && i < files.length; i++) {
 			if(!files[i].isDirectory())
 				continue;
 			result.add(files[i]);
@@ -181,7 +181,7 @@ public class FileUtils {
 	    	throw new IllegalArgumentException("No directory: " + dirName);
 	    
 	    String[] files = file.list();
-	    if(files.length > 0){
+	    if(files != null && files.length > 0){
 	    	if(!recursive)
 	    		throw new IllegalArgumentException("Cannot delete non-empty directory in non-recursive mode: " + dirName);
 	    		

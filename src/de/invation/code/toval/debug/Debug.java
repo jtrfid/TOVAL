@@ -39,7 +39,7 @@ public class Debug {
 	
 	private static Map<Integer, StringBuilder> storedDebugInfo = new HashMap<Integer, StringBuilder>();
 	
-	public static void setOutputMode(OutputMode mode){
+	public static synchronized void setOutputMode(OutputMode mode){
 		outputMode = mode;
 		if(outputMode == OutputMode.FILE && fileWriter == null){
 			try {
@@ -241,7 +241,7 @@ public class Debug {
 	 * Returns the actual time in the format specified by {@link Debug#sdf}.
 	 * @return The actual date
 	 */
-	private static String getTime(){
+	private static synchronized String getTime(){
 		return sdf.format(new Date());
 	}
 	

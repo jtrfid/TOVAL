@@ -38,8 +38,8 @@ public class ValueStatCancellableOnce<U extends Number & Comparable<? super U>> 
 		}
 		if(updateCancelled)
 			throw new UnsupportedOperationException();
-		int compMin = number.compareTo(min);
-		int compMax = number.compareTo(max);
+		int compMin = (int) Math.signum(number.compareTo(min));
+		int compMax = (int) Math.signum(number.compareTo(max));
 
 		if(compMax==0 && compMin==1) {
 			reset(min, lastMax, valueCount-1, nullCount);

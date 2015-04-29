@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 import de.invation.code.toval.types.HashList;
+import de.invation.code.toval.validate.Validate;
 
 
 public class SetUtils {
@@ -77,7 +78,8 @@ public class SetUtils {
 	 * @return Powerset of {@link set}
 	 */
 	public static <T> PowerSet<T> getPowerSet(Set<T> hashSet) {
-		if(hashSet.size()<0)
+		Validate.notNull(hashSet);
+		if(hashSet.size() == 0)
 			throw new IllegalArgumentException("set size 0");
 		HashList<T> hashList = new HashList<T>(hashSet);
 		PowerSet<T> result = new PowerSet<T>(hashList.size());

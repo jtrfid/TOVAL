@@ -105,7 +105,7 @@ public class StringUtils {
 	public static String convertToHTML(String string) throws ParameterException{
 		Validate.notNull(string);
 		String htmlString = "<html>"+string.replace("\n", "<br>")+"</html>";
-		htmlString.replace(" ", "&nbsp;");
+		htmlString = htmlString.replace(" ", "&nbsp;");
 		return htmlString;
 	}
 

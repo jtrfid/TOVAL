@@ -8,12 +8,12 @@ public class ToStringComparator<T> implements Comparator<T> {
 	public int compare(T o1, T o2) {
 		if(o1 == null && o2 != null)
 			return -1;
-		if(o2 == null && o1 != null)
+		else if(o2 == null && o1 != null)
 			return 1;
-		if(o1 == null && o2 == null)
+		else if(o1 == null && o2 == null)
 			return 0;
-		return o1.toString().compareTo(o2.toString());
+		else
+			return o1.toString().compareTo(o2.toString());
 	}
-
 
 }

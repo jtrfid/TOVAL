@@ -14,7 +14,7 @@ import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicLabelUI;
 
 /**
- * A UI delegate for JLabel that rotates the label 90¡
+ * A UI delegate for JLabel that rotates the label 90ï¿½
  * <P>
  * Extends {@link BasicLabelUI}.
  * <P>
@@ -100,9 +100,9 @@ public class VerticalLabelUI extends BasicLabelUI {
       text = super.layoutCL(label, fontMetrics, text, icon,
             verticalViewR, verticalIconR, verticalTextR);
 
-      viewR = copyRectangle(verticalViewR, viewR);
-      iconR = copyRectangle(verticalIconR, iconR);
-      textR = copyRectangle(verticalTextR, textR);
+      copyRectangle(verticalViewR, viewR);
+      copyRectangle(verticalIconR, iconR);
+      copyRectangle(verticalTextR, textR);
       return text;
    }
 

@@ -13,8 +13,6 @@ import java.util.Random;
 import de.invation.code.toval.file.FileWriter;
 import de.invation.code.toval.math.CombinationsCalculator;
 import de.invation.code.toval.math.Permutations;
-import de.invation.code.toval.time.TimeScale;
-import de.invation.code.toval.time.TimeValue;
 import de.invation.code.toval.types.HashList;
 
 
