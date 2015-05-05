@@ -21,7 +21,7 @@ import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 
 
-public class ValueChooserDialog extends AbstractDialog {
+public class ValueChooserDialog extends AbstractDialog<List<String>> {
 	
 	private static final long serialVersionUID = 2306027725394345926L;
 	
@@ -92,12 +92,6 @@ public class ValueChooserDialog extends AbstractDialog {
 			}
 		}
 		return stringList;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<String> getDialogObject(){
-		return (List<String>) super.getDialogObject();
 	}
 	
 	public static List<String> showDialog(Window owner, String title, Collection<String> values) throws Exception{

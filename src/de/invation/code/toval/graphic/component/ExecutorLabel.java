@@ -106,19 +106,19 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 	}
 
 	@Override
-	public void executorStarted() throws Exception {
+	public void executorStarted() {
 		running = true;
 		setGraphicsRunning();
 	}
 
 	@Override
-	public void executorStopped() throws Exception {
+	public void executorStopped() {
 		running = false;
 		setGraphicsCancelled();
 	}
 
 	@Override
-	public void executorFinished() throws Exception {
+	public void executorFinished() {
 		System.out.println("finished");
 		running = false;
 		setGraphicsFinished();

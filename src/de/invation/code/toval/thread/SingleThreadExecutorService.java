@@ -2,6 +2,7 @@ package de.invation.code.toval.thread;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +29,7 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 		listeners.add(listener);
 	}
 	
-	public void setUpAndRun() throws Exception{
+	public void setUpAndRun(){
 		executorService = Executors.newSingleThreadExecutor();
 		AbstractCallable<V> callable = getCallable();
 		callable.addCallableListener(this);
@@ -47,7 +48,7 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 			listener.executorStopped();
 	}
 	
-	public V getResult() throws InterruptedException, ExecutionException {
+	public V getResult() throws CancellationException, InterruptedException, ExecutionException {
 		return futureResult.get();
 	}
 	

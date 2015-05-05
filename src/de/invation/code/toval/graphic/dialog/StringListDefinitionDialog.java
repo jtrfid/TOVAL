@@ -16,7 +16,7 @@ import de.invation.code.toval.graphic.util.SpringUtilities;
 import de.invation.code.toval.misc.StringUtils;
 
 
-public class StringListDefinitionDialog extends AbstractDialog {
+public class StringListDefinitionDialog extends AbstractDialog<List<String>> {
 
 	private static final long serialVersionUID = 6102535150943274087L;
 	
@@ -77,12 +77,6 @@ public class StringListDefinitionDialog extends AbstractDialog {
 			getDialogObject().add(token);
 		}
 		super.okProcedure();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected List<String> getDialogObject() {
-		return (List<String>) super.getDialogObject();
 	}
 	
 	public static List<String> showDialog(Window owner, String title) throws Exception{

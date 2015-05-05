@@ -21,7 +21,7 @@ import javax.swing.event.ListSelectionListener;
 import de.invation.code.toval.graphic.component.BoxLayoutPanel;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 
-public class DefineGenerateDialog extends AbstractDialog {
+public class DefineGenerateDialog extends AbstractDialog<List<String>> {
 
 	private static final long serialVersionUID = -1396837102031308301L;
 	
@@ -139,12 +139,6 @@ public class DefineGenerateDialog extends AbstractDialog {
 	        );
 		}
 		return stringList;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<String> getDialogObject(){
-		return (List<String>) super.getDialogObject();
 	}
 	
 	public static List<String> showDialog(Window owner, String title) throws Exception{

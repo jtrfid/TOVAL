@@ -12,7 +12,7 @@ import javax.swing.SwingConstants;
 import de.invation.code.toval.graphic.util.SpringUtilities;
 
 
-public class StringListGeneratorDialog extends AbstractDialog {
+public class StringListGeneratorDialog extends AbstractDialog<List<String>> {
 
 	private static final long serialVersionUID = -3983005550619271102L;
 	
@@ -66,12 +66,6 @@ public class StringListGeneratorDialog extends AbstractDialog {
 
 	@Override
 	protected void setTitle() {}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<String> getDialogObject(){
-		return (List<String>) super.getDialogObject();
-	}
 	
 	private List<String> createStringList(int number, String prefix, String postfix) {
 		return createStringList(number, prefix + "%s" + postfix);

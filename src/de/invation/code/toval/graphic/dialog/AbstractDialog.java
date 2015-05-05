@@ -17,6 +17,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -24,7 +25,7 @@ import javax.swing.border.Border;
 
 import de.invation.code.toval.validate.Validate;
 
-public abstract class AbstractDialog extends JDialog {
+public abstract class AbstractDialog<O> extends JDialog {
 	
 	private static final long serialVersionUID = -5864654213215817665L;
 	
@@ -36,8 +37,7 @@ public abstract class AbstractDialog extends JDialog {
 	
 	protected JButton btnOK = null;
 	protected JButton btnCancel = null;
-	protected Object dialogObject;
-	protected boolean editMode;
+	protected O dialogObject;
 	protected ButtonPanelLayout buttonLayout = DEFAULT_BUTTON_LAYOUT;
 	protected Window owner = null;
 	
@@ -47,6 +47,7 @@ public abstract class AbstractDialog extends JDialog {
 	protected AbstractDialog(Window owner) {
 		super(owner);
 		this.owner = owner;
+		initialize();
 	}
 	
 	protected AbstractDialog(Window owner, String title) {
@@ -61,25 +62,7 @@ public abstract class AbstractDialog extends JDialog {
 		this.buttonLayout = buttonLayout;
 	}
 	
-	protected AbstractDialog(Window owner, boolean editMode) {
-		this(owner);
-		Validate.notNull(editMode);
-		this.editMode = editMode;
-	}
-	
-	protected AbstractDialog(Window owner, String title, boolean editMode) {
-		this(owner, title);
-		Validate.notNull(editMode);
-		this.editMode = editMode;
-	}
-	
-	protected AbstractDialog(Window owner, Boolean editMode, ButtonPanelLayout buttonLayout) {
-		this(owner);
-		Validate.notNull(editMode);
-		Validate.notNull(buttonLayout);
-		this.editMode = editMode;
-		this.buttonLayout = buttonLayout;
-	}
+	protected void initialize(){}
 	
 	protected void setUpGUI() throws Exception{
 		this.setResizable(true);
@@ -98,15 +81,15 @@ public abstract class AbstractDialog extends JDialog {
 		
 		addComponents();
 		
-		if(editMode){
-			prepareEditing();
-		}
+		initializeContent();
 
 		pack();
 		this.setLocationRelativeTo(owner);
 		this.setVisible(true);
 	}
 	
+	protected void initializeContent() throws Exception {}
+
 	private void addListeners() {
 		addWindowListener(new WindowListener() {	
 			@Override
@@ -162,15 +145,13 @@ public abstract class AbstractDialog extends JDialog {
 	}
 	
 	
-	protected Object getDialogObject(){
+	protected O getDialogObject(){
 		return dialogObject;
 	}
 	
-	protected void setDialogObject(Object value){
-		this.dialogObject = value;
+	protected void setDialogObject(O object){
+		this.dialogObject = object;
 	}
-	
-	protected void prepareEditing() throws Exception {};
 	
 	protected abstract void addComponents() throws Exception;
 	
@@ -267,9 +248,6 @@ public abstract class AbstractDialog extends JDialog {
 	}
 	
 	protected void cancelProcedure(){
-		if(!editMode){
-			setDialogObject(null);
-		}
 		dispose();
 	}
 	
@@ -279,6 +257,18 @@ public abstract class AbstractDialog extends JDialog {
 	
 	public enum ButtonPanelLayout {
 		CENTERED, LEFT_RIGHT;
+	}
+	
+	protected void errorMessage(String title, String message){
+		JOptionPane.showMessageDialog(AbstractDialog.this, message, title, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	protected void invalidFieldContentMessage(String message){
+		errorMessage("Invalid Parameter", "Invalid field content.\nCause: " + message);
+	}
+	
+	protected void internalExceptionMessage(String message){
+		errorMessage("Internal Exception", message);
 	}
 
 }

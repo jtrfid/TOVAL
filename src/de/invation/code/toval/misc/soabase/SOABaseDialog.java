@@ -21,7 +21,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -30,7 +29,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.Border;
 
-import de.invation.code.toval.graphic.dialog.AbstractDialog;
+import de.invation.code.toval.graphic.dialog.AbstractEditCreateDialog;
 import de.invation.code.toval.graphic.dialog.DefineGenerateDialog;
 import de.invation.code.toval.graphic.dialog.StringDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
@@ -39,7 +38,7 @@ import de.invation.code.toval.validate.ParameterException;
 
 
 
-public class SOABaseDialog extends AbstractDialog {
+public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
 
 	private static final long serialVersionUID = 1348084157428660980L;
 	public static final Dimension PREFERRED_SIZE = new Dimension(499, 350);
@@ -70,41 +69,47 @@ public class SOABaseDialog extends AbstractDialog {
 	protected boolean subjectsAssigned;
 	protected boolean ObjectsAssigned;
 	
-	private SOABase originalContext;
-	
 	public SOABaseDialog(Window owner) throws Exception {
 		super(owner);
-		initialize();
 	}
 	
 	public SOABaseDialog(Window owner, SOABase context) throws Exception {
-		super(owner);
-		this.editMode = true;
-		this.originalContext = context;
-		initialize();
+		super(owner, context);
 	}
 	
+	@Override
 	protected void initialize() {
-		if(editMode){
-			setDialogObject(originalContext.clone());
-		} else {
-			setDialogObject(new SOABase(SOABase.DEFAULT_NAME));
-		}
+		super.initialize();
 		activityListModel = new DefaultListModel();
 		subjectListModel = new DefaultListModel();
 		ObjectListModel = new DefaultListModel();
-		addActivitiesAction = new AddActivitiesAction();
-		addSubjectsAction = new AddSubjectsAction();
-		addObjectsAction = new AddObjectsAction();
 		activitiesAssigned = false;
 		subjectsAssigned = false;
 		ObjectsAssigned = false;
 	}
 	
-	protected SOABase originalContext(){
-		return originalContext;
-	}
 	
+	
+	@Override
+	protected SOABase newDialogObject(Object... parameters) {
+		return new SOABase();
+	}
+
+	@Override
+	protected void validateAndSetFieldValues() throws Exception {
+		if(getDialogObject() == null || getDialogObject().isEmpty())
+			throw new ParameterException( "Empty context.");
+		
+		if(getDialogObject().getName().isEmpty())
+			throw new ParameterException("Context name cannot be empty.");
+
+		try {
+			getDialogObject().setName(txtContextName.getText());
+		} catch (Exception e1) {
+			throw new ParameterException("Cannot set context name.\nReason: " + e1.getMessage());
+		}
+	}
+
 	@Override
 	protected Border getBorder() {
 		return BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -117,6 +122,9 @@ public class SOABaseDialog extends AbstractDialog {
 		namePanel.add(new JLabel("Name:"));
 		namePanel.add(getContextNameField());
 		mainPanel().add(namePanel, BorderLayout.PAGE_START);
+		addActivitiesAction = new AddActivitiesAction();
+		addSubjectsAction = new AddSubjectsAction();
+		addObjectsAction = new AddObjectsAction();
 		mainPanel().add(getComponentsPanel(), BorderLayout.CENTER);
 		Component componentsExtension = getComponentsExtensionPanel();
 		if(componentsExtension != null){
@@ -162,7 +170,7 @@ public class SOABaseDialog extends AbstractDialog {
 	
 	@Override
 	protected void setTitle() {
-		if(editMode){
+		if(editMode()){
 			setTitle("Edit Context");
 		} else {
 			setTitle("New Context");
@@ -175,41 +183,6 @@ public class SOABaseDialog extends AbstractDialog {
 	}
 	
 	//------- BUTTONS --------------------------------------------------------------------------------------------
-
-	@Override
-	protected void okProcedure() {
-		if(getDialogObject() == null || getDialogObject().isEmpty()){
-			JOptionPane.showMessageDialog(SOABaseDialog.this, "Empty context.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		if(getDialogObject().getName().isEmpty()){
-			JOptionPane.showMessageDialog(SOABaseDialog.this, "Context name cannot be empty.", "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-
-		try {
-			getDialogObject().setName(txtContextName.getText());
-		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot set context name.\nReason: " + e1.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		if(originalContext != null){
-			try{
-				originalContext.takeoverValues(getDialogObject(), true);
-			}catch(Exception e){
-				JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot store context changes.\nReason: " + e.getMessage(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		dispose();
-	}
-
-	@Override
-	protected void cancelProcedure(){	
-		setDialogObject(null);
-		dispose();
-	}
 	
 	private JButton getAddActivitiesButton(){
 		if(btnAddActivities == null){
@@ -263,7 +236,7 @@ public class SOABaseDialog extends AbstractDialog {
 						try {
 							StringDialog.showDialog(SOABaseDialog.this, "Context: " + getDialogObject().getName(), getDialogObject().toString(), false);
 						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot launch StringDialog.\nReason:" + e1.getMessage(), "Error on launching StringDialog", JOptionPane.ERROR_MESSAGE);
+							internalExceptionMessage("Cannot launch StringDialog.\nReason:" + e1.getMessage());
 						}
 					}
 				}
@@ -323,7 +296,7 @@ public class SOABaseDialog extends AbstractDialog {
 									activitiesAssigned = false;
 								}
 							} catch (Exception e1) {
-								JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot remove activities.\nReason: " + e1.getMessage(), "Internal Error", JOptionPane.ERROR_MESSAGE);
+								errorMessage("Invalid Parameter", "Cannot remove activities.\nReason: " + e1.getMessage());
 								return;
 							}
 							updateActivityList(true);
@@ -362,7 +335,7 @@ public class SOABaseDialog extends AbstractDialog {
 									subjectsAssigned = false;
 								}
 							} catch (Exception e1) {
-								JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot remove subjects.\nReason: " + e1.getMessage(), "Internal Error", JOptionPane.ERROR_MESSAGE);
+								errorMessage("Invalid Parameter", "Cannot remove subjects.\nReason: " + e1.getMessage());
 								return;
 							}
 							updateSubjectList(true);
@@ -401,7 +374,7 @@ public class SOABaseDialog extends AbstractDialog {
 									ObjectsAssigned = false;
 								}
 							} catch (Exception e1) {
-								JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot remove Objects:\nReason: " + e1.getMessage(), "Internal Error", JOptionPane.ERROR_MESSAGE);
+								errorMessage("Invalid Parameter", "Cannot remove Objects:\nReason: " + e1.getMessage());
 								return;
 							}
 							updateObjectList(true);
@@ -475,13 +448,13 @@ public class SOABaseDialog extends AbstractDialog {
 			try {
 				objects = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getObjectDescriptorPlural());
 			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(SOABaseDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
 			}
 			if(objects != null){
 				try {
 					getDialogObject().addObjects(objects);
-				} catch (ParameterException e1) {
-					JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot add " + getDialogObject().getObjectDescriptorPlural().toLowerCase() + " to context.", "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e1) {
+					errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getObjectDescriptorPlural().toLowerCase() + " to context.");
 					return;
 				}
 				ObjectsAssigned = true;
@@ -505,13 +478,13 @@ public class SOABaseDialog extends AbstractDialog {
 			try {
 				subjects = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getSubjectDescriptorPlural());
 			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(SOABaseDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
 			}
 			if(subjects != null){
 				try {
 					getDialogObject().addSubjects(subjects);
-				} catch (ParameterException e1) {
-					JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot add " + getDialogObject().getSubjectDescriptorPlural().toLowerCase() + " to context.", "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e1) {
+					errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getSubjectDescriptorPlural().toLowerCase() + " to context.");
 					return;
 				}
 				subjectsAssigned = true;
@@ -535,13 +508,13 @@ public class SOABaseDialog extends AbstractDialog {
 			try {
 				activities = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getActivityDescriptorPlural());
 			} catch (Exception e2) {
-				JOptionPane.showMessageDialog(SOABaseDialog.this, "<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>", "Internal Exception", JOptionPane.ERROR_MESSAGE);
+				internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
 			}
 			if(activities != null){
 				try {
 					getDialogObject().addActivities(activities);
-				} catch (ParameterException e1) {
-					JOptionPane.showMessageDialog(SOABaseDialog.this, "Cannot add " + getDialogObject().getActivityDescriptorPlural().toLowerCase() + " to context: \n" + e1.getMessage(), "Inconsistency Exception", JOptionPane.ERROR_MESSAGE);
+				} catch (Exception e1) {
+					errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getActivityDescriptorPlural().toLowerCase() + " to context: \n" + e1.getMessage());
 					return;
 				}
 				activitiesAssigned = true;
@@ -553,6 +526,8 @@ public class SOABaseDialog extends AbstractDialog {
 	
 	private abstract class ContextContentPanel extends JPanel {
 		
+		private static final long serialVersionUID = 3530688424334811142L;
+
 		public ContextContentPanel(JList content, String description, JButton button){
 			super(new BorderLayout());
 			add(new JLabel(description + ":"), BorderLayout.PAGE_START);

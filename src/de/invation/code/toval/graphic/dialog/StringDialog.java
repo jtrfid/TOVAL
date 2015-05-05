@@ -7,7 +7,7 @@ import java.awt.Window;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class StringDialog extends AbstractDialog {
+public class StringDialog extends AbstractDialog<String> {
 
 	private static final long serialVersionUID = 4501959307493776929L;
 	
@@ -51,11 +51,6 @@ public class StringDialog extends AbstractDialog {
 
 	@Override
 	protected void setTitle() {}
-	
-	@Override
-	protected String getDialogObject() {
-		return (String) super.getDialogObject();
-	}
 
 	@Override
 	protected void okProcedure() {

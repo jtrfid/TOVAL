@@ -60,8 +60,13 @@ public class AlternatingRowColorListCellRenderer extends JLabel implements ListC
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus){
 
-		setText(value.toString());
-		setToolTipText(value.toString());
+		if(value != null){
+			setText(getText(value));
+			setToolTipText(getTooltip(value));
+		} else {
+			setText("");
+			setToolTipText("");
+		}
 
 		if (isSelected) {
 			setBackground(selectedColor);
@@ -77,5 +82,12 @@ public class AlternatingRowColorListCellRenderer extends JLabel implements ListC
 		}
 		return this;
 	}
+	
+	protected String getText(Object value){
+		return value.toString();
+	}
 
+	protected String getTooltip(Object value){
+		return value.toString();
+	}
 }

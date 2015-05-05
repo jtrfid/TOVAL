@@ -30,7 +30,7 @@ import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRender
 import de.invation.code.toval.validate.Validate;
 
 
-public class ValueEditingDialog extends AbstractDialog {
+public class ValueEditingDialog extends AbstractDialog<Set<String>> {
 	
 	private static final long serialVersionUID = 2306027725394345926L;
 	
@@ -184,12 +184,6 @@ public class ValueEditingDialog extends AbstractDialog {
 		ValueEditingDialog editingDialog = new ValueEditingDialog(owner, title, values);
 		editingDialog.setUpGUI();
 		return editingDialog.getDialogObject();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected Set<String> getDialogObject() {
-		return (Set<String>) super.getDialogObject();
 	}
 	
 	public static void main(String[] args) throws Exception {

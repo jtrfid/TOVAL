@@ -12,14 +12,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import de.invation.code.toval.graphic.dialog.DialogObject;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.CompatibilityException;
 import de.invation.code.toval.validate.InconsistencyException;
 import de.invation.code.toval.validate.ParameterException;
-import de.invation.code.toval.validate.Validate;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
+import de.invation.code.toval.validate.Validate;
 
-public class SOABase implements Cloneable, SOABaseEditingInterface{
+public class SOABase implements Cloneable, DialogObject<SOABase>, SOABaseEditingInterface{
 	
 	public static final String DEFAULT_NAME = "Context";
 	public static final String DEFAULT_SUBJECT_DESCRIPTOR = "Subject;Subjects";
@@ -42,8 +43,8 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 	
 	protected SOABaseListenerSupport contextListenerSupport;
 	
-	protected SOABase(){
-		initialize();
+	public SOABase(){
+		this(DEFAULT_NAME);
 	}
 	
 	public SOABase(String name) {
@@ -588,11 +589,16 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 		}
 
 		properties.setBaseClass(this.getClass());
+		properties.setPropertiesClass(getPropertiesClass());
 		properties.setName(getName());
 		properties.setSubjects(getSubjects());
 		properties.setObjects(getObjects());
 		properties.setActivities(getActivities());
 		return properties;
+	}
+	
+	public void takeoverValues(SOABase context) throws Exception {
+		takeoverValues(context, false);
 	}
 	
 	public void takeoverValues(SOABase context, boolean notifyListeners) throws Exception {
@@ -779,6 +785,20 @@ public class SOABase implements Cloneable, SOABaseEditingInterface{
 			throw new Exception("Cannot create SOABase instance.\nReason: " + e.getMessage());
 		}
 		return (SOABase) newInstance;
+	}
+	
+	public static SOABase createSOABase(String name, int activities, int subjects, int objects){
+		SOABase result = new SOABase(name);
+		String activityPrefix = "act";
+		String objectPrefix = "obj";
+		String subjectPrefix = "subj";
+		for(int i=0; i<activities; i++)
+			result.addActivity(String.format("%s_%s", activityPrefix, i));
+		for(int j=0; j<subjects; j++)
+			result.addSubject(String.format("%s_%s", subjectPrefix, j));
+		for(int k=0; k<objects; k++)
+			result.addObject(String.format("%s_%s", objectPrefix, k));
+		return result;
 	}
 
 //	public static void main(String[] args) throws Exception {
