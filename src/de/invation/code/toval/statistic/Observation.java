@@ -74,7 +74,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 */
@@ -249,7 +249,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 * @return The degrees of the moments that are calculated.
@@ -266,7 +266,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 * If there are calculated moments a recalculation is triggered.
@@ -285,7 +285,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 * If there are calculated moments a recalculation is triggered.
@@ -391,7 +391,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 * @return The calculated moments (probabilistic measure)
@@ -457,7 +457,7 @@ public class Observation implements Serializable {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 */

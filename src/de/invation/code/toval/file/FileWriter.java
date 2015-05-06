@@ -383,11 +383,4 @@ public class FileWriter {
 		}
 	}
 
-	public static void main(String[] args) throws Exception{
-		FileWriter writer = new FileWriter(Charset.forName("MacRoman"), EOLType.CRLF);
-		writer.writeLine("Tšst");
-		writer.writeLine("TŸst");
-		writer.closeFile();
-	}
-
 }

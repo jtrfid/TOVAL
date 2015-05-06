@@ -98,7 +98,7 @@ public class ExtendedObservation extends Observation {
 	 * <ul>
 	 * <li>2nd moment: variance</li>
 	 * <li>3rd moment: skewness (Schiefe)</li>
-	 * <li>4th moment: kurtosis (Wölbung)</li>
+	 * <li>4th moment: kurtosis (Woelbung)</li>
 	 * <li>...</li>
 	 * </ul>
 	 * <br>

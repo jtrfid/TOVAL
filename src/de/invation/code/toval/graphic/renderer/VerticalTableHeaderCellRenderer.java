@@ -13,7 +13,7 @@ import javax.swing.UIManager;
 import de.invation.code.toval.graphic.ui.VerticalLabelUI;
 
 /**
- * A renderer for a JTableHeader with text rotated 90¡ counterclockwise.
+ * A renderer for a JTableHeader with text rotated 90 degrees counterclockwise.
  * <P>
  * Extends {@link DefaultTableHeaderCellRenderer}.
  * 
@@ -63,7 +63,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
 	}
 
 	/**
-	 * An icon implementation to paint the contained icon rotated 90¡ clockwise.
+	 * An icon implementation to paint the contained icon rotated 90 degrees clockwise.
 	 * <P>
 	 * This implementation assumes that the L&F provides ascending and descending sort icons of identical size.
 	 */
@@ -77,7 +77,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
 		}
 
 		/**
-		 * Paints an icon suitable for the header of a sorted table column, rotated by 90¡ clockwise. This rotation is applied to compensate the rotation already applied to the passed in Graphics reference by the VerticalLabelUI.
+		 * Paints an icon suitable for the header of a sorted table column, rotated by 90 degrees clockwise. This rotation is applied to compensate the rotation already applied to the passed in Graphics reference by the VerticalLabelUI.
 		 * <P>
 		 * The icon is retrieved from the UIManager to obtain an icon appropriate to the L&F.
 		 * 

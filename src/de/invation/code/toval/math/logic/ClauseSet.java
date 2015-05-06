@@ -57,7 +57,7 @@ public class ClauseSet extends HashList<Clause> implements Comparator<ClauseSet>
 	
 	public String toString(){
 		if(isEmpty()){
-			return "¿";
+			return "{}";
 		} else {
 			String s = "{";
 			for(Iterator<Clause> i = iterator(); i.hasNext();){

@@ -125,7 +125,7 @@ public class GraphicUtils {
 	    sinPhi=dy/s;                          // Winkel des Pfeils 
 	    cosPhi=dx/s;                          // mit der X-Achse
 	    if(s<headLength) {                        // Der Pfeil 
-	      x0=x1-headLength*cosPhi;                // .. darf nicht kürzer 
+	      x0=x1-headLength*cosPhi;                // .. darf nicht kuerzer 
 	      y0=y1-headLength*sinPhi;                // .. als die Spitze sein
 	    }
 	    xk1=-headLength*Math.cos(arrowAngle);              // Koordinaten

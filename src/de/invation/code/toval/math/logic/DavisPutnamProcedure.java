@@ -20,7 +20,7 @@ public class DavisPutnamProcedure {
 			if(clauseSet.isEmpty() || clauseSet.get(0).isEmpty())
 				break;
 			//Debug.message("variable: "+varSet.get(count-1));
-			//Step 1: Remove all clauses from ClauseSet, that contain a literal l and its inverse Âl
+			//Step 1: Remove all clauses from ClauseSet, that contain a literal l and its inverse dl
 			tempClauses.clear();
 			for(Clause c1: clauseSet)
 				if(c1.hasTwinLiterals())

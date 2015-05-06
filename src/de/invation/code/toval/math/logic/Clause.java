@@ -95,7 +95,7 @@ public class Clause extends HashList<Literal> implements Comparator<Clause>{
 	
 	public String toString(){
 		if(isEmpty()){
-			return "¿";
+			return "{}";
 		} else {
 			String s = "{";
 			for(Iterator<Literal> i = iterator(); i.hasNext();){
