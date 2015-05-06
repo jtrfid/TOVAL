@@ -55,8 +55,14 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.java" />
 			</fileset>
+			<fileset dir="${res.dir}">
+				<include name="**/*.java" />
+			</fileset>
 		</javadoc>
 		<javadoc sourcepath="${res.dir}" destdir="${docs.temp.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
 			<fileset dir="${res.dir}">
 				<include name="**/*.java" />
 			</fileset>
