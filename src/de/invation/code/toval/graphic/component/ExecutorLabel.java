@@ -119,7 +119,6 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 
 	@Override
 	public void executorFinished() {
-		System.out.println("finished");
 		running = false;
 		setGraphicsFinished();
 	}
