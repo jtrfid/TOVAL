@@ -196,8 +196,7 @@ public class Observation implements Serializable {
 	//-----GETTER + SETTER--------------------------------------------------------------------------
 	
 	/**
-	 * Sets the standard precision used for String conversions of inserted values.<br>
-	 * @param format The String format for inserted values
+	 * Sets the standard precision used for String conversions of inserted values.
 	 */
 	public void setStandardPrecision(int precision) {
 		if(precision < 0)
@@ -310,7 +309,7 @@ public class Observation implements Serializable {
 	 * Returns the number of occurrences of the given value.
 	 * @param value The value for which the number of occurrences is desired
 	 * @return The number of occurrences of the given value
-	 * @throws IllegalArgumentException if there are no occurrences of {@link value}
+	 * @throws IllegalArgumentException if there are no occurrences of <code>value</code>
 	 */
 	public Integer getOccurrencesOf(Double value) {
 		if(!insertStat.containsKey(value))
@@ -502,7 +501,7 @@ public class Observation implements Serializable {
 	
 	/**
 	 * Returns a String representation of the observation containing all values and characteristics<br>
-	 * using identation which is specified by {@link identation} as the number of spaces.
+	 * using identation which is specified by <code>identation</code> as the number of spaces.
 	 * @param identation The number of spaces used for identation
 	 * @return A String representation of the observation with identation
 	 */
@@ -557,7 +556,7 @@ public class Observation implements Serializable {
 	/**
 	 * Returns a String representation of the observation containing all values and characteristics.
 	 * @return A String representation of the observation;
-	 * @see #toString(String)
+	 * @see #toString(int)
 	 */
 	@Override
 	public String toString() {

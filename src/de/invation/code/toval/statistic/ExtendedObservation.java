@@ -146,7 +146,7 @@ public class ExtendedObservation extends Observation {
 	
 	/**
 	 * Returns a String representation of the extended observation containing all values and characteristics<br>
-	 * using identation which is specified by {@link identation} as the number of spaces.
+	 * using identation which is specified by <code>identation</code> as the number of spaces.
 	 * @param identation The number of spaces used for identation
 	 * @return A String representation of the extended observation with identation
 	 */

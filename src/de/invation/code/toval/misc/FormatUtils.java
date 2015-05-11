@@ -29,8 +29,7 @@ public class FormatUtils {
 	 * Generator-String used for creating generator-strings for creating formats with trim-constraints.<br>
 	 * It provides a basis for generating formatted output with a fixed length
 	 * and can be parameterized by the desired length.
-	 * @see #getTrimFormat(int)
-	 * @see #trimToLength(Object, int)
+	 * @see #getTrimmedFormat(String, int)
 	 */
 	private static final String TRIM_BASE_FORMAT = "%%%s%%s";
 	/**
@@ -143,7 +142,7 @@ public class FormatUtils {
 	 * Returns an indexed format by placing the specified index before the given format.
 	 * @param index Desired index for the given format
 	 * @param format Format to be indexed
-	 * @return The format {@link format} indexed with {@link index}
+	 * @return The format <code>format</code> indexed with <code>index</code>
 	 */
 	public static String getIndexedFormat(int index, String format) {
 		if(index<1)
@@ -160,7 +159,7 @@ public class FormatUtils {
 	 * It assumes that the given String is a valid format.
 	 * @param format Format to extend
 	 * @param length Desired fixed output length for formatted output
-	 * @return Extended version of {@link format} by trim-constraints
+	 * @return Extended version of <code>format</code> by trim-constraints
 	 */
 	public static String getTrimmedFormat(String format, int length) {
 		return String.format('%'+String.format(TRIM_BASE_FORMAT, length), format.substring(1));

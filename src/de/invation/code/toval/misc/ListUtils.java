@@ -24,14 +24,14 @@ public class ListUtils {
 	 * Returns a random element of the given list.
 	 * @param <T> Type of list elements
 	 * @param list List
-	 * @return Random element of {@link list}
+	 * @return Random element of <code>list</code>
 	 */
 	public static <T> T getRandomItem(List<T> list){
 		return list.get(rand.nextInt(list.size()));
 	}
 	
 	/**
-	 * Inserts a heade
+	 * Inserts a header
 	 * @param <T>
 	 * @param list
 	 * @param headerValue
@@ -55,9 +55,9 @@ public class ListUtils {
 	/**
 	 * Expands an integer list to a size equal to its value range
 	 * and adds <code>null</code>-value entries for every missing intermediate integer value.
-	 * If {@link replace} is not <code>null</code>, all original values are replaced by {@link replace}.
+	 * If <code>replace</code> is not <code>null</code>, all original values are replaced by <code>replace</code>.
 	 * @param list List containing integer values
-	 * @param replace Replacement for existing values within {@link list}
+	 * @param replace Replacement for existing values within <code>list</code>
 	 * @return An expanded list containing null values for missing intermediate integer values
 	 * and optionally replaced original values
 	 */
@@ -87,11 +87,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Returns a new list containing all elements of the original list but {@link exclude}
+	 * Returns a new list containing all elements of the original list but <code>exclude</code>
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
 	 * @param exclude Element to exclude
-	 * @return A new List containing all elements of the original list but {@link exclude}
+	 * @return A new List containing all elements of the original list but <code>exclude</code>
 	 */
 	public static <T> List<T> getListWithout(List<T> list, T exclude){
 		List<T> result = new ArrayList<T>(list.size());
@@ -102,11 +102,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Returns a new list containing all elements of the original list but the elements in {@link exclude}
+	 * Returns a new list containing all elements of the original list but the elements in <code>exclude</code>
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
 	 * @param exclude Elements to exclude
-	 * @return A new List containing all elements of the original list but the elements in {@link exclude}
+	 * @return A new List containing all elements of the original list but the elements in <code>exclude</code>
 	 */
 	public static <T> List<T> getListWithout(List<T> list, List<T> exclude){
 		List<T> result = new ArrayList<T>(list.size());
@@ -127,7 +127,7 @@ public class ListUtils {
 	 * Converts a list to an array of the same type.
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
-	 * @return An array of the same type containing all elements of {@link list}
+	 * @return An array of the same type containing all elements of <code>list</code>
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T[] asArray(List<T> list) {
@@ -135,11 +135,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Creates a mutable list containing {@link n} copies of {@link value}.
+	 * Creates a mutable list containing <code>n</code> copies of <code>value</code>.
 	 * @param <T> Type of list elements
 	 * @param value Basic value for list generation
 	 * @param n Number of copies
-	 * @return A mutable list containing {@link n} copies of {@link value}
+	 * @return A mutable list containing <code>n</code> copies of <code>value</code>
 	 */
 	public static <T> List<T> createList(T value, int n){
 		ArrayList<T> result = new ArrayList<T>(n);
@@ -149,7 +149,7 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Creates a mutable list containing {@link size} incrementing integer values beginning with {@link begin}.
+	 * Creates a mutable list containing <code>size</code> incrementing integer values beginning with <code>begin</code>.
 	 * @param size Number of integer values within the result list
 	 * @param begin First integer to start with
 	 * @return A list containing incrementing integer values beginning with the specified value
@@ -164,14 +164,14 @@ public class ListUtils {
 
 	
 	/**
-	 * Divides the given list using the boundaries in {@link cuts}.<br>
+	 * Divides the given list using the boundaries in <code>cuts</code>.<br>
 	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
 	 * divides the given list in 0...i-1 + i...n<br>
 	 * This method deals with both cut positions including and excluding start and end-indexes<br>
 	 * @param <T> Type of list elements
 	 * @param list The list to divide
 	 * @param cuts Cut positions for divide operations
-	 * @return A list of sublists of {@link list} according to the given cut positions
+	 * @return A list of sublists of <code>list</code> according to the given cut positions
 	 */
 	public static <T> List<List<T>> divideList(List<T> list, Integer... cuts) {
 		Arrays.sort(cuts);
@@ -196,13 +196,13 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Divides the given object-list using the boundaries in {@link cuts}.<br>
+	 * Divides the given object-list using the boundaries in <code>cuts</code>.<br>
 	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
 	 * divides the given list in 0...i-1 + i...n<br>
 	 * This method deals with both cut positions including and excluding start and end-indexes<br>
 	 * @param list List to divide
 	 * @param cuts Cut positions for divide operations
-	 * @return A list of sublists of {@link list} according to the given cut positions
+	 * @return A list of sublists of <code>list</code> according to the given cut positions
 	 * @see #divideList(List, Integer...)
 	 */
 	public static List<List<Object>> divideObjectList(List<Object> list, Integer... cuts) {
@@ -271,7 +271,7 @@ public class ListUtils {
 	 * @param list Basic list for operation
 	 * @param from Start-index (inclusive) for copy operation
 	 * @param to End-index (inclusive) for copy operation
-	 * @return The sublist of {@link list} starting at index {@link from} and ending at index {@link to}
+	 * @return The sublist of <code>list</code> starting at index <code>from</code> and ending at index <code>to</code>
 	 */
 	public static <T> List<T> copyOfRange(List<T> list, int from, int to) {
 		if(from<0 || from >=list.size() || to<0 || to>=list.size() || from>to)
@@ -286,7 +286,7 @@ public class ListUtils {
 	 * Returns a copy of the given list.
 	 * @param <T> Type of list elements
 	 * @param list List to copy
-	 * @return Copy of {@link list} containing the same elements
+	 * @return Copy of <code>list</code> containing the same elements
 	 */
 	public static <T> List<T> copyOf(List<T> list) {
 		ArrayList<T> result = new ArrayList<T>(list.size());
@@ -350,11 +350,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Generates a random sublist of {@link list}, that contains at most {@link maxCount} elements.
+	 * Generates a random sublist of <code>list</code>, that contains at most <code>maxCount</code> elements.
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
 	 * @param maxCount Maximum number of items
-	 * @return A sublist with at most {@link maxCount} elements
+	 * @return A sublist with at most <code>maxCount</code> elements
 	 */
 	public static <T> List<T> getRandomSublistMax(List<T> list, int maxCount){
 		int count = rand.nextInt(maxCount)+1;
@@ -362,11 +362,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Generates a random sublist of {@link list}, that contains at least {@link maxCount} elements.
+	 * Generates a random sublist of <code>list</code>, that contains at least <code>maxCount</code> elements.
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
 	 * @param minCount Minimum number of items
-	 * @return A sublist with at least {@link minCount} elements
+	 * @return A sublist with at least <code>minCount</code> elements
 	 */
 	public static <T> List<T> getRandomSublistMin(List<T> list, int minCount){
 		int count = RandomUtils.randomIntBetween(minCount, list.size());
@@ -374,11 +374,11 @@ public class ListUtils {
 	}
 	
 	/**
-	 * Generates a random sublist of {@link list}, that contains exactly {@link maxCount} elements.
+	 * Generates a random sublist of <code>list</code>, that contains exactly <code>maxCount</code> elements.
 	 * @param <T> Type of list elements
 	 * @param list Basic list for operation
 	 * @param count Number of items
-	 * @return A sublist with exactly {@link count} elements
+	 * @return A sublist with exactly <code>count</code> elements
 	 */
 	public static <T> List<T> getRandomSublist(List<T> list, int count){
 		List<T> result = new ArrayList<T>();

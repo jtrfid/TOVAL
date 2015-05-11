@@ -80,8 +80,6 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Generates a new diagram using the given values for coordinate axes X and Y.
-	 * @param xValues Values for the first dimension X.
-	 * @param yValues Values for the second dimension Y.
 	 */
 	public ScatterChartPanel(ChartModel<?,?> diagram) {
 		this(diagram, true);
@@ -89,8 +87,6 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Generates a new diagram using the given values for coordinate axes X and Y.
-	 * @param xValues Values for the first dimension X.
-	 * @param yValues Values for the second dimension Y.
 	 * @param zeroBased Operation mode
 	 * @see #zeroBased
 	 */
@@ -100,10 +96,9 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Generates a new diagram using the given values for coordinate axes X and Y.
-	 * @param xValues Values for the first dimension X.
-	 * @param yValues Values for the second dimension Y.
 	 * @param zeroBased Operation mode
-	 * @param onlyIntegerTicks If true only integers are allowed as tick values
+	 * @param onlyIntegerTicksX If true only integers are allowed as tick values
+	 * @param onlyIntegerTicksY If true only integers are allowed as tick values
 	 * @see #zeroBased
 	 */
 	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY) {
@@ -112,12 +107,11 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Generates a new diagram using the given values for coordinate axes X and Y.
-	 * @param xValues Values for the first dimension X.
-	 * @param yValues Values for the second dimension Y.
 	 * @param zeroBased Operation mode
 	 * @param paintDimAxisX Indicates if an axis is painted for dimension X
 	 * @param paintDimAxisY Indicates if an axis is painted for dimension Y
-	 * @param onlyIntegerTicks If true only integers are allowed as tick values
+	 * @param onlyIntegerTicksX If true only integers are allowed as tick values
+	 * @param onlyIntegerTicksY If true only integers are allowed as tick values
 	 * @see #zeroBased
 	 */
 	public ScatterChartPanel(ChartModel<?,?> diagram, boolean zeroBased, boolean onlyIntegerTicksX, boolean onlyIntegerTicksY, boolean paintDimAxisX, boolean paintDimAxisY) {
@@ -163,7 +157,7 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Returns the maximum value of the maintained values for the given dimension.
-	 * @param dim Reference dimension for maximum extraction
+	 * @param key Reference dimension for maximum extraction
 	 * @return Maximum of the maintained values for the given dimension
 	 */
 	protected double getMaxValue(ValueDimension key) {
@@ -208,7 +202,7 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Sets the tick spacing for the coordinate axis of the given dimension.<br>
-	 * {@link minorTickSpacing} sets the minor tick spacing,
+	 * <value>minorTickSpacing</value> sets the minor tick spacing,
 	 * major tick spacing is a multiple of minor tick spacing and determined with the help of a multiplicator.
 	 * @param dim Reference dimension for calculation
 	 * @param minorTickSpacing Minor tick spacing
@@ -220,8 +214,8 @@ public class ScatterChartPanel extends JPanel {
 	
 	/**
 	 * Sets the tick spacing for the coordinate axis of the given dimension.<br>
-	 * {@link minorTickSpacing} sets the minor tick spacing,
-	 * major tick spacing is a multiple of minor tick spacing and determined with the help of {@link multiplicator} 
+	 * <value>minorTickSpacing</value> sets the minor tick spacing,
+	 * major tick spacing is a multiple of minor tick spacing and determined with the help of <value>multiplicator</value>
 	 * @param dim Reference dimension for calculation
 	 * @param minorTickSpacing Minor tick spacing
 	 * @param multiplicator Multiplicator for detrermining the major tick spacing.
@@ -393,7 +387,6 @@ public class ScatterChartPanel extends JPanel {
 	/**
 	 * Returns the number of values maintained for every dimension.<br>
 	 * This number is equal for each dimension.
-	 * @return
 	 */
 	protected int getValueCount() {
 		return diagram.getValueCount(ValueDimension.X);
@@ -630,7 +623,7 @@ public class ScatterChartPanel extends JPanel {
 		 * @param dim Reference dimension for calculation
 		 * @param str String that has to be drawn
 		 * @param ref Reference position (dimension dependent)
-		 * @return The position of {@link str} according to the given dimension {@link dim}.
+		 * @return The position of <value>str</value> according to the given dimension <value>dim</value>.
 		 */
 		public Point getDescriptionPos(ValueDimension dim, String str, int ref) {
 			switch(dim) {

@@ -29,7 +29,6 @@ public class RegularPolygon {
 
 	/**
 	 * Creates a new PointCircle with the given order.
-	 * @param order The desired order for the PointCircle.
 	 * @throws ParameterException 
 	 */
 	public RegularPolygon(int radius, int numPoints) throws ParameterException{
@@ -84,8 +83,7 @@ public class RegularPolygon {
 	}
 	
 	/**
-	 * Returns the 
-	 * @return
+	 * Returns the diameter
 	 */
 	public double getDiameter(){
 		return radius*2;

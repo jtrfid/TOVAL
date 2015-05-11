@@ -44,7 +44,7 @@ import de.invation.code.toval.misc.FormatUtils;
 		 */
 		private double maxValue;
 		/**
-		 * Value range between {@link minValue} and {@link maxValue}.
+		 * Value range between <code>minValue</code> and <code>maxValue</code>.
 		 */
 		private double range;
 		/**
@@ -200,7 +200,7 @@ import de.invation.code.toval.misc.FormatUtils;
 		
 		/**
 		 * Sets the tick spacing.<br>
-		 * {@link minorTickSpacing} sets the minor tick spacing,
+		 * <code>minorTickSpacing</code> sets the minor tick spacing,
 		 * major tick spacing is a multiple of minor tick spacing and determined with the help of a multiplicator.
 		 * @param minorTickSpacing Minor tick spacing
 		 * @see #tickMultiplicator
@@ -211,8 +211,8 @@ import de.invation.code.toval.misc.FormatUtils;
 
 		/**
 		 * Sets the tick spacing.<br>
-		 * {@link minorTickSpacing} sets the minor tick spacing,
-		 * major tick spacing is a multiple of minor tick spacing and determined with the help of {@link multiplicator} 
+		 * <code>minorTickSpacing</code> sets the minor tick spacing,
+		 * major tick spacing is a multiple of minor tick spacing and determined with the help of <code>multiplicator</code> 
 		 * @param minorTickSpacing Minor tick spacing
 		 * @param multiplicator Multiplicator for detrermining the major tick spacing.
 		 */
@@ -236,8 +236,7 @@ import de.invation.code.toval.misc.FormatUtils;
 		}
 
 		/**
-		 * Returns a format that can be used for generating String representations of tick values. 
-		 * @return
+		 * Returns a format that can be used for generating String representations of tick values.
 		 */
 		public String getFormat() {
 			return format;

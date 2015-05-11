@@ -41,7 +41,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 
 	/**
 	 * Creates a new StochasticChooser.<br>
-	 * The tolerance is defined as 1/{@link toleranceDenominator}.
+	 * The tolerance is defined as 1/<code>toleranceDenominator</code>.
 	 * @param toleranceDenominator
 	 * @throws ParameterException 
 	 */
@@ -70,8 +70,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	 * Once valid, no more probabilities are accepted.
 	 * @param o Element to add.
 	 * @param p Occurrence probability of the given element.
-	 * @throws InconsistencyException, ParameterException 
-	 * @throws Exception Thrown if the sum of all maintained probabilities is greater than 1.
+	 * @throws InconsistencyException Thrown if the sum of all maintained probabilities is greater than 1.
 	 */
 	public boolean addProbability(E o, Double p) throws InconsistencyException, ParameterException {
 		if(isValid())
@@ -131,7 +130,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	/**
 	 * Conducts a stochastic element choice based on the maintained occurrence probabilities.
 	 * @return A randomly chosen element based on occurrence probabilities.
-	 * @throws Exception Thrown, if the chooser is in an invalid state.
+	 * @throws ValueGenerationException Thrown, if the chooser is in an invalid state.
 	 */
 	public E getNextValue() throws ValueGenerationException{
 		if(!isValid())

@@ -73,7 +73,7 @@ public abstract class Permutations<T> implements Iterator<T>{
 	/**
 	 * Computes the factorial of the given number
 	 * @param number jBasic number for factorial computation
-	 * @return The factorial of {@link number}
+	 * @return The factorial of <code>number</code>
 	 */
 	private static BigInteger getFactorial(int number) {
 		BigInteger factorial = BigInteger.ONE;

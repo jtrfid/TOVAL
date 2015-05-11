@@ -5,9 +5,9 @@ import java.math.BigInteger;
 public class MathUtils {
 
 	/**
-	 * Calculates the factorial of {@link number}.
+	 * Calculates the factorial of <code>number</code>.
 	 * @param number Basic number for operation
-	 * @return The factorial of {@link number}
+	 * @return The factorial of <code>number</code>
 	 */
 	public static BigInteger getFactorial(int number) {
 		BigInteger factorial = BigInteger.ONE;
@@ -22,7 +22,7 @@ public class MathUtils {
 	 * For any set containing n elements, this is the number of distinct k-element subsets of it.
 	 * @param n Set size
 	 * @param k Subset size
-	 * @return The binomial coefficient of {@link n} and {@link k}
+	 * @return The binomial coefficient of <code>n</code> and <code>k</code>
 	 */
 	public static long binCoeff(int n, int k) {
 		if(k>n)
@@ -69,9 +69,9 @@ public class MathUtils {
 	
 	/**
 	 * Returns the number of places after the decimal separator of the given number.
-	 * @param <S> Number type
+	 * @param <N> Number type
 	 * @param number Basic number for operation
-	 * @return The number of places after the decimal separator of {@link number}
+	 * @return The number of places after the decimal separator of <code>number</code>
 	 */
 	public static <N extends Number> int getRHD(N number) {
 		String numberAsString = String.valueOf(number);

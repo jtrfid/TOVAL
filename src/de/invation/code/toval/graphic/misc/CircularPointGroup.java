@@ -500,8 +500,7 @@ public class CircularPointGroup {
 		}
 		
 		/**
-		 * Returns the 
-		 * @return
+		 * Returns the diameter
 		 */
 		public double getDiameter(){
 			return radius*2;
@@ -526,7 +525,7 @@ public class CircularPointGroup {
 		/**
 		 * Increases the number of managed points.<br>
 		 * In case of a capacity overrun (not the complete number of points can be added to the PointCircle), 
-		 * the return value is less than {@link number}.
+		 * the return value is less than <value>number</value>.
 		 * @param number The number of newly introduced points.
 		 * @return The number of points that could be added.
 		 */
@@ -549,8 +548,8 @@ public class CircularPointGroup {
 		
 		/**
 		 * Reduces the number of managed points.<br>
-		 * In case the PointCircle contains less than {@link number} points,
-		 * the return value is less than {@link number}.
+		 * In case the PointCircle contains less than <value>number</value> points,
+		 * the return value is less than <value>number</value>.
 		 * @param number The number of points to remove.
 		 * @return The number of points that could be removed.
 		 */
@@ -574,7 +573,7 @@ public class CircularPointGroup {
 		}
 		
 		/**
-		 * Returns the coordinates for point numbers {@link from} to {@link from}.<br>
+		 * Returns the coordinates for point numbers <value>from</value> to <value>from</value>.<br>
 		 * Point numbers are counted from 1.
 		 * @param from The starting point number
 		 * @param to The ending point number.
@@ -600,7 +599,7 @@ public class CircularPointGroup {
 		}
 		
 		/**
-		 * Returns coordinates for all managed points beginning at number {@link from}.<br>
+		 * Returns coordinates for all managed points beginning at number <value>from</value>.<br>
 		 * Point numbers are counted from 1.
 		 * @param from Starting point number.
 		 * @return A List of coordinates for all points in the given range.

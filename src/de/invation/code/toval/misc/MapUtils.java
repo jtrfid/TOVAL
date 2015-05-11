@@ -50,9 +50,9 @@ public class MapUtils {
 	 * Returns a format-String that can be used to generate a String representation of a map
 	 * using the String.format method.
 	 * @param map Map for which a String representation is desired
-	 * @param precision Desired precision for <code>Float</code> and <code>Double</code> elements
-	 * @return Format-String for {@link map}
-	 * @see Formatter
+	 * @param keyPrecision Desired precision for <code>Float</code> and <code>Double</code> elements
+	 * @param valuePrecision Desired precision for <code>Float</code> and <code>Double</code> elements
+	 * @return Format-String for <code>map</code>
 	 * @see String#format(String, Object...)
 	 */
 	private static String getFormat(Map<?, ?> map, int keyPrecision, int valuePrecision) {

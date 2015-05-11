@@ -19,7 +19,7 @@ public class SetUtils {
 	private static java.util.Random rand = new Random(); 
 	
 	/**
-	 * Generates a subset of {@link set}, that contains a random number of elements.
+	 * Generates a subset of <code>set</code>, that contains a random number of elements.
 	 * @param <T> Type of set elements
 	 * @param set Basic set for operation
 	 * @return A subset with a random number of elements
@@ -29,11 +29,11 @@ public class SetUtils {
 	}
 	
 	/**
-	 * Generates a random subset of {@link set}, that contains at most {@link maxCount} elements.
+	 * Generates a random subset of <code>set</code>, that contains at most <code>maxCount</code> elements.
 	 * @param <T> Type of set elements
 	 * @param set Basic set for operation
 	 * @param maxCount Maximum number of items
-	 * @return A subset with at most {@link maxCount} elements
+	 * @return A subset with at most <code>maxCount</code> elements
 	 */
 	public static <T> Set<T> getRandomSubsetMax(Set<T> set, int maxCount){
 		int count = rand.nextInt(maxCount)+1;
@@ -41,11 +41,11 @@ public class SetUtils {
 	}
 	
 	/**
-	 * Generates a random subset of {@link set}, that contains at least {@link maxCount} elements.
+	 * Generates a random subset of <code>set</code>, that contains at least <code>maxCount</code> elements.
 	 * @param <T> Type of set elements
 	 * @param set Basic set for operation
 	 * @param minCount Minimum number of items
-	 * @return A subset with at least {@link minCount} elements
+	 * @return A subset with at least <code>minCount</code> elements
 	 */
 	public static <T> Set<T> getRandomSubsetMin(Set<T> set, int minCount){
 		int count = RandomUtils.randomIntBetween(minCount, set.size());
@@ -53,11 +53,11 @@ public class SetUtils {
 	}
 	
 	/**
-	 * Generates a random subset of {@link set}, that contains exactly {@link maxCount} elements.
+	 * Generates a random subset of <code>set</code>, that contains exactly <code>maxCount</code> elements.
 	 * @param <T> Type of set elements
 	 * @param set Basic set for operation
 	 * @param count Number of items
-	 * @return A subset with exactly {@link count} elements
+	 * @return A subset with exactly <code>count</code> elements
 	 */
 	public static <T> Set<T> getRandomSubset(Set<T> set, int count){
 		Set<T> result = new HashSet<T>();
@@ -74,8 +74,8 @@ public class SetUtils {
 	/**
 	 * Generates a new Powerset out of the given set.
 	 * @param <T> Type of set elements
-	 * @param set Underlying set of elements
-	 * @return Powerset of {@link set}
+	 * @param hashSet Underlying set of elements
+	 * @return Powerset of <code>set</code>
 	 */
 	public static <T> PowerSet<T> getPowerSet(Set<T> hashSet) {
 		Validate.notNull(hashSet);

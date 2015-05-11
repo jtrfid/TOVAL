@@ -48,10 +48,9 @@ public class Clause extends HashList<Literal> implements Comparator<Clause>{
 	}
 	
 	/**
-	 * Tries to accomplish a resolution along the variable {@link item}.
+	 * Tries to accomplish a resolution along the variable <code>item</code>.
 	 * @param clause
 	 * @param item
-	 * @return
 	 */
 	public ResolveResult resolve(Clause clause, Object item){
 		Literal lPos = new Literal(item, true);

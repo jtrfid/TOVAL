@@ -35,7 +35,7 @@ public class CollectionUtils {
 	 * @param <T> Type of collection elements
 	 * @param baseList List to check for occurrences
 	 * @param valueList Values to search
-	 * @return <code>true</code> if {@link baseList} contains any element of {@link valueList};
+	 * @return <code>true</code> if <code>baseList</code> contains any element of <code>valueList</code>;
 	 * <code>false</code> otherwise
 	 */
 	public static <T> boolean containsNo(Collection<T> baseList, Collection<T> valueList) {
@@ -58,8 +58,8 @@ public class CollectionUtils {
 	/**
 	 * Returns a String representation of a Collection.<br>
 	 * @param coll Collection for String representation
-	 * @return String representation of {@link coll}
-	 * @see CollectionUtils#getFormat(Object[], int)
+	 * @return String representation of <code>coll</code>
+	 * @see CollectionUtils#getFormat(Collection, int, String, String, String)
 	 */
 	public static String toString(Collection<?> coll) {
 		return toString(coll, DEFAULT_PRECISION);
@@ -69,8 +69,9 @@ public class CollectionUtils {
 	 * Returns a String representation of a Collection.<br>
 	 * The specified precision is only applicable for <code>Float</code> and <code>Double</code> elements.
 	 * @param coll Collection for String representation
-	 * @return String representation of {@link coll}
-	 * @see CollectionUtils#getFormat(Object[], int)
+	 * @param precision Desired precision for <code>Float</code> and <code>Double</code> elements
+	 * @return String representation of <code>coll</code>
+	 * @see CollectionUtils#getFormat(Collection, int, String, String, String)
 	 */
 	public static String toString(Collection<?> coll, int precision) {
 		if(coll == null)
@@ -85,7 +86,7 @@ public class CollectionUtils {
 	 * using the String.format method.
 	 * @param coll Collection for which a String representation is desired
 	 * @param precision Desired precision for <code>Float</code> and <code>Double</code> elements
-	 * @return Format-String for {@link coll}
+	 * @return Format-String for <code>coll</code>
 	 * @see Formatter
 	 * @see String#format(String, Object...)
 	 */
@@ -138,7 +139,7 @@ public class CollectionUtils {
 	/**
 	 * Checks if the given list is trivial.<br>
 	 * A list is considered trivial if all its elements are equal (according to T.equals()).
-	 * @param list Basic list for operation.
+	 * @param coll Basic list for operation.
 	 * @return <code>true</code> if this list is trivial;<br>
 	 * <code>false</code> otherwise.
 	 */

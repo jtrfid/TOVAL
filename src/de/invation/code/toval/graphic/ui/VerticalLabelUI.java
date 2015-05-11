@@ -43,7 +43,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
    /**
     * Constructs a VerticalLabelUI with the desired rotation.
-    * @param clockwise <code>true</code> for clockwise rotation, <code>false</code> for anti-clockwise rotation.
+    * @param clockwiseRotation <code>true</code> for clockwise rotation, <code>false</code> for anti-clockwise rotation.
     */
    public VerticalLabelUI(boolean clockwiseRotation) {
       this.clockwiseRotation = clockwiseRotation;

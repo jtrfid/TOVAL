@@ -48,7 +48,7 @@ public class GraphicUtils {
 	 * @param g Graphics context
 	 * @param centerX X coordinate of circle center
 	 * @param centerY Y coordinate of circle center
-	 * @param diameter Circle diameter
+	 * @param diam Circle diameter
 	 */
 	public static void fillCircle(Graphics g, int centerX, int centerY, int diam){
 		g.fillOval((int) (centerX-diam/2), (int) (centerY-diam/2), diam, diam);
@@ -71,7 +71,7 @@ public class GraphicUtils {
 	 * @param g Graphics context
 	 * @param centerX X coordinate of circle center
 	 * @param centerY Y coordinate of circle center
-	 * @param diameter Circle diameter
+	 * @param diam Circle diameter
 	 */
 	public static void fillCircle(Graphics g, int centerX, int centerY, int diam, Color color){
 		Color c = g.getColor();
@@ -88,7 +88,7 @@ public class GraphicUtils {
 	
 	/**
 	 * Draws an arrow between two given points using the specified weight.<br>
-	 * The arrow is leading from point {@link from} to point {@link to}.
+	 * The arrow is leading from point <code>from</code> to point <code>to</code>.
 	 * @param g Graphics context
 	 * @param from Arrow starting point
 	 * @param to Arrow ending point
@@ -100,7 +100,7 @@ public class GraphicUtils {
 	
 	/**
 	 * Draws an arrow between two points (specified by their coordinates) using the specified weight.<br>
-	 * The arrow is leading from point {@link from} to point {@link to}.
+	 * The arrow is leading from point <code>from</code> to point <code>to</code>.
 	 * @param g Graphics context
 	 * @param x0 X coordinate of arrow starting point
 	 * @param y0 Y coordinate of arrow starting point
@@ -153,14 +153,14 @@ public class GraphicUtils {
 	
 	/**
 	 * Draws an arrow between two given points using the specified weight and offsets.<br>
-	 * The arrow lies on the line between point {@link from} to point {@link to} and points to point {@link to}.
-	 * The distance between point {@link from} and the arrow start is defined by {@link offsetFrom},
-	 * respectively for the arrow end, {@link to} and {@link offsetTo}.
+	 * The arrow lies on the line between point <code>from</code> to point <code>to</code> and points to point <code>to</code>.
+	 * The distance between point <code>from</code> and the arrow start is defined by <code>offsetFrom</code>,
+	 * respectively for the arrow end, <code>to</code> and <code>offsetTo</code>.
 	 * @param g Graphics context
 	 * @param from Basic arrow starting point
 	 * @param to Basic arrow ending point
-	 * @param offsetFrom Distance between {@link from} and arrow starting point
-	 * @param offsetTo Distance between {@link to} and arrow ending point
+	 * @param offsetFrom Distance between <code>from</code> and arrow starting point
+	 * @param offsetTo Distance between <code>to</code> and arrow ending point
 	 * @param weight Arrow weight
 	 */
 	public static void drawArrowOffset(Graphics g, Point from, Point to, int offsetFrom, int offsetTo, double weight){

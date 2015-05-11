@@ -91,7 +91,7 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 	/**
 	 * Returns a String representation of all matrix entries.
 	 * @return String representation of all matrix entries
-	 * @see #getValueAsString(Object, Object)
+	 * @see #getValueAsString(Object, Object, boolean)
 	 */
 	public String getValuesAsString() {
 		StringBuilder builder = new StringBuilder();
@@ -169,7 +169,7 @@ public class DynamicMatrix<E, T> extends ArrayList<ArrayList<T>> {
 	/**
 	 * Creates a new list of specified size initialized with <code>null</code>-values.
 	 * @param size 
-	 * @return A new list of size {@link size} initialized with <code>null</code>-values
+	 * @return A new list of size <code>size</code> initialized with <code>null</code>-values
 	 */
 	protected ArrayList<T> createInitializedList(int size) {
 		ArrayList<T> list = new ArrayList<T>(size);

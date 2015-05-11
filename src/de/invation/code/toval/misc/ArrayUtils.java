@@ -50,7 +50,7 @@ public class ArrayUtils {
 	/**
 	 * Returns a new array with the given size containing the default value at each index.
 	 * @param size The desired size of the array.
-	 * @param defaultValue The default value to use
+	 * @param start The default value to use
 	 * @return The created array
 	 */
 	public static Integer[] createAndInitializeArray(int size, Integer start){
@@ -113,7 +113,7 @@ public class ArrayUtils {
 	 * Returns a random element of the given array.
 	 * @param <T> Type of array elements
 	 * @param arr Array
-	 * @return Random element of {@link arr}
+	 * @return Random element of <code>arr</code>
 	 */
 	public static <T> T getRandomItem(T[] arr){
 		return arr[rand.nextInt(arr.length)];
@@ -147,7 +147,7 @@ public class ArrayUtils {
 	}
 	
 	/**
-	 * Swaps the elements at position {@link a} and {@link b} in the array {@link arr}. 
+	 * Swaps the elements at position <code>a</code> and <code>b</code> in the array <code>arr</code>. 
 	 * @param <T> Type of array elements
 	 * @param arr Array that contains the elements to be swapped
 	 * @param a First position
@@ -175,10 +175,10 @@ public class ArrayUtils {
 
 	/**
 	 * Checks if the given array contains the specified value.<br>
-	 * @param <T> Type of array elements and {@link value}
+	 * @param <T> Type of array elements and <code>value</code>
 	 * @param array Array to examine
 	 * @param value Value to search
-	 * @return <code>true</code> if {@link array} contains {@link value}, <code>false</code> otherwise
+	 * @return <code>true</code> if <code>array</code> contains <code>value</code>, <code>false</code> otherwise
 	 */
 	public static <T> boolean arrayContains(T[] array, T value) {
 		for(int i=0; i<array.length; i++) {
@@ -190,14 +190,14 @@ public class ArrayUtils {
 	}
 	
 	/**
-	 * Divides the given array using the boundaries in {@link cuts}.<br>
+	 * Divides the given array using the boundaries in <code>cuts</code>.<br>
 	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
 	 * divides the given array in 0...i-1 + i...n<br>
 	 * This method deals with both cut positions including and excluding start and end-indexes<br>
 	 * @param <T> Type of array elements
 	 * @param arr The array to divide
 	 * @param cuts Cut positions for divide operations
-	 * @return A list of subarrays of {@link arr} according to the given cut positions
+	 * @return A list of subarrays of <code>arr</code> according to the given cut positions
 	 */
 	public static <T> List<T[]> divideArray(T[] arr, Integer... cuts) {
 		Arrays.sort(cuts);
@@ -221,13 +221,13 @@ public class ArrayUtils {
 	}
 	
 	/**
-	 * Divides the given object-array using the boundaries in {@link cuts}.<br>
+	 * Divides the given object-array using the boundaries in <code>cuts</code>.<br>
 	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
 	 * divides the given array in 0...i-1 + i...n<br>
 	 * This method deals with both cut positions including and excluding start and end-indexes<br>
 	 * @param arr Array to divide
 	 * @param cuts Cut positions for divide operations
-	 * @return A list of subarrays of {@link arr} according to the given cut positions
+	 * @return A list of subarrays of <code>arr</code> according to the given cut positions
 	 * @see #divideArray(Object[], Integer[])
 	 */
 	public static <T> List<T[]> divideObjectArray(T[] arr, Integer... cuts) {
@@ -275,8 +275,8 @@ public class ArrayUtils {
 	/**
 	 * Returns a String representation of an object-array.<br>
 	 * @param arr Object-array for String representation
-	 * @return String representation of {@link arr}
-	 * @see ArrayUtils#getFormat(Object[])
+	 * @return String representation of <code>arr</code>
+	 * @see #getFormat(Object[], int, char)
 	 */
 	public static <T> String toString(T[] arr, char valueSeparation) {
 		return toString(arr, DEFAULT_PRECISION, valueSeparation);
@@ -290,8 +290,8 @@ public class ArrayUtils {
 	 * Returns a String representation of an object-array.<br>
 	 * The specified precision is only applicable for <code>Float</code> and <code>Double</code> elements.
 	 * @param arr Object-array for String representation
-	 * @return String representation of {@link arr}
-	 * @see ArrayUtils#getFormat(Object[], int)
+	 * @return String representation of <code>arr</code>
+	 * @see #getFormat(Object[], int, char)
 	 */
 	public static <T> String toString(T[] arr, int precision, char valueSeparation) {
 		if(arr.length>0)
@@ -304,7 +304,7 @@ public class ArrayUtils {
 	 * using the String.format method.
 	 * @param arr Array for which a String representation is desired
 	 * @param precision Desired precision for <code>Float</code> and <code>Double</code> elements
-	 * @return Format-String for {@link arr}
+	 * @return Format-String for <code>arr</code>
 	 * @see Formatter
 	 * @see String#format(String, Object...)
 	 */
@@ -324,7 +324,6 @@ public class ArrayUtils {
 	 * Checks if all given arrays contain the same values.<br>
 	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
 	 * @param arrs
-	 * @return
 	 */
 	public static boolean containSameElementsSorted(short[]... arrs){
 		Validate.notNull(arrs);
@@ -360,8 +359,6 @@ public class ArrayUtils {
 	/**
 	 * Determines the intersection of the given arrays.<br>
 	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
-	 * @param arrs
-	 * @return
 	 */
 	public static short[] intersectionSorted(short[]... arrs){
 		if(arrs.length == 0)

@@ -79,7 +79,7 @@ public class ReflectionUtils {
 	}
 	
 	/**
-	 * The same method as {@link ReflectionUtils#getSubclasses(Class, String)},
+	 * The same method as {@link #getSubclassesInPackage(Class, String, boolean)},
 	 * but with the possibility to search in multiple packages. Since the result
 	 * is returned as a {@link Set}, there won't be any duplicates.
 	 * @throws ReflectionException 
@@ -202,7 +202,7 @@ public class ReflectionUtils {
 
 	/**
 	 * The same method as
-	 * {@link ReflectionUtils#getInterfaceImplementations(Class, String)}, but
+	 * {@link ReflectionUtils#getInterfaceImplementationsInPackage(Class, String, boolean)}, but
 	 * with the possibility to search in multiple packages. Since the result is
 	 * returned as a {@link Set}, there won't be any duplicates.
 	 * @throws ReflectionException 
