@@ -23,8 +23,17 @@ public abstract class AbstractCallable<V> implements Callable<V>{
 			listener.executionFinished();
 		return result;
 	}
+	
+	protected void notifyExecutionStarted(){
+		for(CallableListener listener: listeners)
+			listener.executionStarted();
+	}
+	
+	protected void notifyExecutionStopped(){
+		for(CallableListener listener: listeners)
+			listener.executionStopped();
+	}
 
 	protected abstract V callRoutine() throws Exception;
-
 
 }

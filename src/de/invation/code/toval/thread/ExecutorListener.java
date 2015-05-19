@@ -8,4 +8,6 @@ public interface ExecutorListener {
 	
 	public void executorFinished();
 	
+	public void progress(double progress);
+	
 }

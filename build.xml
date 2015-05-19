@@ -27,7 +27,9 @@
 	<property name="jar.javadoc.file.name" value="${jar.file.name}-javadoc" />
 
 	<!-- Source and destination directories -->
+	<echo>Base dir: ${basedir}</echo>
 	<property name="src.dir" value="${basedir}/src" />
+	<echo>Source dir: ${src.dir}</echo>
 	<property name="res.dir" value="${basedir}/res" />
 	<property name="target.dir" value="${basedir}/bin" />
 	<property name="target.dir.jar" value="${target.dir}/${artifact.name}-${version.name}" />

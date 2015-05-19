@@ -21,12 +21,16 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 	
 	public SingleThreadExecutorService(ExecutorListener listener){
 		this();
-		addListener(listener);
+		addExecutorListener(listener);
 	}
 	
-	public void addListener(ExecutorListener listener){
+	public void addExecutorListener(ExecutorListener listener){
 		Validate.notNull(listener);
 		listeners.add(listener);
+	}
+	
+	public void removeExecutorListener(ExecutorListener listener){
+		listeners.remove(listener);
 	}
 	
 	public void setUpAndRun(){
@@ -34,8 +38,6 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 		AbstractCallable<V> callable = getCallable();
 		callable.addCallableListener(this);
 		futureResult = executorService.submit(callable);
-		for(ExecutorListener listener: listeners)
-			listener.executorStarted();
 	}
 	
 	public boolean isDone(){
@@ -48,15 +50,27 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 			listener.executorStopped();
 	}
 	
-	public V getResult() throws CancellationException, InterruptedException, ExecutionException {
+	protected V getResult() throws CancellationException, InterruptedException, ExecutionException {
 		return futureResult.get();
 	}
 	
 
 	@Override
-	public void executionFinished() throws Exception {
+	public void executionFinished() {
 		for(ExecutorListener listener: listeners)
 			listener.executorFinished();
+	}
+
+	@Override
+	public void executionStarted() {
+		for(ExecutorListener listener: listeners)
+			listener.executorStarted();
+	}
+
+	@Override
+	public void executionStopped() {
+		for(ExecutorListener listener: listeners)
+			listener.executorStopped();
 	}
 
 	protected abstract AbstractCallable<V> getCallable();

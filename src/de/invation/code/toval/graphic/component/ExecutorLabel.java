@@ -68,7 +68,7 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 	
 	public void setExecutor(SingleThreadExecutorService executorService){
 		Validate.notNull(executorService);
-		executorService.addListener(this);
+		executorService.addExecutorListener(this);
 		this.executorService = executorService;
 	}
 	
@@ -122,5 +122,8 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 		running = false;
 		setGraphicsFinished();
 	}
+
+	@Override
+	public void progress(double progress) {}
 
 }
