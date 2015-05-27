@@ -1,15 +1,36 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.invation.code.toval</groupId>
 	<artifactId>TOVAL</artifactId>
 	<packaging>jar</packaging>
 	<version>0.1.5</version>
+
 	<name>TOVAL</name>
-	<url>http://maven.apache.org</url>
+	<description>TOVAL comprises a set of java classes for common programming issues. It includes utils for arrays, lists, sets and collections for convenient handling and modification, but also support for mathematic definitions concerning logic (clauses + resolution) together with some algorithms for permutations, powersets and resolution. Additionally it contains a number of types for multisets, matrices with object keys and much more.</description>
+	<url>https://sourceforge.net/projects/toval/</url>
+	<organization>
+		<name>Institute of Computer Science and Social Studies, Department of Telematics</name>
+		<url>http://www.telematik.uni-freiburg.de/</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>bsd_3</name>
+			<url>http://opensource.org/licenses/BSD-3-Clause</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>http://svn.code.sf.net/p/toval/code/trunk</url>
+	</scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -18,11 +39,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<organization>
-		<name>Institute of Computer Science and Social Studies, Department of Telematics</name>
-		<url>http://www.telematik.uni-freiburg.de/</url>
-	</organization>
-	<description>TOVAL comprises a set of java classes for common programming issues. It includes utils for arrays, lists, sets and collections for convenient handling and modification, but also support for mathematic definitions concerning logic (clauses + resolution) together with some algorithms for permutations, powersets and resolution. Additionally it contains a number of types for multisets, matrices with object keys and much more.</description>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -149,4 +166,5 @@
 			</build>
 		</profile>
 	</profiles>
+
 </project>
