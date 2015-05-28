@@ -50,6 +50,36 @@
 		<echo>Deleting old JARs...</echo>
 		<delete file="${target.dir.jar}/${jar.file.name}.jar" />
 		<delete file="${target.dir.jar}/${jar.sources.file.name}.jar" />
+
+		<echo>Creating new JARs...</echo>
+		<jar jarfile="${target.dir.jar}/${jar.file.name}.jar" basedir="${classes.target.dir}">
+			<manifest>
+				<attribute name="X-Date" value="${touch.time}" />
+			</manifest>
+		</jar>
+		<jar jarfile="${target.dir.jar}/${jar.sources.file.name}.jar">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${res.dir}" />
+			<manifest>
+				<attribute name="X-Date" value="${touch.time}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<!-- Package JARs -->
+
+	<target name="compile" depends="init" description="Compiles the source and the test files">
+		<echo>Compile classes...</echo>
+		<javac destdir="${classes.target.dir}" includeantruntime="false">
+			<src path="${src.dir}" />
+			<src path="${res.dir}" />
+			<classpath refid="TOVAL.classpath" />
+		</javac>
+	</target>
+
+	<target name="package-javadoc" depends="compile" description="Generates Javadoc information">
 		<delete file="${target.dir.jar}/${jar.javadoc.file.name}.jar" />
 
 		<echo>Generating javadoc files...</echo>
@@ -70,21 +100,6 @@
 			</fileset>
 		</javadoc>
 
-		<echo>Creating new JARs...</echo>
-		<jar jarfile="${target.dir.jar}/${jar.file.name}.jar" basedir="${classes.target.dir}">
-			<manifest>
-				<attribute name="X-Date" value="${touch.time}" />
-			</manifest>
-		</jar>
-		<jar jarfile="${target.dir.jar}/${jar.sources.file.name}.jar">
-			<fileset dir="${src.dir}">
-				<include name="**/*.java" />
-			</fileset>
-			<fileset dir="${res.dir}" />
-			<manifest>
-				<attribute name="X-Date" value="${touch.time}" />
-			</manifest>
-		</jar>
 		<jar jarfile="${target.dir.jar}/${jar.javadoc.file.name}.jar" basedir="${docs.temp.dir}">
 			<manifest>
 				<attribute name="X-Date" value="${touch.time}" />
@@ -93,17 +108,6 @@
 
 		<echo>Deleting temporary javadoc files...</echo>
 		<delete dir="${docs.temp.dir}" />
-	</target>
-
-	<!-- Package JARs -->
-
-	<target name="compile" depends="init" description="Compiles the source and the test files">
-		<echo>Compile classes...</echo>
-		<javac destdir="${classes.target.dir}" includeantruntime="false">
-			<src path="${src.dir}" />
-			<src path="${res.dir}" />
-			<classpath refid="TOVAL.classpath" />
-		</javac>
 	</target>
 
 	<target name="clean" description="Deletes the target files including current JARs. Old versions of the JARs stay untouched.">
