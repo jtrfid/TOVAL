@@ -1,12 +1,12 @@
 package de.invation.code.toval.thread;
 
-public interface ExecutorListener {
+public interface ExecutorListener<Z> {
 
 	public void executorStarted();
 	
 	public void executorStopped();
 	
-	public void executorFinished();
+	public void executorFinished(Z result);
 	
 	public void progress(double progress);
 	

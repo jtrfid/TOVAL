@@ -1,11 +1,11 @@
 package de.invation.code.toval.thread;
 
-public interface CallableListener {
+public interface CallableListener<V> {
 	
 	public void executionStarted();
 	
 	public void executionStopped();
 	
-	public void executionFinished();
+	public void executionFinished(V result);
 
 }

@@ -17,7 +17,7 @@ import de.invation.code.toval.thread.ExecutorListener;
 import de.invation.code.toval.thread.SingleThreadExecutorService;
 import de.invation.code.toval.validate.Validate;
 
-public class ExecutorLabel extends JLabel implements ExecutorListener {
+public class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
 	
 	private static final long serialVersionUID = 8368680392887232591L;
 	private static final Dimension DEFAULT_SIZE = new Dimension(40,40);
@@ -61,12 +61,12 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 		});
 	}
 
-	public ExecutorLabel(SingleThreadExecutorService<?> executorService){
+	public ExecutorLabel(SingleThreadExecutorService<Z> executorService){
 		this();
 		setExecutor(executorService);
 	}
 	
-	public void setExecutor(SingleThreadExecutorService<?> executorService){
+	public void setExecutor(SingleThreadExecutorService<Z> executorService){
 		Validate.notNull(executorService);
 		executorService.addExecutorListener(this);
 		this.executorService = executorService;
@@ -136,7 +136,7 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 	}
 
 	@Override
-	public void executorFinished() {
+	public void executorFinished(Z result) {
 		running = false;
 		setGraphicsFinished();
 	}

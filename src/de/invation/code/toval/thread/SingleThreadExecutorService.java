@@ -10,25 +10,25 @@ import java.util.concurrent.Future;
 
 import de.invation.code.toval.validate.Validate;
 
-public abstract class SingleThreadExecutorService<V> implements CallableListener {
+public abstract class SingleThreadExecutorService<V> implements CallableListener<V> {
 	
 	private ExecutorService executorService = null;
 	private Future<V> futureResult = null;
-	private Set<ExecutorListener> listeners = new HashSet<ExecutorListener>();
+	private Set<ExecutorListener<V>> listeners = new HashSet<ExecutorListener<V>>();
 
 	public SingleThreadExecutorService(){}
 	
-	public SingleThreadExecutorService(ExecutorListener listener){
+	public SingleThreadExecutorService(ExecutorListener<V> listener){
 		this();
 		addExecutorListener(listener);
 	}
 	
-	public void addExecutorListener(ExecutorListener listener){
+	public void addExecutorListener(ExecutorListener<V> listener){
 		Validate.notNull(listener);
 		listeners.add(listener);
 	}
 	
-	public void removeExecutorListener(ExecutorListener listener){
+	public void removeExecutorListener(ExecutorListener<V> listener){
 		listeners.remove(listener);
 	}
 	
@@ -45,7 +45,7 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 	
 	public void stop() throws Exception {
 		executorService.shutdownNow();
-		for(ExecutorListener listener: listeners)
+		for(ExecutorListener<V> listener: listeners)
 			listener.executorStopped();
 	}
 	
@@ -55,9 +55,9 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 	
 
 	@Override
-	public void executionFinished() {
-		for(ExecutorListener listener: listeners)
-			listener.executorFinished();
+	public void executionFinished(V result) {
+		for(ExecutorListener<V> listener: listeners)
+			listener.executorFinished(result);
 	}
 
 	@Override
