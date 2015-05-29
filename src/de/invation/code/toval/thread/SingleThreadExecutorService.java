@@ -10,7 +10,6 @@ import java.util.concurrent.Future;
 
 import de.invation.code.toval.validate.Validate;
 
-
 public abstract class SingleThreadExecutorService<V> implements CallableListener {
 	
 	private ExecutorService executorService = null;

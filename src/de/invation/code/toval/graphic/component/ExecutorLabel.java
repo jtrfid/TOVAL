@@ -25,7 +25,7 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 	public static final Color COLOR_DONE = Color.GREEN;
 	public static final Color COLOR_CANCELLED = Color.RED;
 	
-	protected SingleThreadExecutorService executorService = null;
+	protected SingleThreadExecutorService<?> executorService = null;
 	
 	private boolean running = false;
 	
@@ -61,12 +61,12 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 		});
 	}
 
-	public ExecutorLabel(SingleThreadExecutorService executorService){
+	public ExecutorLabel(SingleThreadExecutorService<?> executorService){
 		this();
 		setExecutor(executorService);
 	}
 	
-	public void setExecutor(SingleThreadExecutorService executorService){
+	public void setExecutor(SingleThreadExecutorService<?> executorService){
 		Validate.notNull(executorService);
 		executorService.addExecutorListener(this);
 		this.executorService = executorService;
@@ -87,16 +87,34 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 		executorService.stop();
 	}
 	
+	protected Color getColorInitial(){
+		return COLOR_INITIAL;
+	}
+	
+	protected Color getColorCancelled(){
+		return COLOR_CANCELLED;
+	}
+	
+	protected Color getColorDone(){
+		return COLOR_DONE;
+	}
+	
+	protected void setGraphicsInitial() {
+		setOpaque(true);
+		setIcon(null);
+		setBackground(getColorInitial());
+	}
+	
 	protected void setGraphicsCancelled() {
 		setOpaque(true);
 		setIcon(null);
-		setBackground(COLOR_CANCELLED);
+		setBackground(getColorCancelled());
 	}
 	
 	protected void setGraphicsFinished() {
 		setOpaque(true);
 		setIcon(null);
-		setBackground(COLOR_DONE);
+		setBackground(getColorDone());
 	}
 
 	static ImageIcon getLoadingDotsIcon() {
@@ -125,5 +143,13 @@ public class ExecutorLabel extends JLabel implements ExecutorListener {
 
 	@Override
 	public void progress(double progress) {}
+	
+	public void reset() throws Exception{
+		if(!executorService.isDone()){
+			stopExecutor();
+		} else {
+			setGraphicsInitial();
+		}
+	}
 
 }
