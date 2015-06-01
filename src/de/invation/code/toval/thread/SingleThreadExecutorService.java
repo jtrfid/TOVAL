@@ -35,7 +35,7 @@ public abstract class SingleThreadExecutorService<V,Z,E extends Exception> imple
 	
 	public void setUpAndRun(){
 		executorService = Executors.newSingleThreadExecutor();
-		AbstractCallable<V> callable = createCallable();
+		callable = createCallable();
 		callable.addCallableListener(this);
 		futureResult = executorService.submit(callable);
 	}
