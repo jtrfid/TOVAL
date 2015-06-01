@@ -85,6 +85,7 @@ public abstract class SingleThreadExecutorService<V,Z,E extends Exception> imple
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		executorService.shutdownNow();
 	}
 
 	@Override
@@ -97,12 +98,14 @@ public abstract class SingleThreadExecutorService<V,Z,E extends Exception> imple
 	public void callableStopped() {
 		for(ExecutorListener<Z> listener: listeners)
 			listener.executorStopped();
+		executorService.shutdownNow();
 	}
 
 	@Override
 	public void callableException(Exception e) {
 		for(ExecutorListener<Z> listener: listeners)
 			listener.executorException(e);
+		executorService.shutdownNow();
 	}
 
 	protected abstract AbstractCallable<V> createCallable();

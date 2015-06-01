@@ -17,7 +17,7 @@ import de.invation.code.toval.thread.ExecutorListener;
 import de.invation.code.toval.thread.SingleThreadExecutorService;
 import de.invation.code.toval.validate.Validate;
 
-public class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
+public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
 	
 	private static final long serialVersionUID = 8368680392887232591L;
 	private static final Dimension DEFAULT_SIZE = new Dimension(40,40);
