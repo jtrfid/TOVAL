@@ -10,31 +10,32 @@ import java.util.concurrent.Future;
 
 import de.invation.code.toval.validate.Validate;
 
-public abstract class SingleThreadExecutorService<V> implements CallableListener<V> {
+public abstract class SingleThreadExecutorService<V,Z,E extends Exception> implements CallableListener<V> {
 	
 	private ExecutorService executorService = null;
 	private Future<V> futureResult = null;
-	private Set<ExecutorListener<V>> listeners = new HashSet<ExecutorListener<V>>();
+	private Set<ExecutorListener<Z>> listeners = new HashSet<ExecutorListener<Z>>();
+	private AbstractCallable<V> callable;
 
 	public SingleThreadExecutorService(){}
 	
-	public SingleThreadExecutorService(ExecutorListener<V> listener){
+	public SingleThreadExecutorService(ExecutorListener<Z> listener){
 		this();
 		addExecutorListener(listener);
 	}
 	
-	public void addExecutorListener(ExecutorListener<V> listener){
+	public void addExecutorListener(ExecutorListener<Z> listener){
 		Validate.notNull(listener);
 		listeners.add(listener);
 	}
 	
-	public void removeExecutorListener(ExecutorListener<V> listener){
+	public void removeExecutorListener(ExecutorListener<Z> listener){
 		listeners.remove(listener);
 	}
 	
 	public void setUpAndRun(){
 		executorService = Executors.newSingleThreadExecutor();
-		AbstractCallable<V> callable = getCallable();
+		AbstractCallable<V> callable = createCallable();
 		callable.addCallableListener(this);
 		futureResult = executorService.submit(callable);
 	}
@@ -45,33 +46,69 @@ public abstract class SingleThreadExecutorService<V> implements CallableListener
 	
 	public void stop() throws Exception {
 		executorService.shutdownNow();
-		for(ExecutorListener<V> listener: listeners)
+		for(ExecutorListener<Z> listener: listeners)
 			listener.executorStopped();
 	}
 	
-	protected V getResult() throws CancellationException, InterruptedException, ExecutionException {
-		return futureResult.get();
+	protected V getCallableResult() throws CancellationException, InterruptedException, ExecutionException {
+		if(getCallable().getCallableResult() == null){
+			futureResult.get();
+		}
+		return getCallable().getCallableResult();
 	}
 	
-
+	public final Z getResult() throws E {
+		try {
+			return getResultFromCallableResult(getCallableResult());
+		} catch (CancellationException e) {
+			throw createException("Callable cancelled.", e);
+		} catch (InterruptedException e) {
+			throw createException("Callable interrupted.", e);
+		} catch (ExecutionException e) {
+			throw executionException(e);
+		} catch(Exception e){
+			throw createException("Exception while running callable.\n" + e.getMessage(), e);
+		}
+	}
+	
+	protected abstract E createException(String message, Throwable cause);
+	
+	protected abstract E executionException(ExecutionException e);
+	
+	protected abstract Z getResultFromCallableResult(V callableResult) throws Exception;
+	
 	@Override
-	public void executionFinished(V result) {
-		for(ExecutorListener<V> listener: listeners)
-			listener.executorFinished(result);
+	public void callableFinished(V result) {
+		try {
+			for (ExecutorListener<Z> listener : listeners)
+				listener.executorFinished(getResultFromCallableResult(result));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void executionStarted() {
-		for(ExecutorListener listener: listeners)
+	public void callableStarted() {
+		for(ExecutorListener<Z> listener: listeners)
 			listener.executorStarted();
 	}
 
 	@Override
-	public void executionStopped() {
-		for(ExecutorListener listener: listeners)
+	public void callableStopped() {
+		for(ExecutorListener<Z> listener: listeners)
 			listener.executorStopped();
 	}
 
-	protected abstract AbstractCallable<V> getCallable();
+	@Override
+	public void callableException(Exception e) {
+		for(ExecutorListener<Z> listener: listeners)
+			listener.executorException(e);
+	}
+
+	protected abstract AbstractCallable<V> createCallable();
+	
+	protected AbstractCallable<V> getCallable(){
+		return callable;
+	}
 
 }

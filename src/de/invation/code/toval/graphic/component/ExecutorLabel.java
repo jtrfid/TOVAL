@@ -25,7 +25,7 @@ public class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
 	public static final Color COLOR_DONE = Color.GREEN;
 	public static final Color COLOR_CANCELLED = Color.RED;
 	
-	protected SingleThreadExecutorService<?> executorService = null;
+	protected SingleThreadExecutorService<?,Z,?> executorService = null;
 	
 	private boolean running = false;
 	
@@ -61,12 +61,12 @@ public class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
 		});
 	}
 
-	public ExecutorLabel(SingleThreadExecutorService<Z> executorService){
+	public ExecutorLabel(SingleThreadExecutorService<?,Z,?> executorService){
 		this();
 		setExecutor(executorService);
 	}
 	
-	public void setExecutor(SingleThreadExecutorService<Z> executorService){
+	public void setExecutor(SingleThreadExecutorService<?,Z,?> executorService){
 		Validate.notNull(executorService);
 		executorService.addExecutorListener(this);
 		this.executorService = executorService;
@@ -139,6 +139,12 @@ public class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
 	public void executorFinished(Z result) {
 		running = false;
 		setGraphicsFinished();
+	}
+	
+	@Override
+	public void executorException(Exception exception) {
+		running = false;
+		setGraphicsCancelled();
 	}
 
 	@Override

@@ -8,6 +8,8 @@ public interface ExecutorListener<Z> {
 	
 	public void executorFinished(Z result);
 	
+	public void executorException(Exception exception);
+	
 	public void progress(double progress);
 	
 }
