@@ -42,7 +42,7 @@ public abstract class AbstractCallable<V> implements Callable<V>{
 	
 	protected void notifyExecutionFinished(V result){
 		for(CallableListener<V> listener: listeners)
-			listener.callableStopped();
+			listener.callableFinished(result);
 	}
 	
 	protected void notifyException(Exception exception){
