@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import de.invation.code.toval.graphic.dialog.AbstractDialog;
 import de.invation.code.toval.graphic.dialog.StringDialog;
@@ -20,10 +23,14 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 	
 	private static final long serialVersionUID = -2350754359368195069L;
 	
+	public static final boolean DEFAULT_CONCAT_CAUSE_MESSAGES = false;
+	
 	private JButton btnStackTrace;
+	private boolean concatCauseMessages = DEFAULT_CONCAT_CAUSE_MESSAGES;
 
-	protected ExceptionDialog(Window owner, String title, Exception exception){
+	protected ExceptionDialog(Window owner, String title, Exception exception, boolean concatCauseMessages){
 		super(owner, title);
+		this.concatCauseMessages = concatCauseMessages;
 		setIncludeCancelButton(false);
 		Validate.notNull(exception);
 		setDialogObject(exception);
@@ -62,12 +69,20 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 	}
 
 	public static void showException(String title, Exception exception) {
-		showException(null, title, exception);
+		showException(title, exception, DEFAULT_CONCAT_CAUSE_MESSAGES);
+	}
+	
+	public static void showException(String title, Exception exception, boolean concatCauseMessages) {
+		showException(null, title, exception, concatCauseMessages);
 	}
 	
 	public static void showException(Window owner, String title, Exception exception) {
+		showException(owner, title, exception, DEFAULT_CONCAT_CAUSE_MESSAGES);
+	}
+	
+	public static void showException(Window owner, String title, Exception exception, boolean concatCauseMessages) {
 		try {
-			ExceptionDialog dialog = new ExceptionDialog(owner, title, exception);
+			ExceptionDialog dialog = new ExceptionDialog(owner, title, exception, concatCauseMessages);
 			dialog.setUpGUI();
 		} catch(Exception e){
 			JOptionPane.showMessageDialog(owner, "Cannmot launch ExceptionDialog.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
@@ -77,10 +92,36 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 	@Override
 	protected void addComponents() throws Exception {
 		mainPanel().setLayout(new BorderLayout());
-		mainPanel().add(new JLabel(getDialogObject().getMessage()), BorderLayout.PAGE_START);
+		if(concatCauseMessages){
+			mainPanel().add(getConcatenatedCauseMessages(), BorderLayout.CENTER);
+		} else {
+			mainPanel().add(new JLabel(getDialogObject().getMessage()), BorderLayout.PAGE_START);
+		}
+	}
+	
+	private JComponent getConcatenatedCauseMessages(){
+		List<String> messages = new ArrayList<String>();
+		if(!getDialogObject().getMessage().isEmpty())
+			messages.add(getDialogObject().getMessage());
+		Throwable cause = getDialogObject();
+		while((cause = cause.getCause()) != null){
+			if(!cause.getMessage().isEmpty())
+				messages.add(cause.getMessage());
+		}
+		JTextArea area = new JTextArea();
+		for(String message: messages){
+			area.append(message);
+			area.append("\n");
+		}
+		area.setEditable(false);
+		return new JScrollPane(area);
 	}
 
 	@Override
 	protected void setTitle() {}
+	
+//	public static void main(String[] args) {
+//		ExceptionDialog.showException("Tesrt", new IOException("Teste                                            g", new IOException("Test2")), false);
+//	}
 
 }

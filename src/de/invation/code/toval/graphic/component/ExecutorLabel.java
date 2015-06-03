@@ -23,7 +23,8 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 	private static final Dimension DEFAULT_SIZE = new Dimension(40,40);
 	public static final Color COLOR_INITIAL = Color.BLUE;
 	public static final Color COLOR_DONE = Color.GREEN;
-	public static final Color COLOR_CANCELLED = Color.RED;
+	public static final Color COLOR_CANCELLED = Color.LIGHT_GRAY;
+	public static final Color COLOR_EXCEPTION = Color.RED;
 	
 	protected SingleThreadExecutorService<?,Z,?> executorService = null;
 	
@@ -99,6 +100,10 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 		return COLOR_DONE;
 	}
 	
+	protected Color getColorException(){
+		return COLOR_EXCEPTION;
+	}
+	
 	protected void setGraphicsInitial() {
 		setOpaque(true);
 		setIcon(null);
@@ -109,6 +114,12 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 		setOpaque(true);
 		setIcon(null);
 		setBackground(getColorCancelled());
+	}
+	
+	protected void setGraphicsException() {
+		setOpaque(true);
+		setIcon(null);
+		setBackground(getColorException());
 	}
 	
 	protected void setGraphicsFinished() {
@@ -144,7 +155,7 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 	@Override
 	public void executorException(Exception exception) {
 		running = false;
-		setGraphicsCancelled();
+		setGraphicsException();
 	}
 
 	@Override

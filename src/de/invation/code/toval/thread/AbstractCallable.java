@@ -24,6 +24,7 @@ public abstract class AbstractCallable<V> implements Callable<V>{
 			callableResult = callRoutine();
 		}catch(Exception e){
 			notifyExecutionStopped();
+			notifyException(e);
 			throw e;
 		}
 		notifyExecutionFinished(callableResult);
