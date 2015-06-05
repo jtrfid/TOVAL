@@ -1,6 +1,7 @@
 package de.invation.code.toval.validate;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 	private static final long serialVersionUID = -2350754359368195069L;
 	
 	public static final boolean DEFAULT_CONCAT_CAUSE_MESSAGES = false;
+	private static final Dimension MIN_DIMENSION = new Dimension(400,300);
 	
 	private JButton btnStackTrace;
 	private boolean concatCauseMessages = DEFAULT_CONCAT_CAUSE_MESSAGES;
@@ -34,6 +36,11 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 		setIncludeCancelButton(false);
 		Validate.notNull(exception);
 		setDialogObject(exception);
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		return MIN_DIMENSION;
 	}
 
 	private JButton getButtonStackTrace(){
@@ -85,7 +92,8 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 			ExceptionDialog dialog = new ExceptionDialog(owner, title, exception, concatCauseMessages);
 			dialog.setUpGUI();
 		} catch(Exception e){
-			JOptionPane.showMessageDialog(owner, "Cannmot launch ExceptionDialog.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(owner, "Cannot launch ExceptionDialog.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -101,11 +109,11 @@ public class ExceptionDialog extends AbstractDialog<Exception>{
 	
 	private JComponent getConcatenatedCauseMessages(){
 		List<String> messages = new ArrayList<String>();
-		if(!getDialogObject().getMessage().isEmpty())
+		if(getDialogObject().getMessage() != null && !getDialogObject().getMessage().isEmpty())
 			messages.add(getDialogObject().getMessage());
 		Throwable cause = getDialogObject();
 		while((cause = cause.getCause()) != null){
-			if(!cause.getMessage().isEmpty())
+			if(cause.getMessage() != null && !cause.getMessage().isEmpty())
 				messages.add(cause.getMessage());
 		}
 		JTextArea area = new JTextArea();

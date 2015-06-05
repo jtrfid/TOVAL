@@ -9,12 +9,12 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import de.invation.code.toval.icons.IconFactory;
 import de.invation.code.toval.thread.ExecutorListener;
 import de.invation.code.toval.thread.SingleThreadExecutorService;
+import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.Validate;
 
 public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListener<Z> {
@@ -43,19 +43,21 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(!isEnabled())
+					return;
 				if(!running){
 					// Start executor service
 					try {
 						startExecutor();
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(ExecutorLabel.this), "Exception while starting execution.\nReason: " + e1.getMessage(), "Execution exception", JOptionPane.ERROR_MESSAGE);
+						ExceptionDialog.showException(SwingUtilities.getWindowAncestor(ExecutorLabel.this), "Execution exception", new Exception("Exception while starting execution.", e1), true);
 					}
 				} else {
 					// Stop executor service
 					try {
 						stopExecutor();
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(ExecutorLabel.this), "Exception while stopping execution.\nReason: " + e1.getMessage(), "Execution exception", JOptionPane.ERROR_MESSAGE);
+						ExceptionDialog.showException(SwingUtilities.getWindowAncestor(ExecutorLabel.this), "Execution exception", new Exception("Exception while stopping execution.", e1), true);
 					}
 				}
 			}
@@ -162,7 +164,7 @@ public abstract class ExecutorLabel<Z> extends JLabel implements ExecutorListene
 	public void progress(double progress) {}
 	
 	public void reset() throws Exception{
-		if(!executorService.isDone()){
+		if(executorService != null && !executorService.isDone()){
 			stopExecutor();
 		} else {
 			setGraphicsInitial();

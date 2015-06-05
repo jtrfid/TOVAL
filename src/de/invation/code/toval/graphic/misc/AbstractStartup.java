@@ -1,6 +1,6 @@
 package de.invation.code.toval.graphic.misc;
 
-import javax.swing.JOptionPane;
+import de.invation.code.toval.validate.ExceptionDialog;
 
 public abstract class AbstractStartup {
 	
@@ -16,7 +16,8 @@ public abstract class AbstractStartup {
 		try{
 			startApplication();
 		} catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Cannot launch application.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
+			ExceptionDialog.showException(null, "Internal Exception", e, true);
+//			JOptionPane.showMessageDialog(null, "Cannot launch application.\nReason: " + e.getMessage(), "Internal Exception", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
