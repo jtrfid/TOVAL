@@ -31,6 +31,21 @@ public class ParameterException extends IllegalArgumentException {
 		super(message);
 		usePredefinedMessages = false;
 	}
+        
+        public ParameterException(ErrorCode errorCode, Throwable cause){
+		super(cause);
+		this.errorCode = errorCode;
+	}
+	
+	public ParameterException(ErrorCode errorCode, String message, Throwable cause){
+		super(message, cause);
+		usePredefinedMessages = false;
+	}
+	
+	public ParameterException(String message, Throwable cause){
+		super(message, cause);
+		usePredefinedMessages = false;
+	}
 	
 	@Override
 	public String getMessage(){

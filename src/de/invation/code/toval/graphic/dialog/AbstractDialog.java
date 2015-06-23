@@ -47,7 +47,7 @@ public abstract class AbstractDialog<O> extends JDialog {
 	protected AbstractDialog(Window owner) {
 		super(owner);
 		this.owner = owner;
-		initialize();
+		initialize(); 
 	}
 	
 	protected AbstractDialog(Window owner, String title) {

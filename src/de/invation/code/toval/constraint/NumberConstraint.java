@@ -90,14 +90,14 @@ public static NumberConstraint parse(String constraint) throws ParameterExceptio
 		return result;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		NumberConstraint c = new NumberConstraint("creditAmount", NumberOperator.NOT_IN_INTERVAL, 60, 13.75);
-//		NumberConstraint c = new NumberConstraint("creditAmount", NumberOperator.EQUAL, 60.0);
-		System.out.println(c);
-		System.out.println(c.validate(10));
-		System.out.println(c.getParameterType());
-		System.out.println(c.getParameterClass());
-	}
+//	public static void main(String[] args) throws Exception {
+//		NumberConstraint c = new NumberConstraint("creditAmount", NumberOperator.NOT_IN_INTERVAL, 60, 13.75);
+////		NumberConstraint c = new NumberConstraint("creditAmount", NumberOperator.EQUAL, 60.0);
+//		System.out.println(c);
+//		System.out.println(c.validate(10));
+//		System.out.println(c.getParameterType());
+//		System.out.println(c.getParameterClass());
+//	}
 
 	
 	

@@ -54,10 +54,10 @@ public class StringConstraint extends AbstractConstraint<String> {
 		return result;
 	}
 
-	public static void main(String[] args) throws Exception {
-		StringConstraint c = new StringConstraint("name", StringOperator.NOT_EQUAL, "Gerd");
-		System.out.println(c);
-		System.out.println(c.validate(12));
-	}
-	
+//	public static void main(String[] args) throws Exception {
+//		StringConstraint c = new StringConstraint("name", StringOperator.NOT_EQUAL, "Gerd");
+//		System.out.println(c);
+//		System.out.println(c.validate(12));
+//	}
+//	
 }

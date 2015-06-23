@@ -744,8 +744,8 @@ public class SOABase implements Cloneable, DialogObject<SOABase>, SOABaseEditing
 	}
 
 	@Override
-	public void showDialog(Window parent) throws Exception {
-		SOABaseDialog.showDialog(parent, this);
+	public boolean showDialog(Window parent) throws Exception {
+            return SOABaseDialog.showDialog(parent, this);
 	}
 	
 	public static <P extends SOABaseProperties> SOABase createFromFile(File file) throws Exception{

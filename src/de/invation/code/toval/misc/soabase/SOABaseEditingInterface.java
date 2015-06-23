@@ -4,6 +4,13 @@ import java.awt.Window;
 
 public interface SOABaseEditingInterface {
 	
-	public <S extends SOABase> void showDialog(Window parent) throws Exception;
+    /**
+     * Opens a dialog whic hcan be used to edit the SOA-base.
+     * @param <S>
+     * @param parent
+     * @return <code>true</code> when dialog was closed with accept; <code>false</code> if aborted.
+     * @throws Exception 
+     */
+	public <S extends SOABase> boolean showDialog(Window parent) throws Exception;
 
 }
