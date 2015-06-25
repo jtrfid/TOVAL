@@ -11,6 +11,20 @@ public abstract class AbstractEditCreateDialog<O> extends AbstractDialog<O> {
     private boolean editMode;
     private DialogObject<O> originalObject;
 
+    protected AbstractEditCreateDialog(Window owner, DialogObject<O> originalObject) {
+        super(owner);
+        this.editMode = true;
+        Validate.notNull(originalObject);
+        this.originalObject = originalObject;
+        setDialogObject(originalObject.clone());
+    }
+
+    protected AbstractEditCreateDialog(Window owner, String title, DialogObject<O> originalObject) {
+        this(owner, originalObject);
+        Validate.notNull(title);
+        setTitle(title);
+    }
+    
     protected AbstractEditCreateDialog(Window owner, Object... parameters) {
         super(owner);
         this.editMode = false;
@@ -29,20 +43,6 @@ public abstract class AbstractEditCreateDialog<O> extends AbstractDialog<O> {
         setDialogObject(newDialogObject(parameters));
     }
 
-    protected AbstractEditCreateDialog(Window owner, DialogObject<O> originalObject) {
-        super(owner);
-        this.editMode = true;
-        Validate.notNull(originalObject);
-        this.originalObject = originalObject;
-        setDialogObject(originalObject.clone());
-    }
-
-    protected AbstractEditCreateDialog(Window owner, String title, DialogObject<O> originalObject) {
-        this(owner, originalObject);
-        Validate.notNull(title);
-        setTitle(title);
-    }
-
     protected boolean editMode() {
         return editMode;
     }
@@ -56,7 +56,7 @@ public abstract class AbstractEditCreateDialog<O> extends AbstractDialog<O> {
      * They are set on basis of the dialog object using the method
      * {@link DialogObject#takeoverValues(Object)} afterwards.
      */
-    protected abstract void validateAndSetFieldValues() throws Exception;
+    protected abstract boolean validateAndSetFieldValues() throws Exception;
 
     @Override
     protected void initializeContent() throws Exception {
@@ -67,17 +67,19 @@ public abstract class AbstractEditCreateDialog<O> extends AbstractDialog<O> {
 
     @Override
     protected void okProcedure() {
+        
         try {
-            validateAndSetFieldValues();
+            if(!validateAndSetFieldValues())
+                return;
         } catch (Exception e) {
-            invalidFieldContentMessage(e.getMessage());
+            invalidFieldContentException(e);
             return;
         }
         if (editMode) {
             try {
                 originalObject.takeoverValues(getDialogObject());
             } catch (Exception e) {
-                errorMessage("Invalid Parameter", "Cannot save changes: " + e.getMessage());
+                exception("Cannot save changes.", e);
             }
         }
         super.okProcedure();

@@ -37,6 +37,16 @@ public class StringDialog extends AbstractDialog<String> {
 		setDialogObject(text);
 		this.isEditable = isEditable;
 	}
+        
+    @Override
+    protected void initialize() {
+        setIncludeCancelButton(isEditable);
+        if (isEditable) {
+            setButtonPanelLayout(ButtonPanelLayout.LEFT_RIGHT);
+        } else {
+            setButtonPanelLayout(ButtonPanelLayout.CENTERED);
+        }
+    }
 
 	@Override
 	protected void addComponents() throws Exception {

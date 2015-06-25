@@ -35,6 +35,8 @@ import de.invation.code.toval.graphic.dialog.StringDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
 import de.invation.code.toval.misc.ArrayUtils;
 import de.invation.code.toval.validate.ParameterException;
+import javax.swing.Box;
+import javax.swing.JComponent;
 
 public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
 
@@ -92,7 +94,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
     }
 
     @Override
-    protected void validateAndSetFieldValues() throws Exception {
+    protected boolean validateAndSetFieldValues() throws Exception {
         if (getDialogObject() == null || getDialogObject().isEmpty()) {
             throw new ParameterException("Empty context.");
         }
@@ -106,6 +108,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         } catch (Exception e1) {
             throw new ParameterException("Cannot set context name.\nReason: " + e1.getMessage());
         }
+        return true;
     }
 
     @Override
@@ -118,29 +121,24 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         mainPanel().setLayout(new BorderLayout());
         JPanel namePanel = new JPanel(new FlowLayout());
         namePanel.add(new JLabel("Name:"));
-        namePanel.add(getContextNameField());
+        namePanel.add(getTextFieldContextName());
         mainPanel().add(namePanel, BorderLayout.PAGE_START);
         addActivitiesAction = new AddActivitiesAction();
         addSubjectsAction = new AddSubjectsAction();
         addObjectsAction = new AddObjectsAction();
-        mainPanel().add(getComponentsPanel(), BorderLayout.CENTER);
-        Component componentsExtension = getComponentsExtensionPanel();
-        if (componentsExtension != null) {
-            mainPanel().add(componentsExtension, BorderLayout.PAGE_END);
-        }
-//		contentPane.add(getImportActivitiesButton());
-//		contentPane.add(getShowContextButton());
+        mainPanel().add(getPanelComponents(), BorderLayout.CENTER);
+        mainPanel().add(getPanelComponentsExtension(), BorderLayout.PAGE_END);
     }
 
     @Override
     protected void prepareEditing() {
         txtContextName.setText(getDialogObject().getName());
-        updateActivityList(true);
-        updateSubjectList(true);
-        updateObjectList(true);
+        updateListActivity(true);
+        updateListSubject(true);
+        updateListObject(true);
     }
 
-    private Component getComponentsPanel() {
+    private Component getPanelComponents() {
         if (componentsPanel == null) {
             componentsPanel = new JPanel(new BorderLayout());
             componentsPanel.add(new JSeparator(JSeparator.HORIZONTAL), BorderLayout.PAGE_START);
@@ -157,7 +155,40 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return componentsPanel;
     }
 
-    protected Component getComponentsExtensionPanel() {
+    private Component getPanelComponentsExtension() {
+        JPanel extensionPanel = new JPanel(new BorderLayout());
+        JPanel gridPanel = new JPanel();
+        gridPanel.setLayout(new GridLayout(1, 3, 10, 0));
+        JPanel activityExtensionPanel = new JPanel();
+        List<JButton> activityButtons = getButtonsActivity();
+        activityExtensionPanel.setLayout(new GridLayout(activityButtons.size(), 1, 0, 0));
+        for(JButton activityButton: activityButtons)
+            activityExtensionPanel.add(activityButton);
+        JPanel subjectExtensionPanel = new JPanel();
+        List<JButton> subjectButtons = getButtonsSubject();
+        subjectExtensionPanel.setLayout(new GridLayout(subjectButtons.size(), 1, 0, 0));
+        for(JButton subjectButton: subjectButtons)
+            subjectExtensionPanel.add(subjectButton);
+        JPanel objectExtensionPanel = new JPanel();
+        List<JButton> objectButtons = getButtonsObject();
+        objectExtensionPanel.setLayout(new GridLayout(objectButtons.size(), 1, 0, 0));
+        for(JButton objectButton: objectButtons)
+            objectExtensionPanel.add(objectButton);
+        gridPanel.add(activityExtensionPanel);
+        gridPanel.add(subjectExtensionPanel);
+        gridPanel.add(objectExtensionPanel);
+        extensionPanel.add(gridPanel, BorderLayout.CENTER);
+        JComponent customComponent = getCustomComponent();
+        if(customComponent != null){
+            JPanel restPanel = new JPanel(new BorderLayout(0, 10));
+        restPanel.add(new JSeparator(), BorderLayout.PAGE_START);
+        restPanel.add(customComponent, BorderLayout.CENTER);
+        extensionPanel.add(restPanel, BorderLayout.PAGE_END);
+        }
+        return extensionPanel;
+    }
+    
+    protected JComponent getCustomComponent(){
         return null;
     }
 
@@ -181,7 +212,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
     }
 
 	//------- BUTTONS --------------------------------------------------------------------------------------------
-    private JButton getAddActivitiesButton() {
+    private JButton getButtonAddActivities() {
         if (btnAddActivities == null) {
             btnAddActivities = new JButton();
             btnAddActivities.setAction(addActivitiesAction);
@@ -219,11 +250,11 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
     @Override
     protected List<JButton> getLefthandButtons() {
         List<JButton> lhb = super.getLefthandButtons();
-        lhb.add(getShowContextButton());
+        lhb.add(getButtonShowContext());
         return lhb;
     }
 
-    private JButton getShowContextButton() {
+    private JButton getButtonShowContext() {
         if (btnShowContext == null) {
             btnShowContext = new JButton("Show Context");
             btnShowContext.addActionListener(new ActionListener() {
@@ -232,7 +263,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
                         try {
                             StringDialog.showDialog(SOABaseDialog.this, "Context: " + getDialogObject().getName(), getDialogObject().toString(), false);
                         } catch (Exception e1) {
-                            internalExceptionMessage("Cannot launch StringDialog.\nReason:" + e1.getMessage());
+                            internalException("Cannot launch StringDialog.", e1);
                         }
                     }
                 }
@@ -241,7 +272,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return btnShowContext;
     }
 
-    private JButton getAddSubjectsButton() {
+    private JButton getButtonAddSubjects() {
         if (btnAddSubjects == null) {
             btnAddSubjects = new JButton();
             btnAddSubjects.setAction(addSubjectsAction);
@@ -249,7 +280,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return btnAddSubjects;
     }
 
-    private JButton getAddObjectsButton() {
+    private JButton getButtonAddObjects() {
         if (btnAddObjects == null) {
             btnAddObjects = new JButton();
             btnAddObjects.setAction(addObjectsAction);
@@ -258,7 +289,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
     }
 
 	//------- OTHER GUI COMPONENTS ----------------------------------------------------------------------------------------
-    private JTextField getContextNameField() {
+    private JTextField getTextFieldContextName() {
         if (txtContextName == null) {
             txtContextName = new JTextField();
             txtContextName.setText(SOABase.DEFAULT_NAME);
@@ -267,7 +298,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return txtContextName;
     }
 
-    private JList getActivityList() {
+    private JList getListActivity() {
         if (activityList == null) {
             activityList = new JList(activityListModel);
             activityList.setCellRenderer(new AlternatingRowColorListCellRenderer());
@@ -292,10 +323,10 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
                                     activitiesAssigned = false;
                                 }
                             } catch (Exception e1) {
-                                errorMessage("Invalid Parameter", "Cannot remove activities.\nReason: " + e1.getMessage());
+                                internalException("Cannot remove "+getDialogObject().getActivityDescriptorPlural().toLowerCase()+".", e1);
                                 return;
                             }
-                            updateActivityList(true);
+                            updateListActivity(true);
                         }
                     }
                 }
@@ -308,7 +339,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return activityList;
     }
 
-    private JList getSubjectList() {
+    private JList getListSubject() {
         if (subjectList == null) {
             subjectList = new JList(subjectListModel);
             subjectList.setCellRenderer(new AlternatingRowColorListCellRenderer());
@@ -333,10 +364,10 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
                                     subjectsAssigned = false;
                                 }
                             } catch (Exception e1) {
-                                errorMessage("Invalid Parameter", "Cannot remove subjects.\nReason: " + e1.getMessage());
+                                internalException("Cannot remove "+getDialogObject().getSubjectDescriptorPlural().toLowerCase()+".", e1);
                                 return;
                             }
-                            updateSubjectList(true);
+                            updateListSubject(true);
                         }
                     }
                 }
@@ -349,7 +380,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         return subjectList;
     }
 
-    private JList getObjectList() {
+    private JList getListObject() {
         if (ObjectList == null) {
             ObjectList = new JList(ObjectListModel);
             ObjectList.setCellRenderer(new AlternatingRowColorListCellRenderer());
@@ -374,10 +405,10 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
                                     ObjectsAssigned = false;
                                 }
                             } catch (Exception e1) {
-                                errorMessage("Invalid Parameter", "Cannot remove Objects:\nReason: " + e1.getMessage());
+                                internalException("Cannot remove "+getDialogObject().getObjectDescriptorPlural().toLowerCase()+".", e1);
                                 return;
                             }
-                            updateObjectList(true);
+                            updateListObject(true);
                         }
                     }
                 }
@@ -391,7 +422,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
     }
 
 	//------- FUNCTIONALITY ----------------------------------------------------------------------------------------------
-    private void updateActivityList(boolean setSelection) {
+    private void updateListActivity(boolean setSelection) {
         activityListModel.clear();
         if (getDialogObject() != null) {
             List<String> activities = new ArrayList<String>(getDialogObject().getActivities());
@@ -405,7 +436,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         }
     }
 
-    private void updateSubjectList(boolean setSelection) {
+    private void updateListSubject(boolean setSelection) {
         subjectListModel.clear();
         if (getDialogObject() != null) {
             List<String> subjects = new ArrayList<String>(getDialogObject().getSubjects());
@@ -419,7 +450,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         }
     }
 
-    private void updateObjectList(boolean setSelection) {
+    private void updateListObject(boolean setSelection) {
         ObjectListModel.clear();
         if (getDialogObject() != null) {
             List<String> objects = new ArrayList<String>(getDialogObject().getObjects());
@@ -448,17 +479,17 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
             try {
                 objects = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getObjectDescriptorPlural());
             } catch (Exception e2) {
-                internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
+                internalException("Cannot launch value chooser dialog dialog.", e2);
             }
             if (objects != null) {
                 try {
                     getDialogObject().addObjects(objects);
                 } catch (Exception e1) {
-                    errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getObjectDescriptorPlural().toLowerCase() + " to context.");
+                    internalException("Cannot add " + getDialogObject().getObjectDescriptorPlural().toLowerCase() + " to context.", e1);
                     return;
                 }
                 ObjectsAssigned = true;
-                updateObjectList(false);
+                updateListObject(false);
             }
         }
 
@@ -478,17 +509,17 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
             try {
                 subjects = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getSubjectDescriptorPlural());
             } catch (Exception e2) {
-                internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
+                internalException("Cannot launch value chooser dialog dialog.", e2);
             }
             if (subjects != null) {
                 try {
                     getDialogObject().addSubjects(subjects);
                 } catch (Exception e1) {
-                    errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getSubjectDescriptorPlural().toLowerCase() + " to context.");
+                    internalException("Cannot add " + getDialogObject().getSubjectDescriptorPlural().toLowerCase() + " to context.", e1);
                     return;
                 }
                 subjectsAssigned = true;
-                updateSubjectList(false);
+                updateListSubject(false);
             }
         }
 
@@ -508,17 +539,17 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
             try {
                 activities = DefineGenerateDialog.showDialog(SOABaseDialog.this, getDialogObject().getActivityDescriptorPlural());
             } catch (Exception e2) {
-                internalExceptionMessage("<html>Cannot launch value chooser dialog dialog.<br>Reason: " + e2.getMessage() + "</html>");
+                internalException("Cannot launch value chooser dialog dialog.", e2);
             }
             if (activities != null) {
                 try {
                     getDialogObject().addActivities(activities);
                 } catch (Exception e1) {
-                    errorMessage("Invalid Parameter", "Cannot add " + getDialogObject().getActivityDescriptorPlural().toLowerCase() + " to context: \n" + e1.getMessage());
+                    internalException("Cannot add " + getDialogObject().getActivityDescriptorPlural().toLowerCase() + " to context.", e1);
                     return;
                 }
                 activitiesAssigned = true;
-                updateActivityList(false);
+                updateListActivity(false);
             }
         }
 
@@ -528,7 +559,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
 
         private static final long serialVersionUID = 3530688424334811142L;
 
-        public ContextContentPanel(JList content, String description, JButton button) {
+        public ContextContentPanel(JList content, String description, JButton bottomComponent) {
             super(new BorderLayout());
             add(new JLabel(description + ":"), BorderLayout.PAGE_START);
             JScrollPane scrollPane1 = new JScrollPane();
@@ -536,7 +567,7 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
             scrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             add(scrollPane1, BorderLayout.CENTER);
             scrollPane1.setViewportView(content);
-            add(button, BorderLayout.PAGE_END);
+            add(bottomComponent, BorderLayout.PAGE_END);
         }
     }
 
@@ -545,8 +576,25 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         private static final long serialVersionUID = 4842826076367497019L;
 
         public ActivitiesPanel() {
-            super(getActivityList(), getDialogObject().getActivityDescriptorPlural(), getAddActivitiesButton());
+            super(getListActivity(), getDialogObject().getActivityDescriptorPlural(), getButtonAddActivities());
         }
+        
+    }
+    
+    private JPanel getPanelActivityButtons(){
+        JPanel panelActivityButtons = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        List<JButton> activityButtons = getButtonsActivity();
+        buttonPanel.setLayout(new GridLayout(activityButtons.size(), 1, 5, 5));
+        for(JButton button: activityButtons)
+            buttonPanel.add(button);
+        panelActivityButtons.add(buttonPanel, BorderLayout.PAGE_START);
+        panelActivityButtons.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+        return panelActivityButtons;
+    }
+    
+    protected List<JButton> getButtonsActivity(){
+        return new ArrayList<>();
     }
 
     private class SubjectsPanel extends ContextContentPanel {
@@ -554,8 +602,24 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         private static final long serialVersionUID = -4111381147809133847L;
 
         public SubjectsPanel() {
-            super(getSubjectList(), getDialogObject().getSubjectDescriptorPlural(), getAddSubjectsButton());
+            super(getListSubject(), getDialogObject().getSubjectDescriptorPlural(), getButtonAddSubjects());
         }
+    }
+    
+    private JPanel getPanelSubjectButtons(){
+        JPanel panelSubjectButtons = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        List<JButton> subjectButtons = getButtonsSubject();
+        buttonPanel.setLayout(new GridLayout(subjectButtons.size(), 1, 5, 5));
+        for(JButton button: subjectButtons)
+            buttonPanel.add(button);
+        panelSubjectButtons.add(buttonPanel, BorderLayout.PAGE_START);
+        panelSubjectButtons.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+        return panelSubjectButtons;
+    }
+    
+    protected List<JButton> getButtonsSubject(){
+        return new ArrayList<>();
     }
 
     private class ObjectsPanel extends ContextContentPanel {
@@ -563,10 +627,25 @@ public class SOABaseDialog extends AbstractEditCreateDialog<SOABase> {
         private static final long serialVersionUID = -2779219101533314867L;
 
         public ObjectsPanel() {
-            super(getObjectList(), getDialogObject().getObjectDescriptorPlural(), getAddObjectsButton());
+            super(getListObject(), getDialogObject().getObjectDescriptorPlural(), getButtonAddObjects());
         }
     }
-
+    
+    private JPanel getPanelObjectButtons(){
+        JPanel panelObjectButtons = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        List<JButton> objectButtons = getButtonsObject();
+        buttonPanel.setLayout(new GridLayout(objectButtons.size(), 1, 5, 5));
+        for(JButton button: objectButtons)
+            buttonPanel.add(button);
+        panelObjectButtons.add(buttonPanel, BorderLayout.PAGE_START);
+        panelObjectButtons.add(Box.createVerticalGlue(), BorderLayout.CENTER);
+        return panelObjectButtons;
+    }
+    
+    protected List<JButton> getButtonsObject(){
+        return new ArrayList<>();
+    }
 	//------- STARTUP ---------------------------------------------------------------------------------------------------------------
     public static SOABase showDialog(Window parentWindow) throws Exception {
         SOABaseDialog contextDialog = new SOABaseDialog(parentWindow);
