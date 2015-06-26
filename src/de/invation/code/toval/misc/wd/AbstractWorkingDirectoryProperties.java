@@ -70,15 +70,15 @@ public abstract class AbstractWorkingDirectoryProperties<E> extends AbstractProp
     }
 
     //------- Property setting -------------------------------------------------------------
-    private void setProperty(E property, Object value) {
+    protected void setProperty(E property, Object value) {
         props.setProperty(property.toString(), value.toString());
     }
 
-    private String getProperty(E property) {
+    protected String getProperty(E property) {
         return props.getProperty(property.toString());
     }
 
-    private void removeProperty(E property) {
+    protected void removeProperty(E property) {
         props.remove(property.toString());
     }
 
