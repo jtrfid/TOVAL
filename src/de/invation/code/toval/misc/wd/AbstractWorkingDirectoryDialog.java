@@ -5,12 +5,10 @@
  */
 package de.invation.code.toval.misc.wd;
 
-import de.invation.code.toval.debug.OutputMode;
 import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.graphic.dialog.AbstractDialog;
 import de.invation.code.toval.graphic.renderer.AlternatingRowColorListCellRenderer;
-import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ExceptionListener;
 import de.invation.code.toval.validate.ParameterException;

@@ -114,6 +114,11 @@ public class ExceptionDialog extends JDialog {
     public Dimension getPreferredSize() {
         return MIN_DIMENSION;
     }
+    
+    @Override
+    public Dimension getMinimumSize() {
+        return getPreferredSize();
+    }
 
     private JButton getButtonStackTrace() {
         if (btnStackTrace == null) {
