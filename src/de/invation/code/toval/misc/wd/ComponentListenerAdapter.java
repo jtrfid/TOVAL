@@ -4,15 +4,15 @@ package de.invation.code.toval.misc.wd;
 public class ComponentListenerAdapter<O> implements ComponentListener<O> {
 
 	@Override
-	public void componentAdded(O component) {}
+	public void componentAdded(O component) throws ProjectComponentException{}
 
 	@Override
-	public void componentRemoved(O component) {}
+	public void componentRemoved(O component) throws ProjectComponentException{}
 	
 	@Override
-	public void componentRenamed(O component) {}
+	public void componentRenamed(O component, String oldName, String newName) throws ProjectComponentException{}
 
 	@Override
-	public void componentsChanged() {}
+	public void componentsChanged() throws ProjectComponentException{}
 
 }

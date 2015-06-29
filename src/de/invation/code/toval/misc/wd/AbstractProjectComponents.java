@@ -6,10 +6,10 @@
 package de.invation.code.toval.misc.wd;
 
 import de.invation.code.toval.debug.SimpleDebugger;
+import de.invation.code.toval.types.HashList;
 import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.Validate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  *
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public abstract class AbstractProjectComponents {
     
-    private Set<AbstractComponentContainer> componentContainers = new HashSet<>();
+    private List<AbstractComponentContainer> componentContainers = new HashList<>();
     private SimpleDebugger debugger = null;
     
     protected AbstractProjectComponents() throws ProjectComponentException{
@@ -31,6 +31,18 @@ public abstract class AbstractProjectComponents {
             loadComponents();
         } catch (Exception e) {
             ExceptionDialog.showException(null, "Project component Exception", new Exception("Cannot load components", e), true);
+        }
+    }
+    
+    public void addComponentListener(ComponentListener listener) {
+        for(AbstractComponentContainer container: componentContainers){
+            container.addComponentListener(listener);
+        }
+    }
+
+    public void removeComponentListener(ComponentListener listener) {
+        for(AbstractComponentContainer container: componentContainers){
+            container.removeComponentListener(listener);
         }
     }
     

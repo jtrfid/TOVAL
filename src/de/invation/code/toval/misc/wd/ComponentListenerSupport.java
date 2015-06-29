@@ -8,28 +8,28 @@ public class ComponentListenerSupport<O> extends AbstractListenerSupport<Compone
 
     private static final long serialVersionUID = -5976107306359206805L;
 
-    public void notifyComponentAdded(O component) {
+    public void notifyComponentAdded(O component) throws ProjectComponentException{
         for (ComponentListener listener : listeners) {
             listener.componentAdded(component);
         }
         notifyComponentsChanged();
     }
 
-    public void notifyComponentRemoved(O component) {
+    public void notifyComponentRemoved(O component) throws ProjectComponentException{
         for (ComponentListener listener : listeners) {
             listener.componentRemoved(component);
         }
         notifyComponentsChanged();
     }
 
-    public void notifyComponentRenamed(O component) {
+    public void notifyComponentRenamed(O component, String oldName, String newName) throws ProjectComponentException{
         for (ComponentListener listener : listeners) {
-            listener.componentRenamed(component);
+            listener.componentRenamed(component, oldName, newName);
         }
         notifyComponentsChanged();
     }
 
-    public void notifyComponentsChanged() {
+    public void notifyComponentsChanged() throws ProjectComponentException{
         for (ComponentListener listener : listeners) {
             listener.componentsChanged();
         }

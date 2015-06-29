@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
  */
 public abstract class ConditionalInputDialog {
 	
-	private Window parent = null;
+	protected Window parent = null;
 	private String title = null;
 	private String message = null;
 

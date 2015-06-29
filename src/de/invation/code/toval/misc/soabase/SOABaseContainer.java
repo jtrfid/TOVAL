@@ -35,7 +35,7 @@ public class SOABaseContainer extends AbstractSOABaseContainer<SOABase,SOABasePr
     }
 
     @Override
-    protected SOABaseProperties crearteNewProperties() {
+    protected SOABaseProperties createNewProperties() {
         return new SOABaseProperties();
     }
 

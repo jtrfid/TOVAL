@@ -8,6 +8,7 @@ package de.invation.code.toval.misc.soabase;
 import de.invation.code.toval.debug.SimpleDebugger;
 import de.invation.code.toval.file.FileUtils;
 import de.invation.code.toval.misc.wd.AbstractComponentContainer;
+import de.invation.code.toval.validate.ParameterException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,9 +21,6 @@ import java.util.Set;
  * @param <C>
  */
 public abstract class AbstractSOABaseContainer<C extends SOABase, P extends SOABaseProperties> extends AbstractComponentContainer<C>{
-    
-    public static final boolean DEFAULT_IGNORE_INCOMPATIBLE_FILES = true;
-    protected boolean ignoreIncompatibleFiles = DEFAULT_IGNORE_INCOMPATIBLE_FILES;
 
     protected AbstractSOABaseContainer(String serializationPath) {
         super(serializationPath);
@@ -30,10 +28,6 @@ public abstract class AbstractSOABaseContainer<C extends SOABase, P extends SOAB
 
     protected AbstractSOABaseContainer(String serializationPath, SimpleDebugger debugger) {
         super(serializationPath, debugger);
-    }
-
-    public void setIgnoreIncompatibleFiles(boolean ignoreIncompatibleFiles){
-        this.ignoreIncompatibleFiles = ignoreIncompatibleFiles;
     }
     
     @Override
@@ -44,23 +38,21 @@ public abstract class AbstractSOABaseContainer<C extends SOABase, P extends SOAB
 
     @Override
     protected C loadComponentFromFile(String file) throws Exception {
-        P properties = crearteNewProperties();
+        P properties = createNewProperties();
         try {
             properties.load(file);
         } catch (IOException e) {
             throw new IOException("Cannot load properties file: " + FileUtils.separateFileNameFromEnding(file) + ".");
         }
+        
         Class<?> baseClass = null;
         try{
             baseClass = properties.getBaseClass();
         } catch(Exception e){
             throw new Exception("Cannot extract property class information from properties file", e);
         }
-        if(!properties.getClass().equals(baseClass)){
-            if(ignoreIncompatibleFiles){
-                return null;
-            }
-            throw new Exception("Unexpected SOABase type, expected " + properties.getBaseClass().getSimpleName() + " but got " + baseClass.getSimpleName());
+        if(properties.getClass() == baseClass){
+            throw new ParameterException(ParameterException.ErrorCode.INCOMPATIBILITY, "Unexpected SOABase type, expected " + properties.getBaseClass().getSimpleName() + " but got " + baseClass.getSimpleName());
         }
         
         C result = createSOABaseFromProperties(properties);
@@ -77,21 +69,15 @@ public abstract class AbstractSOABaseContainer<C extends SOABase, P extends SOAB
         if (attributes != null && !attributes.isEmpty()) {
             result.addObjects(attributes);
         }
-        
         loadCustomContent(result, properties);
         
         return result;
     }
     
-    protected abstract P crearteNewProperties() throws Exception;
+    protected abstract P createNewProperties() throws Exception;
     
     protected abstract C createSOABaseFromProperties(P properties) throws Exception;
     
     protected abstract void loadCustomContent(C SOABase, P properties) throws Exception;
-
-    @Override
-    public Set<String> getAcceptedFileEndings() {
-        return new HashSet<>(Arrays.asList(""));
-    }
 
 }

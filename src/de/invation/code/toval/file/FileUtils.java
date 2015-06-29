@@ -15,6 +15,10 @@ import de.invation.code.toval.misc.SystemUtils.OperatingSystemType;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,8 +51,8 @@ public class FileUtils {
             public boolean accept(File dir, String fileName) {
                 if (acceptedEndings != null && !acceptedEndings.isEmpty()) {
                     boolean hasAcceptedEnding = false;
-                    for(String acceptedEnding: acceptedEndings){
-                        if(fileName.endsWith(".".concat(acceptedEnding))){
+                    for (String acceptedEnding : acceptedEndings) {
+                        if (fileName.endsWith(".".concat(acceptedEnding))) {
                             hasAcceptedEnding = true;
                             break;
                         }
@@ -118,19 +122,19 @@ public class FileUtils {
         return result;
     }
 
-    public static void deleteFile(String fileName) {
+    public static void deleteFile(String fileName) throws Exception {
         deleteFile(new File(fileName));
     }
 
-    public static void deleteFile(File file) {
+    public static void deleteFile(File file) throws Exception {
         deleteFile(file, false);
     }
 
-    public static void deleteFile(String fileName, boolean followLinks) {
+    public static void deleteFile(String fileName, boolean followLinks) throws Exception {
         deleteFile(new File(fileName), followLinks);
     }
 
-    public static void deleteFile(File file, boolean followLinks) {
+    public static void deleteFile(File file, boolean followLinks) throws Exception {
 
         if (!file.exists()) {
             throw new IllegalArgumentException("No such file or directory: " + file.getAbsolutePath());
@@ -156,7 +160,7 @@ public class FileUtils {
         }
     }
 
-    public static boolean removeLinkOnly(File file) {
+    public static boolean removeLinkOnly(File file) throws Exception {
         if (file == null) {
             return false;
         }
@@ -186,11 +190,11 @@ public class FileUtils {
         return true;
     }
 
-    public static void deleteDirectory(String dirName, boolean recursive) {
+    public static void deleteDirectory(String dirName, boolean recursive) throws Exception {
         deleteDirectory(dirName, recursive, false);
     }
 
-    public static void deleteDirectory(String dirName, boolean recursive, boolean followLinks) {
+    public static void deleteDirectory(String dirName, boolean recursive, boolean followLinks) throws Exception {
         File file = new File(dirName);
 
         if (!file.exists()) {
@@ -246,21 +250,22 @@ public class FileUtils {
     public static String getPath(String absolutePath) {
         return absolutePath.substring(0, absolutePath.lastIndexOf(File.separator) + 1);
     }
-    
+
     public static String getFile(File f) {
         return getFile(f.getAbsolutePath());
     }
-    
+
     public static String getFile(String absolutePath) {
-        if(absolutePath.endsWith(File.separator))
+        if (absolutePath.endsWith(File.separator)) {
             return "";
+        }
         return absolutePath.substring(absolutePath.lastIndexOf(File.separator) + 1, absolutePath.length());
     }
-    
+
     public static String getFileWithoutEnding(File f) {
         return getFileWithoutEnding(f.getAbsolutePath());
     }
-    
+
     public static String getFileWithoutEnding(String absolutePath) {
         return separateFileNameFromEnding(getFile(absolutePath));
     }
@@ -361,4 +366,55 @@ public class FileUtils {
         return lines;
     }
 
+    public static long getLineCount(String fileName, String encodingName) throws IOException {
+        long linesCount = 0;
+        File file = new File(fileName);
+        FileInputStream fileIn = null;
+        try {
+            fileIn = new FileInputStream(file);
+            Charset encoding = Charset.forName(encodingName);
+            Reader fileReader = new InputStreamReader(fileIn, encoding);
+            int bufferSize = 4096;
+            Reader reader = new BufferedReader(fileReader, bufferSize);
+            char[] buffer = new char[bufferSize];
+            int prevChar = -1;
+            int readCount = reader.read(buffer);
+            while (readCount != -1) {
+                for (int i = 0; i < readCount; i++) {
+                    int nextChar = buffer[i];
+                    switch (nextChar) {
+                        case '\r': {
+                            linesCount++;
+                            break;
+                        }
+                        case '\n': {
+                            if (prevChar == '\r') {
+                            } else {
+                                linesCount++;
+                            }
+                            break;
+                        }
+                    }
+                    prevChar = nextChar;
+                }
+                readCount = reader.read(buffer);
+            }
+            if (prevChar != -1) {
+                switch (prevChar) {
+                    case '\r':
+                    case '\n': {
+                        break;
+                    }
+                    default: {
+                        linesCount++;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            fileIn.close();
+        }
+        return linesCount;
+    }
 }
