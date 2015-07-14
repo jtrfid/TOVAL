@@ -94,8 +94,8 @@ public final class WindowsRegistry {
      */
     public static void createKey(String keyName) {
         int[] info = invoke(Methods.REG_CREATE_KEY_EX.get(), keyParts(keyName));
-        checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
-        invoke(Methods.REG_CLOSE_KEY.get(), info[INFO_INDEX.INFO_HANDLE.get()]);
+        checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
+        invoke(Methods.REG_CLOSE_KEY.get(), info[InfoIndex.INFO_HANDLE.get()]);
     }
 
     /**
@@ -182,9 +182,9 @@ public final class WindowsRegistry {
     public static List<String> readSubkeys(String keyName) {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
-            checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
-            int count = info[INFO_INDEX.INFO_COUNT_KEYS.get()];
-            int maxlen = info[INFO_INDEX.INFO_MAX_KEY_LENGTH.get()] + 1;
+            checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
+            int count = info[InfoIndex.INFO_COUNT_KEYS.get()];
+            int maxlen = info[InfoIndex.INFO_MAX_KEY_LENGTH.get()] + 1;
             List<String> subkeys = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 subkeys.add(fromByteArray(invoke(Methods.REG_ENUM_KEY_EX.get(), key.id, i, maxlen)));
@@ -215,9 +215,9 @@ public final class WindowsRegistry {
     public static Map<String, String> readValues(String keyName) {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
-            checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
-            int count = info[INFO_INDEX.INFO_COUNT_VALUES.get()];
-            int maxlen = info[INFO_INDEX.INFO_MAX_VALUE_LENGTH.get()] + 1;
+            checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
+            int count = info[InfoIndex.INFO_COUNT_VALUES.get()];
+            int maxlen = info[InfoIndex.INFO_MAX_VALUE_LENGTH.get()] + 1;
             Map<String, String> values = new HashMap<>();
             for (int i = 0; i < count; i++) {
                 String valueName = fromByteArray(invoke(Methods.REG_ENUM_VALUE.get(), key.id, i, maxlen));
@@ -255,7 +255,7 @@ public final class WindowsRegistry {
     }
 
     /**
-     * Map of registry hive names to constants from winreg.h
+     * Mapping of hive names to constants from winreg.h.
      */
     public static enum Hive {
 
@@ -301,7 +301,7 @@ public final class WindowsRegistry {
     /**
      * Enumeration type encapsulating info array indexes.
      */
-    private static enum INFO_INDEX {
+    private static enum InfoIndex {
 
         INFO_COUNT_KEYS(0),
         INFO_COUNT_VALUES(2),
@@ -312,7 +312,7 @@ public final class WindowsRegistry {
 
         private int num;
 
-        private INFO_INDEX(int num) {
+        private InfoIndex(int num) {
             this.num = num;
         }
 
@@ -374,8 +374,8 @@ public final class WindowsRegistry {
         static Key open(String keyName, int accessMode) {
             Object[] keyParts = keyParts(keyName);
             int[] ret = invoke(Methods.REG_OPEN_KEY.get(), keyParts[0], keyParts[1], accessMode);
-            checkError(ret[INFO_INDEX.INFO_ERROR_CODE.get()]);
-            return new Key(ret[INFO_INDEX.INFO_HANDLE.get()]);
+            checkError(ret[InfoIndex.INFO_ERROR_CODE.get()]);
+            return new Key(ret[InfoIndex.INFO_HANDLE.get()]);
         }
 
         @Override

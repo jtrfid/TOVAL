@@ -82,35 +82,6 @@ public final class WindowsUtils extends OSUtils {
     }
 
     /**
-     * Checks if the given extension is already registered.
-     *
-     * @param fileTypeExtension File extension with leading dot, e.g.
-     * <code>.bar</code>.
-     * @return <code>true</code> if extension is registered, <code>false</code>
-     * otherwise.
-     */
-    public static boolean getFileExtension(String fileTypeExtension) {
-        if (!isWindows()) {
-            return false;
-        }
-
-        // sanitize file extension
-        if (!fileTypeExtension.substring(0, 1).equals(".")) {
-            fileTypeExtension = "." + fileTypeExtension;
-        }
-
-        Hive[] hives = {Hive.HKEY_CURRENT_USER, Hive.HKEY_LOCAL_MACHINE};
-
-        for (Hive h : hives) {
-            List<String> subkeys = WindowsRegistry.readSubkeys(h.getName() + SOFTWARE_CLASSES);
-            if (subkeys.contains(fileTypeExtension)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Returns <code>true</code> if current OS is Windows and this class can be
      * used.
      *
