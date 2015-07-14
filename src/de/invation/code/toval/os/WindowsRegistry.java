@@ -66,17 +66,6 @@ public final class WindowsRegistry {
     private static final int ERROR_FILE_NOT_FOUND = 2;
     private static final int ERROR_SUCCESS = 0;
 
-    private static final Method REG_CLOSE_KEY = getMethod("WindowsRegCloseKey", int.class);
-    private static final Method REG_CREATE_KEY_EX = getMethod("WindowsRegCreateKeyEx", int.class, byte[].class);
-    private static final Method REG_DELETE_KEY = getMethod("WindowsRegDeleteKey", int.class, byte[].class);
-    private static final Method REG_DELETE_VALUE = getMethod("WindowsRegDeleteValue", int.class, byte[].class);
-    private static final Method REG_ENUM_KEY_EX = getMethod("WindowsRegEnumKeyEx", int.class, int.class, int.class);
-    private static final Method REG_ENUM_VALUE = getMethod("WindowsRegEnumValue", int.class, int.class, int.class);
-    private static final Method REG_OPEN_KEY = getMethod("WindowsRegOpenKey", int.class, byte[].class, int.class);
-    private static final Method REG_QUERY_VALUE_EX = getMethod("WindowsRegQueryValueEx", int.class, byte[].class);
-    private static final Method REG_QUERY_INFO_KEY = getMethod("WindowsRegQueryInfoKey", int.class);
-    private static final Method REG_SET_VALUE_EX = getMethod("WindowsRegSetValueEx", int.class, byte[].class, byte[].class);
-
     private static Throwable initError;
 
     private WindowsRegistry() {
@@ -104,9 +93,9 @@ public final class WindowsRegistry {
      * @param keyName Key name (i.a. with parent keys) to be created.
      */
     public static void createKey(String keyName) {
-        int[] info = invoke(REG_CREATE_KEY_EX, keyParts(keyName));
+        int[] info = invoke(Methods.REG_CREATE_KEY_EX.get(), keyParts(keyName));
         checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
-        invoke(REG_CLOSE_KEY, info[INFO_INDEX.INFO_HANDLE.get()]);
+        invoke(Methods.REG_CLOSE_KEY.get(), info[INFO_INDEX.INFO_HANDLE.get()]);
     }
 
     /**
@@ -116,7 +105,7 @@ public final class WindowsRegistry {
      * @param keyName Key name to delete.
      */
     public static void deleteKey(String keyName) {
-        checkError(invoke(REG_DELETE_KEY, keyParts(keyName)));
+        checkError(invoke(Methods.REG_DELETE_KEY.get(), keyParts(keyName)));
     }
 
     /**
@@ -127,7 +116,7 @@ public final class WindowsRegistry {
      */
     public static void deleteValue(String keyName, String valueName) {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
-            checkError(invoke(REG_DELETE_VALUE, key.id, toByteArray(valueName)));
+            checkError(invoke(Methods.REG_DELETE_VALUE.get(), key.id, toByteArray(valueName)));
         }
     }
 
@@ -140,18 +129,6 @@ public final class WindowsRegistry {
             chars[i] = (char) ((int) bytes[i] & 0xFF);
         }
         return new String(chars);
-    }
-
-    private static Method getMethod(String methodName, Class<?>... parameterTypes) {
-        try {
-            Method m = java.util.prefs.Preferences.systemRoot().getClass()
-                    .getDeclaredMethod(methodName, parameterTypes);
-            m.setAccessible(true);
-            return m;
-        } catch (NoSuchMethodException | SecurityException t) {
-            initError = t;
-            return null;
-        }
     }
 
     private static <T> T invoke(Method method, Object... args) {
@@ -204,13 +181,13 @@ public final class WindowsRegistry {
      */
     public static List<String> readSubkeys(String keyName) {
         try (Key key = Key.open(keyName, KEY_READ)) {
-            int[] info = invoke(REG_QUERY_INFO_KEY, key.id);
+            int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
             int count = info[INFO_INDEX.INFO_COUNT_KEYS.get()];
             int maxlen = info[INFO_INDEX.INFO_MAX_KEY_LENGTH.get()] + 1;
             List<String> subkeys = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
-                subkeys.add(fromByteArray(invoke(REG_ENUM_KEY_EX, key.id, i, maxlen)));
+                subkeys.add(fromByteArray(invoke(Methods.REG_ENUM_KEY_EX.get(), key.id, i, maxlen)));
             }
             return subkeys;
         }
@@ -225,7 +202,7 @@ public final class WindowsRegistry {
      */
     public static String readValue(String keyName, String valueName) {
         try (Key key = Key.open(keyName, KEY_READ)) {
-            return fromByteArray(invoke(REG_QUERY_VALUE_EX, key.id, toByteArray(valueName)));
+            return fromByteArray(invoke(Methods.REG_QUERY_VALUE_EX.get(), key.id, toByteArray(valueName)));
         }
     }
 
@@ -237,13 +214,13 @@ public final class WindowsRegistry {
      */
     public static Map<String, String> readValues(String keyName) {
         try (Key key = Key.open(keyName, KEY_READ)) {
-            int[] info = invoke(REG_QUERY_INFO_KEY, key.id);
+            int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[INFO_INDEX.INFO_ERROR_CODE.get()]);
             int count = info[INFO_INDEX.INFO_COUNT_VALUES.get()];
             int maxlen = info[INFO_INDEX.INFO_MAX_VALUE_LENGTH.get()] + 1;
             Map<String, String> values = new HashMap<>();
             for (int i = 0; i < count; i++) {
-                String valueName = fromByteArray(invoke(REG_ENUM_VALUE, key.id, i, maxlen));
+                String valueName = fromByteArray(invoke(Methods.REG_ENUM_VALUE.get(), key.id, i, maxlen));
                 values.put(valueName, readValue(keyName, valueName));
             }
             return values;
@@ -273,7 +250,7 @@ public final class WindowsRegistry {
      */
     public static void writeValue(String keyName, String valueName, String value) {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
-            checkError(invoke(REG_SET_VALUE_EX, key.id, toByteArray(valueName), toByteArray(value)));
+            checkError(invoke(Methods.REG_SET_VALUE_EX.get(), key.id, toByteArray(valueName), toByteArray(value)));
         }
     }
 
@@ -345,6 +322,45 @@ public final class WindowsRegistry {
     }
 
     /**
+     * Enumeration type for the different methods to access the Windows
+     * Registry.
+     */
+    private static enum Methods {
+
+        REG_CLOSE_KEY("WindowsRegCloseKey", int.class),
+        REG_CREATE_KEY_EX("WindowsRegCreateKeyEx", int.class, byte[].class),
+        REG_DELETE_KEY("WindowsRegDeleteKey", int.class, byte[].class),
+        REG_DELETE_VALUE("WindowsRegDeleteValue", int.class, byte[].class),
+        REG_ENUM_KEY_EX("WindowsRegEnumKeyEx", int.class, int.class, int.class),
+        REG_ENUM_VALUE("WindowsRegEnumValue", int.class, int.class, int.class),
+        REG_OPEN_KEY("WindowsRegOpenKey", int.class, byte[].class, int.class),
+        REG_QUERY_VALUE_EX("WindowsRegQueryValueEx", int.class, byte[].class),
+        REG_QUERY_INFO_KEY("WindowsRegQueryInfoKey", int.class),
+        REG_SET_VALUE_EX("WindowsRegSetValueEx", int.class, byte[].class, byte[].class);
+
+        private Method method;
+
+        private Methods(String methodName, Class<?>... parameterTypes) {
+            try {
+                Method m = java.util.prefs.Preferences.systemRoot().getClass().getDeclaredMethod(methodName, parameterTypes);
+                m.setAccessible(true);
+                method = m;
+            } catch (NoSuchMethodException | SecurityException t) {
+                initError = t;
+            }
+        }
+
+        /**
+         * Returns the method.
+         *
+         * @return The method
+         */
+        public Method get() {
+            return method;
+        }
+    }
+
+    /**
      * Type encapsulating a native handle to a registry key.
      */
     private static class Key implements AutoCloseable {
@@ -357,14 +373,14 @@ public final class WindowsRegistry {
 
         static Key open(String keyName, int accessMode) {
             Object[] keyParts = keyParts(keyName);
-            int[] ret = invoke(REG_OPEN_KEY, keyParts[0], keyParts[1], accessMode);
+            int[] ret = invoke(Methods.REG_OPEN_KEY.get(), keyParts[0], keyParts[1], accessMode);
             checkError(ret[INFO_INDEX.INFO_ERROR_CODE.get()]);
             return new Key(ret[INFO_INDEX.INFO_HANDLE.get()]);
         }
 
         @Override
         public void close() {
-            invoke(REG_CLOSE_KEY, id);
+            invoke(Methods.REG_CLOSE_KEY.get(), id);
         }
     }
 
