@@ -59,6 +59,9 @@ import java.util.Map;
  */
 public final class WindowsRegistry {
 
+    public static final char REG_PATH_SEPARATOR = '\\';
+    public static final String REG_PATH_SEPARATOR_REGEX = "\\\\";
+
     private static final int KEY_READ = 0x20019;
     private static final int KEY_WRITE = 0x20006;
 
@@ -120,6 +123,40 @@ public final class WindowsRegistry {
         }
     }
 
+    /**
+     * Checks if a given key exists.
+     *
+     * @param keyName Key name to check for existence.
+     * @return <code>true</code> if the key exists, otherwise
+     * <code>false</code>.
+     */
+    public static boolean existsKey(String keyName) {
+        String[] keyNameParts = keyName.split(REG_PATH_SEPARATOR_REGEX);
+
+        // first part must be valid hive
+        if (Hive.getHive(keyNameParts[0]) == null) {
+            return false;
+        }
+
+        for (int i = 1; i < keyNameParts.length; i++) {
+            // build path
+            StringBuilder path = new StringBuilder();
+            for (int j = 0; j < i; j++) {
+                path.append(keyNameParts[j]);
+                if (j < i) {
+                    path.append(REG_PATH_SEPARATOR);
+                }
+            }
+
+            // check if next element in path exists
+            List<String> subkeys = readSubkeys(path.toString());
+            if (!subkeys.contains(keyNameParts[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private static String fromByteArray(byte[] bytes) {
         if (bytes == null) {
             return null;
@@ -162,7 +199,7 @@ public final class WindowsRegistry {
      * array for each key name as second element.
      */
     private static Object[] keyParts(String fullKeyName) {
-        int x = fullKeyName.indexOf('\\');
+        int x = fullKeyName.indexOf(REG_PATH_SEPARATOR);
         String hiveName = x >= 0 ? fullKeyName.substring(0, x) : fullKeyName;
         String keyName = x >= 0 ? fullKeyName.substring(x + 1) : "";
         if (Hive.getHive(hiveName) == null) {

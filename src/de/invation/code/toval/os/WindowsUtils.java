@@ -33,6 +33,8 @@ package de.invation.code.toval.os;
 import de.invation.code.toval.os.WindowsRegistry.Hive;
 import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utils class for Windows operating system regarding functionalities and
@@ -48,9 +50,18 @@ public final class WindowsUtils extends OSUtils {
      */
     public static final String WINDOWS_LINE_SEPARATOR = "\r\n";
 
-    private static final String SOFTWARE_CLASSES = "\\Software\\Classes\\";
-    private static final String SHELL_OPEN_COMMAND = "\\shell\\open\\command";
+    private static final String SOFTWARE = "Software";
+    private static final String CLASSES = "Classes";
+    private static final String SH = "shell";
+    private static final String OPEN = "open";
+    private static final String COMMAND = "command";
+    private static final String SOFTWARE_CLASSES = WindowsRegistry.REG_PATH_SEPARATOR + SOFTWARE + WindowsRegistry.REG_PATH_SEPARATOR + CLASSES + WindowsRegistry.REG_PATH_SEPARATOR;
+    private static final String SHELL = WindowsRegistry.REG_PATH_SEPARATOR + SH;
+    private static final String SHELL_OPEN = SHELL + WindowsRegistry.REG_PATH_SEPARATOR + OPEN;
+    private static final String SHELL_OPEN_COMMAND = SHELL_OPEN + WindowsRegistry.REG_PATH_SEPARATOR + COMMAND;
     private static final String DEFAULT_KEY_NAME = "";
+
+    private static final Pattern PATTERN_TEXT_BETWEEN_QUOTES = Pattern.compile("\"([^\"]*)\"");
 
     /**
      * Checks if the given extension is already registered.
@@ -79,6 +90,54 @@ public final class WindowsUtils extends OSUtils {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the associated application for a given extension.
+     *
+     * @param fileTypeExtension File extension with leading dot, e.g.
+     * <code>.bar</code>.
+     * @return {@link String} with path to associated application or
+     * <code>null</code> if file extension is not registered or can't be read.
+     */
+    public static String getFileExtension(String fileTypeExtension) {
+        if (!isWindows() || !isFileExtensionRegistered(fileTypeExtension)) {
+            return null;
+        }
+
+        // sanitize file extension
+        if (!fileTypeExtension.substring(0, 1).equals(".")) {
+            fileTypeExtension = "." + fileTypeExtension;
+        }
+
+        Hive[] hives = {Hive.HKEY_CURRENT_USER, Hive.HKEY_LOCAL_MACHINE};
+
+        // get fileTypeName
+        String fileTypeName = null;
+        for (Hive h : hives) {
+            if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES + fileTypeExtension)) {
+                fileTypeName = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES + fileTypeExtension, DEFAULT_KEY_NAME);
+            }
+        }
+
+        // get file association
+        if (fileTypeName != null) {
+            for (Hive h : hives) {
+                if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND)) {
+                    String fileTypeAssociation = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND, DEFAULT_KEY_NAME);
+                    Matcher m = PATTERN_TEXT_BETWEEN_QUOTES.matcher(fileTypeAssociation);
+
+                    // If exists return first string between quotes
+                    while (m.find()) {
+                        return m.group(1);
+                    }
+
+                    // otherwise return complete file association string
+                    return fileTypeAssociation;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -141,6 +200,6 @@ public final class WindowsUtils extends OSUtils {
      * @return Given path in the Windows path format
      */
     public static String toWindowsPath(String path) {
-        return path.replaceAll("/", "\\\\");
+        return path.replaceAll("/", WindowsRegistry.REG_PATH_SEPARATOR_REGEX);
     }
 }
