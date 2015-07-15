@@ -30,57 +30,24 @@
  */
 package de.invation.code.toval.os;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
 /**
- * Utils class regarding operating system functionalities and properties.
- *
- * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class OSUtils {
+public class OSException extends Exception {
 
-    /**
-     * Returns the current operating system
-     *
-     * @return Operating system of type {@link OSType}
-     */
-    public static OSType getCurrentOS() {
-        String osName = System.getProperty("os.name");
-        return OSType.getOSTypeByName(osName);
+    public OSException() {
+        super();
     }
 
-    /**
-     * Returns the execution path to the direcory of the current Java
-     * application.
-     *
-     * @return Execution path as {@link File}.
-     * @throws OSException If the execution path can't be determined.
-     */
-    public static File getExecutionPath() throws OSException {
-        try {
-            return new File(OSUtils.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
-        } catch (URISyntaxException ex) {
-            throw new OSException(ex);
-        }
+    public OSException(String message) {
+        super(message);
     }
 
-    /**
-     * Returns the version of the JVM
-     *
-     * @return Java specification version
-     */
-    public static String getJavaVersion() {
-        return System.getProperty("java.specification.version");
+    public OSException(Throwable cause) {
+        super(cause);
     }
 
-    /**
-     * Returns the current user's home directory.
-     *
-     * @return The home directory as {@link File}
-     */
-    public static File getUserHomeDirectory() {
-        return new File(System.getProperty("user.home"));
+    public OSException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

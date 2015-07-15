@@ -31,6 +31,7 @@
 package de.invation.code.toval.os;
 
 import de.invation.code.toval.os.WindowsRegistry.Hive;
+import de.invation.code.toval.os.WindowsRegistry.RegistryException;
 import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -70,8 +71,9 @@ public final class WindowsUtils extends OSUtils {
      * <code>.bar</code>.
      * @return <code>true</code> if extension is registered, <code>false</code>
      * otherwise.
+     * @throws RegistryException 
      */
-    public static boolean isFileExtensionRegistered(String fileTypeExtension) {
+    public static boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException {
         if (!isWindows()) {
             return false;
         }
@@ -99,8 +101,9 @@ public final class WindowsUtils extends OSUtils {
      * <code>.bar</code>.
      * @return {@link String} with path to associated application or
      * <code>null</code> if file extension is not registered or can't be read.
+     * @throws RegistryException If Registry can't be read.
      */
-    public static String getFileExtension(String fileTypeExtension) {
+    public static String getFileExtension(String fileTypeExtension) throws RegistryException {
         if (!isWindows() || !isFileExtensionRegistered(fileTypeExtension)) {
             return null;
         }
@@ -163,8 +166,9 @@ public final class WindowsUtils extends OSUtils {
      * created for the current user.
      * @return <code>true</code> if registration was successful,
      * <code>false</code> otherwise.
+     * @throws RegistryException If keys can't be created or values can't be written.
      */
-    public static boolean registerFileExtension(String fileTypeName, String fileTypeExtension, File application, boolean userOnly) {
+    public static boolean registerFileExtension(String fileTypeName, String fileTypeExtension, File application, boolean userOnly) throws RegistryException {
         if (!isWindows()) {
             return false;
         }

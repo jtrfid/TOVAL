@@ -74,7 +74,7 @@ public final class WindowsRegistry {
     private WindowsRegistry() {
     }
 
-    private static void checkError(int e) {
+    private static void checkError(int e) throws RegistryException {
         if (e == ERROR_SUCCESS) {
             return;
         }
@@ -94,8 +94,9 @@ public final class WindowsRegistry {
      * This method returns without error if the key already exists.
      *
      * @param keyName Key name (i.a. with parent keys) to be created.
+     * @throws RegistryException 
      */
-    public static void createKey(String keyName) {
+    public static void createKey(String keyName) throws RegistryException {
         int[] info = invoke(Methods.REG_CREATE_KEY_EX.get(), keyParts(keyName));
         checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
         invoke(Methods.REG_CLOSE_KEY.get(), info[InfoIndex.INFO_HANDLE.get()]);
@@ -106,8 +107,9 @@ public final class WindowsRegistry {
      * "Access denied" error will be thrown. Subkeys must be deleted separately.
      *
      * @param keyName Key name to delete.
+     * @throws RegistryException 
      */
-    public static void deleteKey(String keyName) {
+    public static void deleteKey(String keyName) throws RegistryException {
         checkError(invoke(Methods.REG_DELETE_KEY.get(), keyParts(keyName)));
     }
 
@@ -116,8 +118,9 @@ public final class WindowsRegistry {
      *
      * @param keyName Name of the key, which contains the value to delete.
      * @param valueName Name of the value to delete.
+     * @throws RegistryException 
      */
-    public static void deleteValue(String keyName, String valueName) {
+    public static void deleteValue(String keyName, String valueName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
             checkError(invoke(Methods.REG_DELETE_VALUE.get(), key.id, toByteArray(valueName)));
         }
@@ -129,8 +132,9 @@ public final class WindowsRegistry {
      * @param keyName Key name to check for existence.
      * @return <code>true</code> if the key exists, otherwise
      * <code>false</code>.
+     * @throws RegistryException 
      */
-    public static boolean existsKey(String keyName) {
+    public static boolean existsKey(String keyName) throws RegistryException {
         String[] keyNameParts = keyName.split(REG_PATH_SEPARATOR_REGEX);
 
         // first part must be valid hive
@@ -168,7 +172,7 @@ public final class WindowsRegistry {
         return new String(chars);
     }
 
-    private static <T> T invoke(Method method, Object... args) {
+    private static <T> T invoke(Method method, Object... args) throws RegistryException {
         if (initError != null) {
             throw new RegistryException("Registry methods are not available", initError);
         }
@@ -198,7 +202,7 @@ public final class WindowsRegistry {
      * @return Array with the hive key as first element and a following byte
      * array for each key name as second element.
      */
-    private static Object[] keyParts(String fullKeyName) {
+    private static Object[] keyParts(String fullKeyName) throws RegistryException {
         int x = fullKeyName.indexOf(REG_PATH_SEPARATOR);
         String hiveName = x >= 0 ? fullKeyName.substring(0, x) : fullKeyName;
         String keyName = x >= 0 ? fullKeyName.substring(x + 1) : "";
@@ -215,8 +219,9 @@ public final class WindowsRegistry {
      * @param keyName Key name to read all subkeys from.
      * @return {@link List} of key names directly contained in the specified
      * key.
+     * @throws RegistryException 
      */
-    public static List<String> readSubkeys(String keyName) {
+    public static List<String> readSubkeys(String keyName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
@@ -236,8 +241,9 @@ public final class WindowsRegistry {
      * @param keyName Name of the key, which contains the value to read.
      * @param valueName Name of the value to read.
      * @return Content of the specified value.
+     * @throws RegistryException 
      */
-    public static String readValue(String keyName, String valueName) {
+    public static String readValue(String keyName, String valueName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
             return fromByteArray(invoke(Methods.REG_QUERY_VALUE_EX.get(), key.id, toByteArray(valueName)));
         }
@@ -248,8 +254,9 @@ public final class WindowsRegistry {
      *
      * @param keyName Name of the key to read all values from.
      * @return {@link Map} of value name and value content pairs.
+     * @throws RegistryException 
      */
-    public static Map<String, String> readValues(String keyName) {
+    public static Map<String, String> readValues(String keyName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
@@ -284,8 +291,9 @@ public final class WindowsRegistry {
      * @param keyName Name of the key to write the value in.
      * @param valueName Name of the value.
      * @param value Content of the value.
+     * @throws RegistryException 
      */
-    public static void writeValue(String keyName, String valueName, String value) {
+    public static void writeValue(String keyName, String valueName, String value) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
             checkError(invoke(Methods.REG_SET_VALUE_EX.get(), key.id, toByteArray(valueName), toByteArray(value)));
         }
@@ -408,7 +416,7 @@ public final class WindowsRegistry {
             this.id = id;
         }
 
-        static Key open(String keyName, int accessMode) {
+        static Key open(String keyName, int accessMode) throws RegistryException {
             Object[] keyParts = keyParts(keyName);
             int[] ret = invoke(Methods.REG_OPEN_KEY.get(), keyParts[0], keyParts[1], accessMode);
             checkError(ret[InfoIndex.INFO_ERROR_CODE.get()]);
@@ -416,7 +424,7 @@ public final class WindowsRegistry {
         }
 
         @Override
-        public void close() {
+        public void close() throws RegistryException {
             invoke(Methods.REG_CLOSE_KEY.get(), id);
         }
     }
@@ -424,7 +432,7 @@ public final class WindowsRegistry {
     /**
      * The exception type that will be thrown if a registry operation fails.
      */
-    public static class RegistryException extends RuntimeException {
+    public static class RegistryException extends OSException {
 
         public RegistryException(String message) {
             super(message);
