@@ -53,13 +53,15 @@ public final class WindowsUtils extends OSUtils {
 
     private static final String SOFTWARE = "Software";
     private static final String CLASSES = "Classes";
-    private static final String SH = "shell";
+    private static final String SHELL = "shell";
     private static final String OPEN = "open";
     private static final String COMMAND = "command";
-    private static final String SOFTWARE_CLASSES = WindowsRegistry.REG_PATH_SEPARATOR + SOFTWARE + WindowsRegistry.REG_PATH_SEPARATOR + CLASSES + WindowsRegistry.REG_PATH_SEPARATOR;
-    private static final String SHELL = WindowsRegistry.REG_PATH_SEPARATOR + SH;
-    private static final String SHELL_OPEN = SHELL + WindowsRegistry.REG_PATH_SEPARATOR + OPEN;
-    private static final String SHELL_OPEN_COMMAND = SHELL_OPEN + WindowsRegistry.REG_PATH_SEPARATOR + COMMAND;
+
+    private static final String SOFTWARE_CLASSES_PATH = WindowsRegistry.REG_PATH_SEPARATOR + SOFTWARE + WindowsRegistry.REG_PATH_SEPARATOR + CLASSES + WindowsRegistry.REG_PATH_SEPARATOR;
+    private static final String SHELL_PATH = WindowsRegistry.REG_PATH_SEPARATOR + SHELL;
+    private static final String SHELL_OPEN_PATH = SHELL_PATH + WindowsRegistry.REG_PATH_SEPARATOR + OPEN;
+    private static final String SHELL_OPEN_COMMAND_PATH = SHELL_OPEN_PATH + WindowsRegistry.REG_PATH_SEPARATOR + COMMAND;
+
     private static final String DEFAULT_KEY_NAME = "";
 
     private static final Pattern PATTERN_TEXT_BETWEEN_QUOTES = Pattern.compile("\"([^\"]*)\"");
@@ -71,19 +73,17 @@ public final class WindowsUtils extends OSUtils {
      * <code>.bar</code>.
      * @return <code>true</code> if extension is registered, <code>false</code>
      * otherwise.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
-    public static boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException {
+    public static boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException, OSException {
         if (!isWindows()) {
             return false;
         }
 
         // sanitize file extension
-        if (!fileTypeExtension.substring(0, 1).equals(".")) {
-            fileTypeExtension = "." + fileTypeExtension;
-        }
+        fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
-        String[] hives = {Hive.HKEY_CURRENT_USER + SOFTWARE_CLASSES, Hive.HKEY_LOCAL_MACHINE + SOFTWARE_CLASSES, Hive.HKEY_CLASSES_ROOT + "\\"};
+        String[] hives = {Hive.HKEY_CURRENT_USER + SOFTWARE_CLASSES_PATH, Hive.HKEY_LOCAL_MACHINE + SOFTWARE_CLASSES_PATH, Hive.HKEY_CLASSES_ROOT + "\\"};
 
         for (String h : hives) {
             List<String> subkeys = WindowsRegistry.readSubkeys(h);
@@ -103,31 +103,29 @@ public final class WindowsUtils extends OSUtils {
      * <code>null</code> if file extension is not registered or can't be read.
      * @throws RegistryException If Registry can't be read.
      */
-    public static String getFileExtension(String fileTypeExtension) throws RegistryException {
+    public static String getFileExtension(String fileTypeExtension) throws RegistryException, OSException {
         if (!isWindows() || !isFileExtensionRegistered(fileTypeExtension)) {
             return null;
         }
 
         // sanitize file extension
-        if (!fileTypeExtension.substring(0, 1).equals(".")) {
-            fileTypeExtension = "." + fileTypeExtension;
-        }
+        fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
         Hive[] hives = {Hive.HKEY_CURRENT_USER, Hive.HKEY_LOCAL_MACHINE};
 
         // get fileTypeName
         String fileTypeName = null;
         for (Hive h : hives) {
-            if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES + fileTypeExtension)) {
-                fileTypeName = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES + fileTypeExtension, DEFAULT_KEY_NAME);
+            if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension)) {
+                fileTypeName = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, DEFAULT_KEY_NAME);
             }
         }
 
         // get file association
         if (fileTypeName != null) {
             for (Hive h : hives) {
-                if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND)) {
-                    String fileTypeAssociation = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND, DEFAULT_KEY_NAME);
+                if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH)) {
+                    String fileTypeAssociation = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, DEFAULT_KEY_NAME);
                     Matcher m = PATTERN_TEXT_BETWEEN_QUOTES.matcher(fileTypeAssociation);
 
                     // If exists return first string between quotes
@@ -166,17 +164,16 @@ public final class WindowsUtils extends OSUtils {
      * created for the current user.
      * @return <code>true</code> if registration was successful,
      * <code>false</code> otherwise.
-     * @throws RegistryException If keys can't be created or values can't be written.
+     * @throws RegistryException If keys can't be created or values can't be
+     * written.
      */
-    public static boolean registerFileExtension(String fileTypeName, String fileTypeExtension, File application, boolean userOnly) throws RegistryException {
+    public static boolean registerFileExtension(String fileTypeName, String fileTypeExtension, File application, boolean userOnly) throws RegistryException, OSException {
         if (!isWindows()) {
             return false;
         }
 
         // sanitize file extension
-        if (!fileTypeExtension.substring(0, 1).equals(".")) {
-            fileTypeExtension = "." + fileTypeExtension;
-        }
+        fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
         // create path to linked application
         String applicationPath = toWindowsPath(application.getAbsolutePath());
@@ -185,16 +182,43 @@ public final class WindowsUtils extends OSUtils {
         WindowsRegistry.Hive hive = userOnly ? WindowsRegistry.Hive.HKEY_CURRENT_USER : WindowsRegistry.Hive.HKEY_LOCAL_MACHINE;
 
         // create programmatic identifier
-        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES + fileTypeName);
+        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName);
 
         // create verb to open file type
-        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND);
-        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES + fileTypeName + SHELL_OPEN_COMMAND, DEFAULT_KEY_NAME, "\"" + applicationPath + "\" \"%1\"");
+        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH);
+        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, DEFAULT_KEY_NAME, "\"" + applicationPath + "\" \"%1\"");
 
         // associate with file extension
-        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES + fileTypeExtension);
-        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES + fileTypeExtension, DEFAULT_KEY_NAME, fileTypeName);
+        WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension);
+        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, DEFAULT_KEY_NAME, fileTypeName);
         return true;
+    }
+
+    /**
+     * Sanitizes file extension such that it can be used in the Windows
+     * Registry.
+     *
+     * @param fileTypeExtension Extension to sanitize
+     * @return Sanitized file extension
+     */
+    private static String sanitizeFileExtension(String fileTypeExtension) throws OSException {
+        // Remove whitespaces
+        String newFileTypeExtension = fileTypeExtension.replaceAll("\\s+", "");
+
+        // to lower case
+        newFileTypeExtension = newFileTypeExtension.toLowerCase();
+
+        /*
+         * Check if name contains multiple dots and if so, just take the last
+         * part. Also adds a dot before last part.
+         */
+        String[] splittedFileExtension = newFileTypeExtension.split("\\.");
+        if (newFileTypeExtension.length() == 0 || splittedFileExtension.length == 0) {
+            throw new OSException("The given file extension \"" + fileTypeExtension + "\" is too short.");
+        }
+        newFileTypeExtension = "." + splittedFileExtension[splittedFileExtension.length - 1];
+
+        return newFileTypeExtension;
     }
 
     /**

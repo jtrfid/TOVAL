@@ -52,7 +52,7 @@ public class ParserException extends Exception {
 
 		String msgSuper = super.getMessage();
 
-		if (msg.length() == 0)
+		if (msg == null || msg.length() == 0)
 			return msgSuper;
 
 		if (msgSuper != null)
