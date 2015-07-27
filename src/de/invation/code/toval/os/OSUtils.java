@@ -32,6 +32,7 @@ package de.invation.code.toval.os;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 /**
  * Utils class regarding operating system functionalities and properties.
@@ -39,7 +40,9 @@ import java.net.URISyntaxException;
  * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class OSUtils {
+public abstract class OSUtils {
+
+    public final static Pattern MIME_PATTERN = Pattern.compile("[a-zA-Z]+\\/[a-zA-Z0-9\\+-\\.]+");
 
     /**
      * Returns the current operating system
@@ -65,6 +68,17 @@ public class OSUtils {
             throw new OSException(ex);
         }
     }
+    
+    /**
+     * Returns the associated application for a given extension.
+     *
+     * @param fileTypeExtension File extension with leading dot, e.g.
+     * <code>.bar</code>.
+     * @return {@link String} with path to associated application or
+     * <code>null</code> if file extension is not registered or can't be read.
+     * @throws OSException
+     */
+    public abstract String getFileExtension(String fileTypeExtension) throws OSException;
 
     /**
      * Returns the version of the JVM
@@ -83,4 +97,38 @@ public class OSUtils {
     public static File getUserHomeDirectory() {
         return new File(System.getProperty("user.home"));
     }
+
+    /**
+     * Returns <code>true</code> if this class type fits the operating system,
+     * otherwise <code>false</code>.
+     *
+     * @return Boolean value if class is applicable.
+     */
+    public abstract boolean isApplicable();
+    
+    /**
+     * Checks if the given extension is already registered.
+     *
+     * @param fileTypeExtension File extension with leading dot, e.g.
+     * <code>.bar</code>.
+     * @return <code>true</code> if extension is registered, <code>false</code>
+     * otherwise.
+     * @throws OSException
+     */
+    public abstract boolean isFileExtensionRegistered(String fileTypeExtension) throws OSException;
+
+    /**
+     * Registers a new file extension in the Windows registry.
+     *
+     * @param fileTypeName Name of the file extension. Must be atomic, e.g.
+     * <code>foocorp.fooapp.v1</code>.
+     * @param fileTypeExtension File extension with leading dot, e.g.
+     * <code>.bar</code>.
+     * @param application Path to the application, which should open the new
+     * file extension.
+     * @return <code>true</code> if registration was successful,
+     * <code>false</code> otherwise.
+     * @throws OSException
+     */
+    public abstract boolean registerFileExtension(String fileTypeName, String fileTypeExtension, String application) throws OSException;
 }

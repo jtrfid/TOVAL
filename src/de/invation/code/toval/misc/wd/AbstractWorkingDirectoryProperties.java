@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.invation.code.toval.misc.wd;
 
 import de.invation.code.toval.misc.ArrayUtils;
@@ -32,7 +27,7 @@ public abstract class AbstractWorkingDirectoryProperties<E> extends AbstractProp
 
     private String applicationPath = null;
 
-    private Set<WDPropertyChangeListener> listeners = new HashSet<WDPropertyChangeListener>();
+    private Set<WDPropertyChangeListener> listeners = new HashSet<>();
 
     protected AbstractWorkingDirectoryProperties() throws IOException {
         
@@ -140,12 +135,12 @@ public abstract class AbstractWorkingDirectoryProperties<E> extends AbstractProp
     }
 
     public Set<String> getKnownWorkingDirectories() {
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
         String propertyValue = props.getProperty(PROPERTY_NAME_KNOWN_WORKING_DIRECTORIES);
         if (propertyValue == null) {
             return result;
         }
-        return new HashSet<String>(StringUtils.splitArrayStringQuoted(propertyValue, '\''));
+        return new HashSet<>(StringUtils.splitArrayStringQuoted(propertyValue, '\''));
     }
 
     
@@ -173,7 +168,7 @@ public abstract class AbstractWorkingDirectoryProperties<E> extends AbstractProp
         try {
             store(getPropertyFileName());
         } catch (IOException e) {
-            throw new IOException("Cannot create/store properties file on disk.");
+            throw new IOException("Cannot create/store properties file on disk.", e);
         }
     }
 }

@@ -5,6 +5,7 @@ import de.invation.code.toval.misc.wd.AbstractWorkingDirectoryProperties;
 import de.invation.code.toval.properties.PropertyException;
 import de.invation.code.toval.validate.ExceptionDialog;
 import de.invation.code.toval.validate.ParameterException;
+import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 
 public abstract class AbstractWorkingDirectoryStartup extends AbstractStartup {
@@ -20,17 +21,14 @@ public abstract class AbstractWorkingDirectoryStartup extends AbstractStartup {
         MessageDialog.getInstance();
         
         try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    try{
-                        initializeComponentContainer();
-                    } catch(Exception e){
-                        MessageDialog.getInstance().message("Exception while initializing component container: " + e.getMessage());
-                    }
+            SwingUtilities.invokeAndWait(() -> {
+                try{
+                    initializeComponentContainer();
+                } catch(Exception e){
+                    MessageDialog.getInstance().message("Exception while initializing component container: " + e.getMessage());
                 }
             });
-        } catch (Exception e) {
+        } catch (InterruptedException | InvocationTargetException e) {
             throw new Exception("Exception during startup.", e);
         }
         createMainClass();
@@ -41,7 +39,7 @@ public abstract class AbstractWorkingDirectoryStartup extends AbstractStartup {
     protected abstract void createMainClass() throws Exception;
     
     protected boolean chooseWorkingDirectory() {
-        String workingDirectory = null;
+        String workingDirectory;
         try {
             workingDirectory = launchWorkingDirectoryDialog();
         } catch (Exception e) {

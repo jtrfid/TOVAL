@@ -47,7 +47,8 @@ import java.util.Map;
  * (<code>HKEY_CLASSES_ROOT</code>, <code>HKEY_CURRENT_USER</code>,
  * <code>HKEY_LOCAL_MACHINE</code>, etc.), which contain hierarchically
  * structured <i>keys</i>. Each key can contain <i>values</i>, which have a name
- * and a content.
+ * and a content. Every key contains a default value, usually indicated by an
+ * empty name ({@value #DEFAULT_KEY_NAME}).
  * </p>
  * <p>
  * This class contains methods to read and write keys and values in different
@@ -58,6 +59,8 @@ import java.util.Map;
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
 public final class WindowsRegistry {
+
+    public static final String DEFAULT_KEY_NAME = "";
 
     public static final char REG_PATH_SEPARATOR = '\\';
     public static final String REG_PATH_SEPARATOR_REGEX = "\\\\";
@@ -94,7 +97,7 @@ public final class WindowsRegistry {
      * This method returns without error if the key already exists.
      *
      * @param keyName Key name (i.a. with parent keys) to be created.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static void createKey(String keyName) throws RegistryException {
         int[] info = invoke(Methods.REG_CREATE_KEY_EX.get(), keyParts(keyName));
@@ -107,7 +110,7 @@ public final class WindowsRegistry {
      * "Access denied" error will be thrown. Subkeys must be deleted separately.
      *
      * @param keyName Key name to delete.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static void deleteKey(String keyName) throws RegistryException {
         checkError(invoke(Methods.REG_DELETE_KEY.get(), keyParts(keyName)));
@@ -118,7 +121,7 @@ public final class WindowsRegistry {
      *
      * @param keyName Name of the key, which contains the value to delete.
      * @param valueName Name of the value to delete.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static void deleteValue(String keyName, String valueName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
@@ -132,7 +135,7 @@ public final class WindowsRegistry {
      * @param keyName Key name to check for existence.
      * @return <code>true</code> if the key exists, otherwise
      * <code>false</code>.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static boolean existsKey(String keyName) throws RegistryException {
         String[] keyNameParts = keyName.split(REG_PATH_SEPARATOR_REGEX);
@@ -190,7 +193,7 @@ public final class WindowsRegistry {
      * <code>false</code> otherwise.
      */
     public static boolean isAvailable() {
-        return initError == null && WindowsUtils.isWindows();
+        return initError == null && WindowsUtils.instance().isApplicable();
     }
 
     /**
@@ -209,8 +212,8 @@ public final class WindowsRegistry {
         if (Hive.getHive(hiveName) == null) {
             throw new RegistryException("Unknown registry hive: " + hiveName, null);
         }
-        Integer hkey = Hive.getHive(hiveName).getId();
-        return new Object[]{hkey, toByteArray(keyName)};
+        Integer hiveKey = Hive.getHive(hiveName).getId();
+        return new Object[]{hiveKey, toByteArray(keyName)};
     }
 
     /**
@@ -219,17 +222,17 @@ public final class WindowsRegistry {
      * @param keyName Key name to read all subkeys from.
      * @return {@link List} of key names directly contained in the specified
      * key.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static List<String> readSubkeys(String keyName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
             int count = info[InfoIndex.INFO_COUNT_KEYS.get()];
-            int maxlen = info[InfoIndex.INFO_MAX_KEY_LENGTH.get()] + 1;
+            int maxLength = info[InfoIndex.INFO_MAX_KEY_LENGTH.get()] + 1;
             List<String> subkeys = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
-                subkeys.add(fromByteArray(invoke(Methods.REG_ENUM_KEY_EX.get(), key.id, i, maxlen)));
+                subkeys.add(fromByteArray(invoke(Methods.REG_ENUM_KEY_EX.get(), key.id, i, maxLength)));
             }
             return subkeys;
         }
@@ -241,7 +244,7 @@ public final class WindowsRegistry {
      * @param keyName Name of the key, which contains the value to read.
      * @param valueName Name of the value to read.
      * @return Content of the specified value.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static String readValue(String keyName, String valueName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
@@ -254,17 +257,17 @@ public final class WindowsRegistry {
      *
      * @param keyName Name of the key to read all values from.
      * @return {@link Map} of value name and value content pairs.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static Map<String, String> readValues(String keyName) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_READ)) {
             int[] info = invoke(Methods.REG_QUERY_INFO_KEY.get(), key.id);
             checkError(info[InfoIndex.INFO_ERROR_CODE.get()]);
             int count = info[InfoIndex.INFO_COUNT_VALUES.get()];
-            int maxlen = info[InfoIndex.INFO_MAX_VALUE_LENGTH.get()] + 1;
+            int maxLength = info[InfoIndex.INFO_MAX_VALUE_LENGTH.get()] + 1;
             Map<String, String> values = new HashMap<>();
             for (int i = 0; i < count; i++) {
-                String valueName = fromByteArray(invoke(Methods.REG_ENUM_VALUE.get(), key.id, i, maxlen));
+                String valueName = fromByteArray(invoke(Methods.REG_ENUM_VALUE.get(), key.id, i, maxLength));
                 values.put(valueName, readValue(keyName, valueName));
             }
             return values;
@@ -274,13 +277,13 @@ public final class WindowsRegistry {
     /**
      * Conversion of strings to/from null-terminated byte arrays.
      *
-     * @param str String to convert to null-terminated byte array.
+     * @param string String to convert to null-terminated byte array.
      * @return Null-terminated byte array.
      */
-    private static byte[] toByteArray(String str) {
-        byte[] bytes = new byte[str.length() + 1];
-        for (int i = 0; i < str.length(); i++) {
-            bytes[i] = (byte) str.charAt(i);
+    private static byte[] toByteArray(String string) {
+        byte[] bytes = new byte[string.length() + 1];
+        for (int i = 0; i < string.length(); i++) {
+            bytes[i] = (byte) string.charAt(i);
         }
         return bytes;
     }
@@ -291,7 +294,7 @@ public final class WindowsRegistry {
      * @param keyName Name of the key to write the value in.
      * @param valueName Name of the value.
      * @param value Content of the value.
-     * @throws RegistryException 
+     * @throws RegistryException
      */
     public static void writeValue(String keyName, String valueName, String value) throws RegistryException {
         try (Key key = Key.open(keyName, KEY_WRITE)) {
@@ -398,7 +401,7 @@ public final class WindowsRegistry {
         /**
          * Returns the method.
          *
-         * @return The method
+         * @return The desired method
          */
         public Method get() {
             return method;

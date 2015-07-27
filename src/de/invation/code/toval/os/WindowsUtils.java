@@ -45,6 +45,8 @@ import java.util.regex.Pattern;
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
 public final class WindowsUtils extends OSUtils {
+    
+    private static WindowsUtils instance = null;
 
     /**
      * Default Windows line separator
@@ -62,9 +64,10 @@ public final class WindowsUtils extends OSUtils {
     private static final String SHELL_OPEN_PATH = SHELL_PATH + WindowsRegistry.REG_PATH_SEPARATOR + OPEN;
     private static final String SHELL_OPEN_COMMAND_PATH = SHELL_OPEN_PATH + WindowsRegistry.REG_PATH_SEPARATOR + COMMAND;
 
-    private static final String DEFAULT_KEY_NAME = "";
-
     private static final Pattern PATTERN_TEXT_BETWEEN_QUOTES = Pattern.compile("\"([^\"]*)\"");
+
+    private WindowsUtils() {
+    }
 
     /**
      * Checks if the given extension is already registered.
@@ -75,8 +78,9 @@ public final class WindowsUtils extends OSUtils {
      * otherwise.
      * @throws RegistryException
      */
-    public static boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException, OSException {
-        if (!isWindows()) {
+    @Override
+    public boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException, OSException {
+        if (!isApplicable()) {
             return false;
         }
 
@@ -95,6 +99,18 @@ public final class WindowsUtils extends OSUtils {
     }
 
     /**
+     * Returns singleton instance of {@link OSUtils}.
+     *
+     * @return instance
+     */
+    public static synchronized WindowsUtils instance() {
+        if (instance == null) {
+            instance = new WindowsUtils();
+        }
+        return instance;
+    }
+
+    /**
      * Returns the associated application for a given extension.
      *
      * @param fileTypeExtension File extension with leading dot, e.g.
@@ -103,8 +119,9 @@ public final class WindowsUtils extends OSUtils {
      * <code>null</code> if file extension is not registered or can't be read.
      * @throws RegistryException If Registry can't be read.
      */
-    public static String getFileExtension(String fileTypeExtension) throws RegistryException, OSException {
-        if (!isWindows() || !isFileExtensionRegistered(fileTypeExtension)) {
+    @Override
+    public String getFileExtension(String fileTypeExtension) throws RegistryException, OSException {
+        if (!isApplicable() || !isFileExtensionRegistered(fileTypeExtension)) {
             return null;
         }
 
@@ -117,7 +134,7 @@ public final class WindowsUtils extends OSUtils {
         String fileTypeName = null;
         for (Hive h : hives) {
             if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension)) {
-                fileTypeName = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, DEFAULT_KEY_NAME);
+                fileTypeName = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, WindowsRegistry.DEFAULT_KEY_NAME);
             }
         }
 
@@ -125,7 +142,7 @@ public final class WindowsUtils extends OSUtils {
         if (fileTypeName != null) {
             for (Hive h : hives) {
                 if (WindowsRegistry.existsKey(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH)) {
-                    String fileTypeAssociation = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, DEFAULT_KEY_NAME);
+                    String fileTypeAssociation = WindowsRegistry.readValue(h.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, WindowsRegistry.DEFAULT_KEY_NAME);
                     Matcher m = PATTERN_TEXT_BETWEEN_QUOTES.matcher(fileTypeAssociation);
 
                     // If exists return first string between quotes
@@ -147,7 +164,8 @@ public final class WindowsUtils extends OSUtils {
      *
      * @return <code>true</code> if OS is Windows, <code>false</code> otherwise.
      */
-    public static boolean isWindows() {
+    @Override
+    public boolean isApplicable() {
         return getCurrentOS() == OSType.OS_WINDOWS;
     }
 
@@ -160,15 +178,14 @@ public final class WindowsUtils extends OSUtils {
      * <code>.bar</code>.
      * @param application Path to the application, which should open the new
      * file extension.
-     * @param userOnly Set <code>true</code> if file association should only be
-     * created for the current user.
      * @return <code>true</code> if registration was successful,
      * <code>false</code> otherwise.
      * @throws RegistryException If keys can't be created or values can't be
      * written.
      */
-    public static boolean registerFileExtension(String fileTypeName, String fileTypeExtension, File application, boolean userOnly) throws RegistryException, OSException {
-        if (!isWindows()) {
+    @Override
+    public boolean registerFileExtension(String fileTypeName, String fileTypeExtension, String application) throws RegistryException, OSException {
+        if (!isApplicable()) {
             return false;
         }
 
@@ -176,21 +193,21 @@ public final class WindowsUtils extends OSUtils {
         fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
         // create path to linked application
-        String applicationPath = toWindowsPath(application.getAbsolutePath());
+        String applicationPath = toWindowsPath(new File (application).getAbsolutePath());
 
         // Set registry hive
-        WindowsRegistry.Hive hive = userOnly ? WindowsRegistry.Hive.HKEY_CURRENT_USER : WindowsRegistry.Hive.HKEY_LOCAL_MACHINE;
+        WindowsRegistry.Hive hive = WindowsRegistry.Hive.HKEY_CURRENT_USER;
 
         // create programmatic identifier
         WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName);
 
         // create verb to open file type
         WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH);
-        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, DEFAULT_KEY_NAME, "\"" + applicationPath + "\" \"%1\"");
+        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeName + SHELL_OPEN_COMMAND_PATH, WindowsRegistry.DEFAULT_KEY_NAME, "\"" + applicationPath + "\" \"%1\"");
 
         // associate with file extension
         WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension);
-        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, DEFAULT_KEY_NAME, fileTypeName);
+        WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, WindowsRegistry.DEFAULT_KEY_NAME, fileTypeName);
         return true;
     }
 
@@ -201,7 +218,7 @@ public final class WindowsUtils extends OSUtils {
      * @param fileTypeExtension Extension to sanitize
      * @return Sanitized file extension
      */
-    private static String sanitizeFileExtension(String fileTypeExtension) throws OSException {
+    private String sanitizeFileExtension(String fileTypeExtension) throws OSException {
         // Remove whitespaces
         String newFileTypeExtension = fileTypeExtension.replaceAll("\\s+", "");
 
@@ -227,7 +244,7 @@ public final class WindowsUtils extends OSUtils {
      * @param path Path to convert to the Windows format
      * @return Given path in the Windows path format
      */
-    public static String toWindowsPath(String path) {
+    public String toWindowsPath(String path) {
         return path.replaceAll("/", WindowsRegistry.REG_PATH_SEPARATOR_REGEX);
     }
 }
