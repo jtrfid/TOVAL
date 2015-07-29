@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>de.uni.freiburg.iig.telematik</groupId>
 		<artifactId>tools</artifactId>
-		<version>0.1.6-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>TOVAL</artifactId>
 	<packaging>jar</packaging>
 
 	<name>TOVAL: Toms Java Library</name>
 	<description>TOVAL comprises a set of java classes for common programming issues. It includes utils for arrays, lists, sets and collections for convenient handling and modification, but also support for mathematic definitions concerning logic (clauses + resolution) together with some algorithms for permutations, powersets and resolution. Additionally it contains a number of types for multisets, matrices with object keys and much more.</description>
-	<url>https://sourceforge.net/projects/toval/</url>
+	<url>https://github.com/GerdHolz/TOVAL</url>
 	<organization>
 		<name>Institute of Computer Science and Social Studies, Department of Telematics</name>
 		<url>http://www.telematik.uni-freiburg.de/</url>
@@ -27,7 +27,7 @@
 	</licenses>
 
 	<scm>
-		<url>http://svn.code.sf.net/p/toval/code/trunk</url>
+		<url>https://github.com/GerdHolz/TOVAL.git</url>
 	</scm>
 
 	<properties>
