@@ -118,7 +118,7 @@ public abstract class OSUtils {
     public abstract boolean isFileExtensionRegistered(String fileTypeExtension) throws OSException;
 
     /**
-     * Registers a new file extension in the Windows registry.
+     * Registers a new file extension in the operating system.
      *
      * @param fileTypeName Name of the file extension. Must be atomic, e.g.
      * <code>foocorp.fooapp.v1</code>.
@@ -131,4 +131,32 @@ public abstract class OSUtils {
      * @throws OSException
      */
     public abstract boolean registerFileExtension(String fileTypeName, String fileTypeExtension, String application) throws OSException;
+
+    /**
+     * Sanitizes file extension such that it can be used in the Windows
+     * Registry.
+     *
+     * @param fileTypeExtension Extension to sanitize
+     * @return Sanitized file extension
+     * @throws OSException If the file extension is malformed
+     */
+    protected static String sanitizeFileExtension(String fileTypeExtension) throws OSException {
+        // Remove whitespaces
+        String newFileTypeExtension = fileTypeExtension.replaceAll("\\s+", "");
+
+        // to lower case
+        newFileTypeExtension = newFileTypeExtension.toLowerCase();
+
+        /*
+         * Check if name contains multiple dots and if so, just take the last
+         * part. Also adds a dot before last part.
+         */
+        String[] splittedFileExtension = newFileTypeExtension.split("\\.");
+        if (newFileTypeExtension.length() == 0 || splittedFileExtension.length == 0) {
+            throw new OSException("The given file extension \"" + fileTypeExtension + "\" is too short.");
+        }
+        newFileTypeExtension = "." + splittedFileExtension[splittedFileExtension.length - 1];
+
+        return newFileTypeExtension;
+    }
 }

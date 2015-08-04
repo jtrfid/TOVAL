@@ -70,47 +70,6 @@ public final class WindowsUtils extends OSUtils {
     }
 
     /**
-     * Checks if the given extension is already registered.
-     *
-     * @param fileTypeExtension File extension with leading dot, e.g.
-     * <code>.bar</code>.
-     * @return <code>true</code> if extension is registered, <code>false</code>
-     * otherwise.
-     * @throws RegistryException
-     */
-    @Override
-    public boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException, OSException {
-        if (!isApplicable()) {
-            return false;
-        }
-
-        // sanitize file extension
-        fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
-
-        String[] hives = {Hive.HKEY_CURRENT_USER + SOFTWARE_CLASSES_PATH, Hive.HKEY_LOCAL_MACHINE + SOFTWARE_CLASSES_PATH, Hive.HKEY_CLASSES_ROOT + "\\"};
-
-        for (String h : hives) {
-            List<String> subkeys = WindowsRegistry.readSubkeys(h);
-            if (subkeys.contains(fileTypeExtension)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns singleton instance of {@link OSUtils}.
-     *
-     * @return instance
-     */
-    public static synchronized WindowsUtils instance() {
-        if (instance == null) {
-            instance = new WindowsUtils();
-        }
-        return instance;
-    }
-
-    /**
      * Returns the associated application for a given extension.
      *
      * @param fileTypeExtension File extension with leading dot, e.g.
@@ -159,6 +118,18 @@ public final class WindowsUtils extends OSUtils {
     }
 
     /**
+     * Returns singleton instance of {@link OSUtils}.
+     *
+     * @return instance
+     */
+    public static synchronized WindowsUtils instance() {
+        if (instance == null) {
+            instance = new WindowsUtils();
+        }
+        return instance;
+    }
+
+    /**
      * Returns <code>true</code> if current OS is Windows and this class can be
      * used.
      *
@@ -167,6 +138,35 @@ public final class WindowsUtils extends OSUtils {
     @Override
     public boolean isApplicable() {
         return getCurrentOS() == OSType.OS_WINDOWS;
+    }
+
+    /**
+     * Checks if the given extension is already registered.
+     *
+     * @param fileTypeExtension File extension with leading dot, e.g.
+     * <code>.bar</code>.
+     * @return <code>true</code> if extension is registered, <code>false</code>
+     * otherwise.
+     * @throws RegistryException
+     */
+    @Override
+    public boolean isFileExtensionRegistered(String fileTypeExtension) throws RegistryException, OSException {
+        if (!isApplicable()) {
+            return false;
+        }
+
+        // sanitize file extension
+        fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
+
+        String[] hives = {Hive.HKEY_CURRENT_USER + SOFTWARE_CLASSES_PATH, Hive.HKEY_LOCAL_MACHINE + SOFTWARE_CLASSES_PATH, Hive.HKEY_CLASSES_ROOT + "\\"};
+
+        for (String h : hives) {
+            List<String> subkeys = WindowsRegistry.readSubkeys(h);
+            if (subkeys.contains(fileTypeExtension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -209,33 +209,6 @@ public final class WindowsUtils extends OSUtils {
         WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension);
         WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, WindowsRegistry.DEFAULT_KEY_NAME, fileTypeName);
         return true;
-    }
-
-    /**
-     * Sanitizes file extension such that it can be used in the Windows
-     * Registry.
-     *
-     * @param fileTypeExtension Extension to sanitize
-     * @return Sanitized file extension
-     */
-    private String sanitizeFileExtension(String fileTypeExtension) throws OSException {
-        // Remove whitespaces
-        String newFileTypeExtension = fileTypeExtension.replaceAll("\\s+", "");
-
-        // to lower case
-        newFileTypeExtension = newFileTypeExtension.toLowerCase();
-
-        /*
-         * Check if name contains multiple dots and if so, just take the last
-         * part. Also adds a dot before last part.
-         */
-        String[] splittedFileExtension = newFileTypeExtension.split("\\.");
-        if (newFileTypeExtension.length() == 0 || splittedFileExtension.length == 0) {
-            throw new OSException("The given file extension \"" + fileTypeExtension + "\" is too short.");
-        }
-        newFileTypeExtension = "." + splittedFileExtension[splittedFileExtension.length - 1];
-
-        return newFileTypeExtension;
     }
 
     /**
