@@ -32,7 +32,7 @@ To add a dependency on TOVAL using Maven, use the following:
 
 ```xml
 <dependency>
-  <groupId>de.uni.freiburg.iig.telematik</groupId>
+  <groupId>de.invation.code</groupId>
   <artifactId>TOVAL</artifactId>
   <version>1.0.0</version>
 </dependency>
