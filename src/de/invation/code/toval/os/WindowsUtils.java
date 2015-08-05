@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public final class WindowsUtils extends OSUtils {
+public final class WindowsUtils extends OSUtils<String> {
     
     private static WindowsUtils instance = null;
 

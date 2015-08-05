@@ -37,7 +37,7 @@ package de.invation.code.toval.os;
  * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public class MacOSUtils extends OSUtils {
+public class MacOSUtils extends OSUtils<String> {
 
     private static MacOSUtils instance = null;
 

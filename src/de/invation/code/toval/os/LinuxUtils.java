@@ -50,18 +50,26 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
-public final class LinuxUtils extends OSUtils {
+public final class LinuxUtils extends OSUtils<Set<String>> {
 
-    /*
-     * MIME: /type=\"([a-zA-Z]+\/[a-zA-Z0-9\\+-\\.]+)+\"/gi
-     * Extension: /<glob\s+pattern=\"\*?\.?([a-z0-9]+)\"\s*(?:\/>|>[\d\w\s]*<\/glob>)/gi
-     */
     /**
      * Default Windows line separator
      */
     public static final String LINUX_LINE_SEPARATOR = "\n";
 
+    /*
+     * Matches lists of MIME to list of application associations:
+     * application/xml=brasero.desktop;mount-archive.desktop;
+     */
+    private static final Pattern MIME_TYPE_APPS = Pattern.compile("([a-z0-9-]+\\/[a-z0-9-+\\.]+)\\=|([a-z0-9- \\.]+\\.desktop)", Pattern.CASE_INSENSITIVE);
+
+    /*
+     * Matches file extension specifications in MIME type files (see MIME_TYPE_FILES)
+     */
     private static final Pattern MIME_TYPE_FILE_EXTENSION = Pattern.compile("<glob\\s+pattern=\\\"\\*?(\\.[a-z0-9]+)\\\"\\s*(?:\\/>|>[\\d\\w\\s]*<\\/glob>)", Pattern.CASE_INSENSITIVE);
+    /*
+     * Matches MIME types declarations in MIME type files (see MIME_TYPE_FILES)
+     */
     private static final Pattern MIME_TYPE_FILE_MIME = Pattern.compile("type=\\\"([a-zA-Z]+\\/[a-zA-Z0-9\\\\+-\\\\.]+)+\\\"", Pattern.CASE_INSENSITIVE);
 
     /*
@@ -82,7 +90,7 @@ public final class LinuxUtils extends OSUtils {
     private static LinuxUtils instance = null;
 
     private Set<String> mimeTypes = null;
-    private Map<String, String> mimeApps = null;
+    private Map<String, Set<String>> mimeApps = null;
     private Map<String, Set<String>> extensionMime = null;
     private Map<String, Set<String>> mimeExtension = null;
 
@@ -97,7 +105,12 @@ public final class LinuxUtils extends OSUtils {
      */
     @Override
     public boolean isFileExtensionRegistered(String fileTypeExtension) throws OSException {
-        return getFileExtension(fileTypeExtension) != null;
+        try {
+            getFileExtension(fileTypeExtension);
+            return true;
+        } catch (OSException e) {
+            return false;
+        }
     }
 
     /**
@@ -110,7 +123,7 @@ public final class LinuxUtils extends OSUtils {
      * @throws OSException
      */
     @Override
-    public String getFileExtension(String fileTypeExtension) throws OSException {
+    public Set<String> getFileExtension(String fileTypeExtension) throws OSException {
         initializeMimeExtensionArrays();
         fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
@@ -118,14 +131,15 @@ public final class LinuxUtils extends OSUtils {
             throw new OSException("File type extension \"" + fileTypeExtension + "\" is not registered.");
         }
 
+        Set<String> apps = new HashSet<>();
         Set<String> allMimeTypes = extensionMime.get(fileTypeExtension);
-        Map<String, String> mimeApplications = getMimeApps();
+        Map<String, Set<String>> mimeApplications = getMimeApps();
         for (String mimeType : allMimeTypes) {
             if (mimeApplications.containsKey(mimeType) && mimeApplications.get(mimeType) != null) {
-                return mimeApplications.get(mimeType);
+                apps.addAll(mimeApplications.get(mimeType));
             }
         }
-        return null;
+        return apps;
     }
 
     /**
@@ -134,7 +148,7 @@ public final class LinuxUtils extends OSUtils {
      * @return Key-value-pairs of MIME types and the associated application.
      * @throws OSException
      */
-    public Map<String, String> getMimeApps() throws OSException {
+    public Map<String, Set<String>> getMimeApps() throws OSException {
         // lazy initialization
         if (mimeApps == null) {
             mimeApps = new HashMap<>();
@@ -144,10 +158,20 @@ public final class LinuxUtils extends OSUtils {
                 if (mimeAppListFile.exists() && mimeAppListFile.isFile() && mimeAppListFile.canRead()) {
                     try (BufferedReader br = new BufferedReader(new FileReader(mimeAppListFile))) {
                         for (String line; (line = br.readLine()) != null;) {
-                            line = line.replaceAll("\\s+", "");
-                            String[] splitted = line.split("=");
-                            if (splitted.length == 2 && MIME_PATTERN.matcher(splitted[0]).matches()) {
-                                mimeApps.put(splitted[0], splitted[1]);
+                            String mimeType = null;
+                            Set<String> apps = new HashSet<>();
+                            Matcher extMatcher = MIME_TYPE_APPS.matcher(line);
+                            while (extMatcher.find()) {
+                                if (extMatcher.group(1) != null) {
+                                    mimeType = extMatcher.group(1);
+                                }
+                                if (extMatcher.group(2) != null) {
+                                    apps.add(extMatcher.group(2));
+                                }
+                            }
+
+                            if (mimeType != null && apps.size() > 0) {
+                                mimeApps.put(mimeType, apps);
                             }
                         }
                     } catch (IOException e) {
@@ -289,6 +313,9 @@ public final class LinuxUtils extends OSUtils {
      */
     @Override
     public boolean registerFileExtension(String mimeTypeName, String fileTypeExtension, String application) throws OSException {
+        // TODO create mime-info in /usr/share/mime/packages
+        // TODO add MIME type to .desktop file
+        // not possible due to missing permissions?
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

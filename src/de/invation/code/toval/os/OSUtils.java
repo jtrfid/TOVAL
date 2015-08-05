@@ -39,8 +39,9 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
+ * @param <O> Return value type of associated applications for a file extension.
  */
-public abstract class OSUtils {
+public abstract class OSUtils<O extends Object> {
 
     public final static Pattern MIME_PATTERN = Pattern.compile("[a-zA-Z]+\\/[a-zA-Z0-9\\+-\\.]+");
 
@@ -68,7 +69,7 @@ public abstract class OSUtils {
             throw new OSException(ex);
         }
     }
-    
+
     /**
      * Returns the associated application for a given extension.
      *
@@ -78,7 +79,7 @@ public abstract class OSUtils {
      * <code>null</code> if file extension is not registered or can't be read.
      * @throws OSException
      */
-    public abstract String getFileExtension(String fileTypeExtension) throws OSException;
+    public abstract O getFileExtension(String fileTypeExtension) throws OSException;
 
     /**
      * Returns the version of the JVM
@@ -105,7 +106,7 @@ public abstract class OSUtils {
      * @return Boolean value if class is applicable.
      */
     public abstract boolean isApplicable();
-    
+
     /**
      * Checks if the given extension is already registered.
      *
