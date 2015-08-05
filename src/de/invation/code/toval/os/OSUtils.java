@@ -108,6 +108,26 @@ public abstract class OSUtils<O extends Object> {
     public abstract boolean isApplicable();
 
     /**
+     * Returns an instance of OSUtils fitting the current operating system or
+     * throws an {@link UnsupportedOperationException} if the OSUtils class is
+     * not implemented yet for the current operating system.
+     *
+     * @return Instance of OSUtils
+     */
+    public OSUtils getOSUtils() {
+        switch (getCurrentOS()) {
+            case OS_LINUX:
+                return LinuxUtils.instance();
+            case OS_MACOSX:
+                return MacOSUtils.instance();
+            case OS_WINDOWS:
+                return WindowsUtils.instance();
+            default:
+                throw new UnsupportedOperationException("Operating system is not implemented and supported yet.");
+        }
+    }
+
+    /**
      * Checks if the given extension is already registered.
      *
      * @param fileTypeExtension File extension with leading dot, e.g.
