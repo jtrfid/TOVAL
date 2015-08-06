@@ -43,8 +43,6 @@ import java.util.regex.Pattern;
  */
 public abstract class OSUtils<O extends Object> {
 
-    public final static Pattern MIME_PATTERN = Pattern.compile("[a-zA-Z]+\\/[a-zA-Z0-9\\+-\\.]+");
-
     /**
      * Returns the current operating system
      *
@@ -120,6 +118,8 @@ public abstract class OSUtils<O extends Object> {
                 return LinuxUtils.instance();
             case OS_MACOSX:
                 return MacOSUtils.instance();
+            case OS_SOLARIS:
+                return SolarisUtils.instance();
             case OS_WINDOWS:
                 return WindowsUtils.instance();
             default:

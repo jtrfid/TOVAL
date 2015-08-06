@@ -30,8 +30,6 @@
  */
 package de.invation.code.toval.os;
 
-import static de.invation.code.toval.os.OSUtils.MIME_PATTERN;
-import static de.invation.code.toval.os.OSUtils.getUserHomeDirectory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -58,22 +56,27 @@ public class LinuxMIMEDatabase {
     /*
      * Array of possible file names for the extension list. Both should be writable.
      */
-    private static final String[] MIME_APPS_LISTS = {getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/defaults.list", getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeapps.list", "/usr/share/applications/defaults.list", "/usr/share/applications/mimeapps.list", "/usr/share/applications/mimeinfo.cache", getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeinfo.cache"};
+    private static final String[] MIME_APPS_LISTS = {OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/defaults.list", OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeapps.list", "/usr/share/applications/defaults.list", "/usr/share/applications/mimeapps.list", "/usr/share/applications/mimeinfo.cache", OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeinfo.cache"};
+
+    /*
+     * matches a MIME type
+     */
+    private final static Pattern MIME_PATTERN = Pattern.compile("[a-z0-9-]+\\/[a-z0-9-\\+\\.]+", Pattern.CASE_INSENSITIVE);
 
     /*
      * Matches lists of MIME to list of application associations:
      * application/xml=brasero.desktop;mount-archive.desktop;
      */
-    private static final Pattern MIME_TYPE_APPS = Pattern.compile("([a-z0-9-]+\\/[a-z0-9-+\\.]+)\\=|([a-z0-9- \\.]+\\.desktop)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_APPS_PATTERN = Pattern.compile("([a-z0-9-]+\\/[a-z0-9-+\\.]+)\\=|([a-z0-9- \\.]+\\.desktop)", Pattern.CASE_INSENSITIVE);
 
     /*
      * Matches file extension specifications in MIME type files (see MIME_TYPE_FILES)
      */
-    private static final Pattern MIME_TYPE_FILE_EXTENSION = Pattern.compile("<glob\\s+pattern=\\\"\\*?(\\.[a-z0-9]+)\\\"\\s*(?:\\/>|>[\\d\\w\\s]*<\\/glob>)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_FILE_EXTENSION_PATTERN = Pattern.compile("<glob\\s+pattern=\\\"\\*?(\\.[a-z0-9]+)\\\"\\s*(?:\\/>|>[\\d\\w\\s]*<\\/glob>)", Pattern.CASE_INSENSITIVE);
     /*
      * Matches MIME types declarations in MIME type files (see MIME_TYPE_FILES)
      */
-    private static final Pattern MIME_TYPE_FILE_MIME = Pattern.compile("type=\\\"([a-zA-Z]+\\/[a-zA-Z0-9\\\\+-\\\\.]+)+\\\"", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_FILE_MIME_PATTERN = Pattern.compile("type=\\\"([a-zA-Z]+\\/[a-zA-Z0-9\\\\+-\\\\.]+)+\\\"", Pattern.CASE_INSENSITIVE);
 
     /*
      * List of directories with MIME-type files with aliases and extension associations
@@ -83,7 +86,7 @@ public class LinuxMIMEDatabase {
     /*
      * List of MIME-types with boolean value indicating if list is writable
      */
-    protected static final String[] MIME_TYPE_LISTS = {"/usr/share/mime/types", getUserHomeDirectory().getAbsolutePath() + "/.local/share/mime/types"};
+    private static final String[] MIME_TYPE_LISTS = {"/usr/share/mime/types", OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/mime/types"};
 
     private Set<String> mimeTypes = null;
     private Map<String, Set<String>> mimeApps = null;
@@ -126,7 +129,7 @@ public class LinuxMIMEDatabase {
                         for (String line; (line = br.readLine()) != null;) {
                             String mimeType = null;
                             Set<String> apps = new HashSet<>();
-                            Matcher extMatcher = MIME_TYPE_APPS.matcher(line);
+                            Matcher extMatcher = MIME_TYPE_APPS_PATTERN.matcher(line);
                             while (extMatcher.find()) {
                                 if (extMatcher.group(1) != null) {
                                     mimeType = extMatcher.group(1);
@@ -214,12 +217,12 @@ public class LinuxMIMEDatabase {
                             try {
                                 String content = new String(Files.readAllBytes(fileEntry.toPath()));
 
-                                Matcher extMatcher = MIME_TYPE_FILE_EXTENSION.matcher(content);
+                                Matcher extMatcher = MIME_TYPE_FILE_EXTENSION_PATTERN.matcher(content);
                                 while (extMatcher.find()) {
                                     tmpExtensions.add(extMatcher.group(1).toLowerCase());
                                 }
 
-                                Matcher mimeMatcher = MIME_TYPE_FILE_MIME.matcher(content);
+                                Matcher mimeMatcher = MIME_TYPE_FILE_MIME_PATTERN.matcher(content);
                                 while (mimeMatcher.find()) {
                                     tmpMimeTypes.add(mimeMatcher.group(1).toLowerCase());
                                 }
