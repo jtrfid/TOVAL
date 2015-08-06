@@ -58,10 +58,10 @@ public class LinuxMIMEDatabase {
      */
     private static final String[] MIME_APPS_LISTS = {OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/defaults.list", OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeapps.list", "/usr/share/applications/defaults.list", "/usr/share/applications/mimeapps.list", "/usr/share/applications/mimeinfo.cache", OSUtils.getUserHomeDirectory().getAbsolutePath() + "/.local/share/applications/mimeinfo.cache"};
 
-    /*
+    /**
      * matches a MIME type
      */
-    private final static Pattern MIME_PATTERN = Pattern.compile("[a-z0-9-]+\\/[a-z0-9-\\+\\.]+", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern MIME_PATTERN = Pattern.compile("[a-z0-9-]+\\/[a-z0-9-\\+\\.]+", Pattern.CASE_INSENSITIVE);
 
     /*
      * Matches lists of MIME to list of application associations:
