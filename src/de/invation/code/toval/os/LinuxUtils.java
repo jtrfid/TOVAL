@@ -30,6 +30,11 @@
  */
 package de.invation.code.toval.os;
 
+import de.invation.code.toval.validate.ParameterException;
+import de.invation.code.toval.validate.Validate;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -148,13 +153,28 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
     }
 
     /**
-     * Static class to represent a Linux program starter, which is indicated by
-     * the file extension ".desktop".
+     * <p>
+     * Class to represent a Linux program starter, which is indicated by the
+     * file extension ".desktop". A program starter creates an icon in the
+     * application menu and links it with the application.
+     * </p>
+     * <p>
+     * To install the program starter, it must be put into
+     * <code>~/.local/share/applications/</code> (user) or
+     * <code>/usr/share/applications/</code> (system) and, depending on the
+     * operating system, must be made executable.
+     * </p>
+     * <p>
+     * To create a desktop icon, the program starter must also be put on the
+     * desktop.
+     * </p>
      *
      * @version 1.0
      * @author Adrian Lange <lange@iig.uni-freiburg.de>
      */
     public static class LinuxProgramStarter {
+
+        private String fileName = null;
 
         // Type
         private ProgramStarterType attrType = ProgramStarterType.APPLICATION;
@@ -194,191 +214,266 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         // StartupWMClass
         private String attrStartupWMClass = null;
 
-        public LinuxProgramStarter(ProgramStarterType type, String name, String exec) {
-            this.attrType = type;
-            this.attrName = name;
-            this.attrExec = exec;
+        /**
+         * Creates a new program starter.
+         *
+         * @param fileName Name of the program starter file, e.g.
+         * <code><i>fileName</i>.desktop</code>
+         * @param type Type of the program starter
+         * @param name Name of the program to start
+         * @param exec Command to execute to start the program
+         */
+        public LinuxProgramStarter(String fileName, ProgramStarterType type, String name, String exec) {
+            setFileName(fileName);
+            setType(type);
+            setName(name);
+            setExec(exec);
+        }
+
+        /**
+         * Installs the program starter to
+         * <code>~/.local/share/applications/</code> and makes it executable.
+         *
+         * @param overwrite Set <code>true</code> if an already existing program
+         * starter with the same name should be overwritten, otherwise
+         * <code>false</code>.
+         * @throws OSException
+         */
+        public final void install(boolean overwrite) throws OSException {
+            File programStarterDirectory = new File(getUserHomeDirectory() + "/.local/share/applications/");
+            if (!programStarterDirectory.exists() || !programStarterDirectory.canWrite()) {
+                throw new OSException("Can't write to directory \"" + programStarterDirectory.getAbsolutePath() + "\".");
+            }
+            File programStarterFile = new File(programStarterDirectory.getAbsolutePath() + "/" + getFileName() + ".desktop");
+            if (programStarterFile.exists()) {
+                if (overwrite) {
+                    programStarterFile.delete();
+                } else {
+                    throw new OSException("File \"" + programStarterFile.getName() + "\" already exists.");
+                }
+            }
+
+            try {
+                // write program starter
+                PrintWriter out;
+                out = new PrintWriter(programStarterFile.getAbsolutePath());
+                out.print(this.toString());
+                out.close();
+
+                // make it executable
+                Runtime.getRuntime().exec("chmod a+x " + programStarterFile.getAbsolutePath());
+            } catch (IOException ex) {
+                throw new OSException(ex);
+            }
+        }
+
+        /**
+         * @return the fileName
+         */
+        public String getFileName() {
+            return fileName;
         }
 
         /**
          * @return the attrType
          */
-        public ProgramStarterType getAttrType() {
+        public ProgramStarterType getType() {
             return attrType;
         }
 
         /**
          * @return the attrExec
          */
-        public String getAttrExec() {
+        public String getExec() {
             return attrExec;
         }
 
         /**
          * @return the attrTryExec
          */
-        public String getAttrTryExec() {
+        public String getTryExec() {
             return attrTryExec;
         }
 
         /**
          * @return the attrIcon
          */
-        public String getAttrIcon() {
+        public String getIcon() {
             return attrIcon;
         }
 
         /**
          * @return the attrCategories
          */
-        public Set<ProgramStarterCategories> getAttrCategories() {
+        public Set<ProgramStarterCategories> getCategories() {
             return attrCategories;
         }
 
         /**
          * @return the attrName
          */
-        public String getAttrName() {
+        public String getName() {
             return attrName;
         }
 
         /**
          * @return the attrNameLang
          */
-        public Map<String, String> getAttrNameLang() {
+        public Map<String, String> getNameLang() {
             return attrNameLang;
         }
 
         /**
          * @return the attrGenericName
          */
-        public String getAttrGenericName() {
+        public String getGenericName() {
             return attrGenericName;
         }
 
         /**
          * @return the attrGenericNameLang
          */
-        public Map<String, String> getAttrGenericNameLang() {
+        public Map<String, String> getGenericNameLang() {
             return attrGenericNameLang;
         }
 
         /**
          * @return the attrComment
          */
-        public String getAttrComment() {
+        public String getComment() {
             return attrComment;
         }
 
         /**
          * @return the attrCommentLang
          */
-        public Map<String, String> getAttrCommentLang() {
+        public Map<String, String> getCommentLang() {
             return attrCommentLang;
         }
 
         /**
          * @return the attrTerminal
          */
-        public boolean isAttrTerminal() {
+        public boolean isTerminal() {
             return attrTerminal;
         }
 
         /**
          * @return the attrNoDisplay
          */
-        public boolean isAttrNoDisplay() {
+        public boolean isNoDisplay() {
             return attrNoDisplay;
         }
 
         /**
          * @return the attrPath
          */
-        public String getAttrPath() {
+        public String getPath() {
             return attrPath;
         }
 
         /**
          * @return the attrKeywords
          */
-        public Set<String> getAttrKeywords() {
+        public Set<String> getKeywords() {
             return attrKeywords;
         }
 
         /**
          * @return the attrOnlyShowIn
          */
-        public Set<LinuxDesktopEnvironments> getAttrOnlyShowIn() {
+        public Set<LinuxDesktopEnvironments> getOnlyShowIn() {
             return attrOnlyShowIn;
         }
 
         /**
          * @return the attrNotShowIn
          */
-        public Set<LinuxDesktopEnvironments> getAttrNotShowIn() {
+        public Set<LinuxDesktopEnvironments> getNotShowIn() {
             return attrNotShowIn;
         }
 
         /**
          * @return the attrMimeType
          */
-        public Set<String> getAttrMimeType() {
+        public Set<String> getMimeType() {
             return attrMimeType;
         }
 
         /**
          * @return the attrStartupNotify
          */
-        public boolean isAttrStartupNotify() {
+        public boolean isStartupNotify() {
             return attrStartupNotify;
         }
 
         /**
          * @return the attrStartupWMClass
          */
-        public String getAttrStartupWMClass() {
+        public String getStartupWMClass() {
             return attrStartupWMClass;
+        }
+
+        /**
+         * The file name must start with any word character, followed by
+         * arbitrary word characters and digits: <code>[a-z]+[a-z0-9]*</code>.
+         *
+         * @param fileName the fileName to set
+         */
+        public final void setFileName(String fileName) {
+            Validate.notNull(fileName);
+
+            if (Pattern.matches("[a-z]+[a-z0-9]*", fileName)) {
+                this.fileName = fileName;
+            } else {
+                throw new ParameterException("");
+            }
         }
 
         /**
          * @param attrType the attrType to set
          */
-        public void setAttrType(ProgramStarterType attrType) {
+        public final void setType(ProgramStarterType attrType) {
+            Validate.notNull(attrType);
             this.attrType = attrType;
         }
 
         /**
          * @param attrExec the attrExec to set
          */
-        public void setAttrExec(String attrExec) {
+        public final void setExec(String attrExec) {
+            Validate.notNull(attrExec);
+            Validate.notEmpty(attrExec);
             this.attrExec = attrExec;
         }
 
         /**
          * @param attrTryExec the attrTryExec to set
          */
-        public void setAttrTryExec(String attrTryExec) {
+        public void setTryExec(String attrTryExec) {
             this.attrTryExec = attrTryExec;
         }
 
         /**
          * @param attrIcon the attrIcon to set
          */
-        public void setAttrIcon(String attrIcon) {
+        public void setIcon(String attrIcon) {
             this.attrIcon = attrIcon;
         }
 
         /**
          * @param category the category to add
          */
-        public void addAttrCategory(ProgramStarterCategories category) {
+        public void addCategory(ProgramStarterCategories category) {
             attrCategories.add(category);
         }
 
         /**
          * @param attrName the attrName to set
          */
-        public void setAttrName(String attrName) {
+        public final void setName(String attrName) {
+            Validate.notNull(attrName);
+            Validate.notEmpty(attrName);
             this.attrName = attrName;
         }
 
@@ -387,7 +482,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
          * @param name the name to set
          * @throws OSException
          */
-        public void addAttrNameLang(String langIdentificator, String name) throws OSException {
+        public void addNameLang(String langIdentificator, String name) throws OSException {
             langIdentificator = sanitizeLangIdentificator(langIdentificator);
             attrNameLang.put(langIdentificator, name);
         }
@@ -395,7 +490,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         /**
          * @param attrGenericName the attrGenericName to set
          */
-        public void setAttrGenericName(String attrGenericName) {
+        public void setGenericName(String attrGenericName) {
             this.attrGenericName = attrGenericName;
         }
 
@@ -404,7 +499,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
          * @param name the name to set
          * @throws OSException
          */
-        public void setAttrGenericNameLang(String langIdentificator, String name) throws OSException {
+        public void setGenericNameLang(String langIdentificator, String name) throws OSException {
             langIdentificator = sanitizeLangIdentificator(langIdentificator);
             attrGenericNameLang.put(langIdentificator, name);
         }
@@ -412,7 +507,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         /**
          * @param attrComment the attrComment to set
          */
-        public void setAttrComment(String attrComment) {
+        public void setComment(String attrComment) {
             this.attrComment = attrComment;
         }
 
@@ -421,7 +516,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
          * @param comment the comment to set
          * @throws OSException
          */
-        public void setAttrCommentLang(String langIdentificator, String comment) throws OSException {
+        public void setCommentLang(String langIdentificator, String comment) throws OSException {
             langIdentificator = sanitizeLangIdentificator(langIdentificator);
             attrCommentLang.put(langIdentificator, comment);
         }
@@ -429,42 +524,42 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         /**
          * @param attrTerminal the attrTerminal to set
          */
-        public void setAttrTerminal(boolean attrTerminal) {
+        public void setTerminal(boolean attrTerminal) {
             this.attrTerminal = attrTerminal;
         }
 
         /**
          * @param attrNoDisplay the attrNoDisplay to set
          */
-        public void setAttrNoDisplay(boolean attrNoDisplay) {
+        public void setNoDisplay(boolean attrNoDisplay) {
             this.attrNoDisplay = attrNoDisplay;
         }
 
         /**
          * @param attrPath the attrPath to set
          */
-        public void setAttrPath(String attrPath) {
+        public void setPath(String attrPath) {
             this.attrPath = attrPath;
         }
 
         /**
          * @param attrKeyword the keyword to add
          */
-        public void addAttrKeywords(String attrKeyword) {
+        public void addKeywords(String attrKeyword) {
             attrKeywords.add(attrKeyword);
         }
 
         /**
          * @param linuxDesktopEnvironment the desktop environment to add
          */
-        public void setAttrOnlyShowIn(LinuxDesktopEnvironments linuxDesktopEnvironment) {
+        public void setOnlyShowIn(LinuxDesktopEnvironments linuxDesktopEnvironment) {
             attrOnlyShowIn.add(linuxDesktopEnvironment);
         }
 
         /**
          * @param linuxDesktopEnvironment the desktop environment to add
          */
-        public void setAttrNotShowIn(LinuxDesktopEnvironments linuxDesktopEnvironment) {
+        public void setNotShowIn(LinuxDesktopEnvironments linuxDesktopEnvironment) {
             attrNotShowIn.add(linuxDesktopEnvironment);
         }
 
@@ -472,7 +567,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
          * @param mimeType the attrMimeType to set
          * @throws OSException
          */
-        public void setAttrMimeType(String mimeType) throws OSException {
+        public void setMimeType(String mimeType) throws OSException {
             if (!Pattern.matches(LinuxMIMEDatabase.MIME_PATTERN.pattern(), mimeType)) {
                 throw new OSException("Invalid MIME type \"" + mimeType + "\".");
             }
@@ -482,14 +577,14 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         /**
          * @param attrStartupNotify the attrStartupNotify to set
          */
-        public void setAttrStartupNotify(boolean attrStartupNotify) {
+        public void setStartupNotify(boolean attrStartupNotify) {
             this.attrStartupNotify = attrStartupNotify;
         }
 
         /**
          * @param attrStartupWMClass the attrStartupWMClass to set
          */
-        public void setAttrStartupWMClass(String attrStartupWMClass) {
+        public void setStartupWMClass(String attrStartupWMClass) {
             this.attrStartupWMClass = attrStartupWMClass;
         }
 
@@ -498,95 +593,112 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
             StringBuilder s = new StringBuilder();
 
             s.append("[Desktop Entry]").append(LINUX_LINE_SEPARATOR);
+
             // type
-            s.append("Type=").append(getAttrType().name()).append(LINUX_LINE_SEPARATOR);
+            s.append("Type=").append(getType().name()).append(LINUX_LINE_SEPARATOR);
+
             // name
-            s.append("Name=").append(getAttrName()).append(LINUX_LINE_SEPARATOR);
-            for (Map.Entry<String, String> name : getAttrNameLang().entrySet()) {
+            s.append("Name=").append(getName()).append(LINUX_LINE_SEPARATOR);
+            for (Map.Entry<String, String> name : getNameLang().entrySet()) {
                 s.append("Name[").append(name.getKey()).append("]=").append(name.getValue()).append(LINUX_LINE_SEPARATOR);
             }
+
             // exec
-            s.append("Exec=").append(getAttrExec()).append(LINUX_LINE_SEPARATOR);
+            s.append("Exec=").append(getExec()).append(LINUX_LINE_SEPARATOR);
+
             // icon
-            if (getAttrIcon() != null) {
-                s.append("Icon=").append(getAttrIcon()).append(LINUX_LINE_SEPARATOR);
+            if (getIcon() != null) {
+                s.append("Icon=").append(getIcon()).append(LINUX_LINE_SEPARATOR);
             }
+
             // Comment
-            if (getAttrComment() != null) {
-                s.append("Comment=").append(getAttrComment()).append(LINUX_LINE_SEPARATOR);
+            if (getComment() != null) {
+                s.append("Comment=").append(getComment()).append(LINUX_LINE_SEPARATOR);
             }
-            if (getAttrCommentLang().size() > 0) {
-                for (Map.Entry<String, String> comment : getAttrCommentLang().entrySet()) {
+            if (getCommentLang().size() > 0) {
+                for (Map.Entry<String, String> comment : getCommentLang().entrySet()) {
                     s.append("Comment[").append(comment.getKey()).append("]=").append(comment.getValue()).append(LINUX_LINE_SEPARATOR);
                 }
             }
+
             // Categories
-            if (getAttrCategories().size() > 0) {
+            if (getCategories().size() > 0) {
                 s.append("Categories=");
-                for (ProgramStarterCategories cat : getAttrCategories()) {
+                for (ProgramStarterCategories cat : getCategories()) {
                     s.append(cat.name).append(";");
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // Path
-            if (getAttrPath() != null) {
-                s.append("Path=").append(getAttrPath()).append(LINUX_LINE_SEPARATOR);
+            if (getPath() != null) {
+                s.append("Path=").append(getPath()).append(LINUX_LINE_SEPARATOR);
             }
+
             // Keywords
-            if (getAttrKeywords().size() > 0) {
+            if (getKeywords().size() > 0) {
                 s.append("Keywords=");
-                for (String keyword : getAttrKeywords()) {
+                for (String keyword : getKeywords()) {
                     s.append(keyword).append(";");
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // TryExec
-            if (getAttrTryExec() != null) {
-                s.append("TryExec=").append(getAttrTryExec()).append(LINUX_LINE_SEPARATOR);
+            if (getTryExec() != null) {
+                s.append("TryExec=").append(getTryExec()).append(LINUX_LINE_SEPARATOR);
             }
+
             // Terminal
-            s.append("Terminal=").append(isAttrTerminal()).append(LINUX_LINE_SEPARATOR);
+            s.append("Terminal=").append(isTerminal()).append(LINUX_LINE_SEPARATOR);
+
             // GenericName
-            if (getAttrGenericName() != null) {
-                s.append("GenericName=").append(getAttrGenericName()).append(LINUX_LINE_SEPARATOR);
+            if (getGenericName() != null) {
+                s.append("GenericName=").append(getGenericName()).append(LINUX_LINE_SEPARATOR);
             }
-            if (getAttrGenericNameLang().size() > 0) {
-                for (Map.Entry<String, String> name : getAttrGenericNameLang().entrySet()) {
+            if (getGenericNameLang().size() > 0) {
+                for (Map.Entry<String, String> name : getGenericNameLang().entrySet()) {
                     s.append("GenericName[").append(name.getKey()).append("]=").append(name.getValue()).append(LINUX_LINE_SEPARATOR);
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // NoDisplay
-            s.append("NoDisplay=").append(isAttrNoDisplay()).append(LINUX_LINE_SEPARATOR);
+            s.append("NoDisplay=").append(isNoDisplay()).append(LINUX_LINE_SEPARATOR);
+
             // OnlyShowIn
-            if (getAttrOnlyShowIn().size() > 0) {
+            if (getOnlyShowIn().size() > 0) {
                 s.append("OnlyShowIn=");
-                for (LinuxDesktopEnvironments env : getAttrOnlyShowIn()) {
+                for (LinuxDesktopEnvironments env : getOnlyShowIn()) {
                     s.append(env.name).append(";");
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // NotShowIn
-            if (getAttrNotShowIn().size() > 0) {
+            if (getNotShowIn().size() > 0) {
                 s.append("NotShowIn=");
-                for (LinuxDesktopEnvironments env : getAttrNotShowIn()) {
+                for (LinuxDesktopEnvironments env : getNotShowIn()) {
                     s.append(env.name).append(";");
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // MimeType
-            if (getAttrMimeType().size() > 0) {
+            if (getMimeType().size() > 0) {
                 s.append("MimeType=");
-                for (String type : getAttrMimeType()) {
+                for (String type : getMimeType()) {
                     s.append(type).append(";");
                 }
                 s.append(LINUX_LINE_SEPARATOR);
             }
+
             // StartupNotify
-            s.append("StartupNotify=").append(isAttrStartupNotify()).append(LINUX_LINE_SEPARATOR);
+            s.append("StartupNotify=").append(isStartupNotify()).append(LINUX_LINE_SEPARATOR);
+
             // StartupWMClass
-            if (getAttrStartupWMClass() != null) {
-                s.append("StartupWMClass=").append(getAttrStartupWMClass()).append(LINUX_LINE_SEPARATOR);
+            if (getStartupWMClass() != null) {
+                s.append("StartupWMClass=").append(getStartupWMClass()).append(LINUX_LINE_SEPARATOR);
             }
 
             return s.toString();
