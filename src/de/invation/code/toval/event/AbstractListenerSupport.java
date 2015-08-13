@@ -9,7 +9,7 @@ public abstract class AbstractListenerSupport<L extends Object> implements Seria
 
 	private static final long serialVersionUID = -7522608459092207941L;
 	
-	protected HashSet<L> listeners = new HashSet<L>();
+	protected HashSet<L> listeners = new HashSet<>();
 	
 	public boolean addListener(L l) {
 		Validate.notNull(l);

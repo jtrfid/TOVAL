@@ -96,7 +96,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
     }
 
     public List<O> getComponentsSorted(Comparator<O> comparator) {
-        List<O> netList = new ArrayList<O>(getComponents());
+        List<O> netList = new ArrayList<>(getComponents());
         Collections.sort(netList, comparator);
         return netList;
     }
@@ -209,7 +209,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
     protected abstract O loadComponentFromFile(String file) throws Exception;
 
     public Set<String> getAcceptedFileEndings() {
-        return new HashSet<String>(Arrays.asList(""));
+        return new HashSet<>(Arrays.asList(""));
     }
 
     public void removeComponents(boolean removeFilesFromDisk) throws ProjectComponentException {
@@ -264,6 +264,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
         try {
             serializeComponent(getComponent(componentName), getComponentDirectory(componentName).getCanonicalPath(), getSerializationFileName(getComponent(componentName)).concat(getFileEndingForComponent(getComponent(componentName))));
         } catch (Exception e) {
+            System.err.println(e.getMessage());
             throw new ProjectComponentException("Cannot store component.", e);
         }
     }
@@ -347,7 +348,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
             try{
                 storeComponent(component.getName());
             } catch(Exception e){
-                throw new ProjectComponentException("Cannot store created component to disk.", e);
+                throw new ProjectComponentException("Cannot store created component to disk: " + e.getMessage(), e);
             }
         }
         if(notifyListeners){
@@ -390,13 +391,13 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
     public final File getComponentDirectory(String componentName) throws ProjectComponentException {
         if(!useSubdirectoriesForComponents){
             File path = new File(basePath);
-            Validate.directory(path);
+            //Validate.directory(path);
             return path;
         }
         
         try {
             File path = new File(String.format(componentDirectoryFormat, basePath, componentName));
-            Validate.directory(path);
+            //Validate.directory(path);
             return path;
         } catch (Exception e) {
             throw new ProjectComponentException("Cannot compose component directory.", e);

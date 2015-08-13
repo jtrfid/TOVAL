@@ -93,7 +93,7 @@ public class MessageDialog extends JDialog implements SimpleDebugger {
         setVisible(true);
     }
 
-    public static MessageDialog getInstance() {
+    public static synchronized MessageDialog getInstance() {
         if (instance == null) {
             instance = new MessageDialog();
         }
@@ -116,6 +116,7 @@ public class MessageDialog extends JDialog implements SimpleDebugger {
 //		MessageDialog.getInstance().addMessage("Trst3");
 //		MessageDialog.getInstance().addMessage("Trst4");
 //	}
+    @Override
     public void newLine() {
         messageListModel.addElement(" ");
     }
