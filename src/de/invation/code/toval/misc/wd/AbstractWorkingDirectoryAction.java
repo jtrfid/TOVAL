@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.invation.code.toval.misc.wd;
 
 import de.invation.code.toval.debug.SimpleDebugger;
@@ -28,7 +23,7 @@ public abstract class AbstractWorkingDirectoryAction extends AbstractAction {
     protected AbstractWorkingDirectoryProperties properties;
     protected SimpleDebugger debugger;
 
-    private Set<ExceptionListener> exceptionListeners = new HashSet<ExceptionListener>();
+    private final Set<ExceptionListener> exceptionListeners = new HashSet<>();
     
     public AbstractWorkingDirectoryAction(Window parentWindow, String name, AbstractWorkingDirectoryProperties properties) {
         this(parentWindow, name, properties, null);

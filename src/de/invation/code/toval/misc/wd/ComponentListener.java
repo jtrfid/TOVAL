@@ -1,6 +1,5 @@
 package de.invation.code.toval.misc.wd;
 
-@SuppressWarnings("rawtypes")
 public interface ComponentListener<O> {
 	
 	public void componentAdded(O component) throws ProjectComponentException;
@@ -10,5 +9,4 @@ public interface ComponentListener<O> {
 	public void componentRenamed(O component, String oldName, String newName) throws ProjectComponentException;
 	
 	public void componentsChanged() throws ProjectComponentException;
-	
 }

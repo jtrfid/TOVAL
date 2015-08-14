@@ -12,11 +12,11 @@ import de.invation.code.toval.reflect.GenericReflection;
 import de.invation.code.toval.validate.Validate;
 
 public class ArrayUtils {
-	
+
 	/**
 	 * Random number generator.
 	 */
-	private static java.util.Random rand = new Random(); 
+	private static final java.util.Random rand = new Random();
 	/**
 	 * String for value separation.<br>
 	 * Used for generating String representations of arrays.
@@ -31,226 +31,274 @@ public class ArrayUtils {
 	 * having type <code>Float</code> or <code>Double</code>.
 	 */
 	public static final int DEFAULT_PRECISION = 2;
-	
+
 	/**
-	 * Returns a new array with the given size containing the default value at each index.
-	 * @param size The desired size of the array.
-	 * @param defaultValue The default value to use
+	 * Returns a new array with the given size containing the default value at
+	 * each index.
+	 * 
+	 * @param <T>
+	 *            Array type.
+	 * @param size
+	 *            The desired size of the array.
+	 * @param defaultValue
+	 *            The default value to use
 	 * @return The created array
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> T[] createArray(int size, T defaultValue){
+	public static <T> T[] createArray(int size, T defaultValue) {
 		T[] result = (T[]) GenericReflection.newArray(defaultValue.getClass(), size);
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = defaultValue;
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Returns a new array with the given size containing the default value at each index.
-	 * @param size The desired size of the array.
-	 * @param start The default value to use
+	 * Returns a new array with the given size containing the default value at
+	 * each index.
+	 * 
+	 * @param size
+	 *            The desired size of the array.
+	 * @param start
+	 *            The default value to use
 	 * @return The created array
 	 */
-	public static Integer[] createAndInitializeArray(int size, Integer start){
+	public static Integer[] createAndInitializeArray(int size, Integer start) {
 		Integer[] result = new Integer[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = start++;
 		}
 		return result;
 	}
-	
-	public static byte[] createArray(int size, byte defaultValue){
+
+	public static byte[] createArray(int size, byte defaultValue) {
 		byte[] result = new byte[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = defaultValue;
 		}
 		return result;
 	}
-	
-	public static short[] createArray(int size, short defaultValue){
+
+	public static short[] createArray(int size, short defaultValue) {
 		short[] result = new short[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = defaultValue;
 		}
 		return result;
 	}
-	
-	public static double[] createArray(int size, double defaultValue){
+
+	public static double[] createArray(int size, double defaultValue) {
 		double[] result = new double[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = defaultValue;
 		}
 		return result;
 	}
-	
-	public static short[] createRandomArray(int size, short maxValue){
+
+	public static short[] createRandomArray(int size, short maxValue) {
 		short[] result = new short[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = (short) (rand.nextInt(maxValue) + 1);
 		}
 		return result;
 	}
-	
-	public static int[] createArray(int size, int defaultValue){
+
+	public static int[] createArray(int size, int defaultValue) {
 		int[] result = new int[size];
-		for(int i=0; i<result.length; i++){
+		for (int i = 0; i < result.length; i++) {
 			result[i] = defaultValue;
 		}
 		return result;
 	}
-	
-	public static int[] createAndInitializeArray(int size, int begin){
+
+	public static int[] createAndInitializeArray(int size, int begin) {
 		int[] result = new int[size];
-		int c=0;
-		for(int i=begin; i<size+begin; i++)
+		int c = 0;
+		for (int i = begin; i < size + begin; i++)
 			result[c++] = i;
 		return result;
 	}
-	
+
 	/**
 	 * Returns a random element of the given array.
-	 * @param <T> Type of array elements
-	 * @param arr Array
+	 * 
+	 * @param <T>
+	 *            Type of array elements
+	 * @param arr
+	 *            Array
 	 * @return Random element of <code>arr</code>
 	 */
-	public static <T> T getRandomItem(T[] arr){
+	public static <T> T getRandomItem(T[] arr) {
 		return arr[rand.nextInt(arr.length)];
 	}
-	
+
 	/**
 	 * Reverses the entries of a given array.
-	 * @param <T> Type of array elements
-	 * @param arr Array to reverse
+	 * 
+	 * @param <T>
+	 *            Type of array elements
+	 * @param arr
+	 *            Array to reverse
 	 * @return The same array in reverse order
 	 */
 	public static <T> T[] reverseArray(T[] arr) {
-		for (int left=0, right=arr.length-1; left<right; left++, right--) {
-		    T temp = arr[left]; 
-		    arr[left] = arr[right]; 
-		    arr[right] = temp;
+		for (int left = 0, right = arr.length - 1; left < right; left++, right--) {
+			T temp = arr[left];
+			arr[left] = arr[right];
+			arr[right] = temp;
 		}
 		return arr;
 	}
-	
-	public static <T> List<T> toList(T[] arr){
+
+	public static <T> List<T> toList(T[] arr) {
 		return Arrays.asList(arr);
 	}
-	
-	public static <T> List<String> toStringList(T[] arr){
-		List<String> result = new ArrayList<String>();
-		for(T t: arr){
+
+	public static <T> List<String> toStringList(T[] arr) {
+		List<String> result = new ArrayList<>();
+		for (T t : arr) {
 			result.add(t.toString());
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Swaps the elements at position <code>a</code> and <code>b</code> in the array <code>arr</code>. 
-	 * @param <T> Type of array elements
-	 * @param arr Array that contains the elements to be swapped
-	 * @param a First position
-	 * @param b Second position
+	 * Swaps the elements at position <code>a</code> and <code>b</code> in the
+	 * array <code>arr</code>.
+	 * 
+	 * @param <T>
+	 *            Type of array elements
+	 * @param arr
+	 *            Array that contains the elements to be swapped
+	 * @param a
+	 *            First position
+	 * @param b
+	 *            Second position
 	 */
 	public static <T> void swap(T[] arr, int a, int b) {
-		if(a<0 || a>arr.length || b<0 || b>arr.length)
+		if (a < 0 || a > arr.length || b < 0 || b > arr.length)
 			throw new IllegalArgumentException("swap position out of bounds.");
-		if(a != b) {
-			T t = arr[a]; 
-			arr[a] = arr[b]; 
+		if (a != b) {
+			T t = arr[a];
+			arr[a] = arr[b];
 			arr[b] = t;
 		}
 	}
-	
+
 	/**
 	 * Permutes the elements of the given array.
-	 * @param <T> Array-type
-	 * @param arr Array to shuffle
+	 * 
+	 * @param <T>
+	 *            Array-type
+	 * @param arr
+	 *            Array to shuffle
 	 */
 	public static <T> void shuffleArray(T[] arr) {
-		for(int i = arr.length; i > 1; i--)
-			swap(arr, i-1, rand.nextInt(i));
+		for (int i = arr.length; i > 1; i--)
+			swap(arr, i - 1, rand.nextInt(i));
 	}
 
 	/**
 	 * Checks if the given array contains the specified value.<br>
-	 * @param <T> Type of array elements and <code>value</code>
-	 * @param array Array to examine
-	 * @param value Value to search
-	 * @return <code>true</code> if <code>array</code> contains <code>value</code>, <code>false</code> otherwise
+	 * 
+	 * @param <T>
+	 *            Type of array elements and <code>value</code>
+	 * @param array
+	 *            Array to examine
+	 * @param value
+	 *            Value to search
+	 * @return <code>true</code> if <code>array</code> contains
+	 *         <code>value</code>, <code>false</code> otherwise
 	 */
 	public static <T> boolean arrayContains(T[] array, T value) {
-		for(int i=0; i<array.length; i++) {
-			if(array[i] == value) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == value) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Divides the given array using the boundaries in <code>cuts</code>.<br>
-	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
-	 * divides the given array in 0...i-1 + i...n<br>
-	 * This method deals with both cut positions including and excluding start and end-indexes<br>
-	 * @param <T> Type of array elements
-	 * @param arr The array to divide
-	 * @param cuts Cut positions for divide operations
-	 * @return A list of subarrays of <code>arr</code> according to the given cut positions
+	 * Cuts are interpreted in an inclusive way, which means that a single cut
+	 * at position i divides the given array in 0...i-1 + i...n<br>
+	 * This method deals with both cut positions including and excluding start
+	 * and end-indexes<br>
+	 * 
+	 * @param <T>
+	 *            Type of array elements
+	 * @param arr
+	 *            The array to divide
+	 * @param cuts
+	 *            Cut positions for divide operations
+	 * @return A list of subarrays of <code>arr</code> according to the given
+	 *         cut positions
 	 */
 	public static <T> List<T[]> divideArray(T[] arr, Integer... cuts) {
 		Arrays.sort(cuts);
 		int c = cuts.length;
-		if(cuts[0]<0 || cuts[c-1]>arr.length-1)
+		if (cuts[0] < 0 || cuts[c - 1] > arr.length - 1)
 			throw new IllegalArgumentException("cut position out of bounds.");
-		int startIndex = cuts[0]==0 ? 1 : 0;
-		if(cuts[c-1]!=arr.length-1) {
-			cuts = Arrays.copyOf(cuts, cuts.length+1);
-			cuts[cuts.length-1] = arr.length-1;
+		int startIndex = cuts[0] == 0 ? 1 : 0;
+		if (cuts[c - 1] != arr.length - 1) {
+			cuts = Arrays.copyOf(cuts, cuts.length + 1);
+			cuts[cuts.length - 1] = arr.length - 1;
 			c++;
 		}
-		List<T[]> result = new ArrayList<T[]>(c-startIndex);
+		List<T[]> result = new ArrayList<>(c - startIndex);
 		int lastEnd = 0;
-		for(int i=startIndex; i<=c-1; i++) {
-			int c2 = i<c-1 ? 0 : 1;
-			result.add(Arrays.copyOfRange(arr, lastEnd, cuts[i]+c2));
+		for (int i = startIndex; i <= c - 1; i++) {
+			int c2 = i < c - 1 ? 0 : 1;
+			result.add(Arrays.copyOfRange(arr, lastEnd, cuts[i] + c2));
 			lastEnd = cuts[i];
 		}
 		return result;
 	}
-	
+
 	/**
-	 * Divides the given object-array using the boundaries in <code>cuts</code>.<br>
-	 * Cuts are interpreted in an inclusive way, which means that a single cut at position i
-	 * divides the given array in 0...i-1 + i...n<br>
-	 * This method deals with both cut positions including and excluding start and end-indexes<br>
-	 * @param arr Array to divide
-	 * @param cuts Cut positions for divide operations
-	 * @return A list of subarrays of <code>arr</code> according to the given cut positions
+	 * Divides the given object-array using the boundaries in <code>cuts</code>.
+	 * <br>
+	 * Cuts are interpreted in an inclusive way, which means that a single cut
+	 * at position i divides the given array in 0...i-1 + i...n<br>
+	 * This method deals with both cut positions including and excluding start
+	 * and end-indexes<br>
+	 * 
+	 * @param <T>
+	 *            Object array type.
+	 * @param arr
+	 *            Array to divide
+	 * @param cuts
+	 *            Cut positions for divide operations
+	 * @return A list of subarrays of <code>arr</code> according to the given
+	 *         cut positions
 	 * @see #divideArray(Object[], Integer[])
 	 */
 	public static <T> List<T[]> divideObjectArray(T[] arr, Integer... cuts) {
 		return divideArray(arr, cuts);
 	}
-	
+
 	/**
 	 * Returns an Iterator for all possible permutations of the given array.
-	 * @param <T> Type of list array
-	 * @param arr Basic array for permutations
+	 * 
+	 * @param <T>
+	 *            Type of list array
+	 * @param arr
+	 *            Basic array for permutations
 	 * @return Iterator holding all possible permutations
 	 */
-	public static <T> Iterator<T[]> getPermutations(T[] arr){
-		return new ArrayPermutations<T>(arr);
+	public static <T> Iterator<T[]> getPermutations(T[] arr) {
+		return new ArrayPermutations<>(arr);
 	}
-	
+
 	/**
 	 * Generates all permutations of a given array.
-	 * @param <T> Type of array elements.
+	 * 
+	 * @param <T>
+	 *            Type of array elements.
 	 */
 	private static class ArrayPermutations<T> extends Permutations<T[]> {
 
-		private T[] array;
+		private final T[] array;
 
 		public ArrayPermutations(T[] array) {
 			super(array.length);
@@ -259,6 +307,7 @@ public class ArrayUtils {
 
 		/**
 		 * Returns a new array with permuted elements.
+		 * 
 		 * @return A new array with permuted elements
 		 */
 		@Override
@@ -271,39 +320,59 @@ public class ArrayUtils {
 			return newArr;
 		}
 	}
-	
+
 	/**
 	 * Returns a String representation of an object-array.<br>
-	 * @param arr Object-array for String representation
+	 * 
+	 * @param <T>
+	 *            Object array type.
+	 * @param arr
+	 *            Object-array for String representation
+	 * @param valueSeparation
+	 *            Value separation character.
 	 * @return String representation of <code>arr</code>
 	 * @see #getFormat(Object[], int, char)
 	 */
 	public static <T> String toString(T[] arr, char valueSeparation) {
 		return toString(arr, DEFAULT_PRECISION, valueSeparation);
 	}
-	
+
 	public static <T> String toString(T[] arr) {
 		return toString(arr, DEFAULT_PRECISION, VALUE_SEPARATION);
 	}
-	
+
 	/**
 	 * Returns a String representation of an object-array.<br>
-	 * The specified precision is only applicable for <code>Float</code> and <code>Double</code> elements.
-	 * @param arr Object-array for String representation
+	 * The specified precision is only applicable for <code>Float</code> and
+	 * <code>Double</code> elements.
+	 * 
+	 * @param <T>
+	 *            Object array type.
+	 * @param arr
+	 *            Object-array for String representation
+	 * @param precision
+	 *            Precision for Float and Double elements.
+	 * @param valueSeparation
+	 *            Value separation character.
 	 * @return String representation of <code>arr</code>
 	 * @see #getFormat(Object[], int, char)
 	 */
 	public static <T> String toString(T[] arr, int precision, char valueSeparation) {
-		if(arr.length>0)
+		if (arr.length > 0)
 			return String.format(getFormat(arr, precision, valueSeparation), arr);
-		else return EMPTY_ARRAY;
+		else
+			return EMPTY_ARRAY;
 	}
-	
+
 	/**
-	 * Returns a format-String that can be used to generate a String representation of an array
-	 * using the String.format method.
-	 * @param arr Array for which a String representation is desired
-	 * @param precision Desired precision for <code>Float</code> and <code>Double</code> elements
+	 * Returns a format-String that can be used to generate a String
+	 * representation of an array using the String.format method.
+	 * 
+	 * @param arr
+	 *            Array for which a String representation is desired
+	 * @param precision
+	 *            Desired precision for <code>Float</code> and
+	 *            <code>Double</code> elements
 	 * @return Format-String for <code>arr</code>
 	 * @see Formatter
 	 * @see String#format(String, Object...)
@@ -311,93 +380,99 @@ public class ArrayUtils {
 	private static <T> String getFormat(T[] arr, int precision, char valueSeparation) {
 		StringBuilder builder = new StringBuilder();
 		builder.append('[');
-		for(int i=0; i<arr.length-1; i++) {
+		for (int i = 0; i < arr.length - 1; i++) {
 			builder.append(FormatUtils.getFormat(arr[i], precision));
 			builder.append(valueSeparation);
 		}
-		builder.append(FormatUtils.getFormat(arr[arr.length-1], precision));
+		builder.append(FormatUtils.getFormat(arr[arr.length - 1], precision));
 		builder.append(']');
 		return builder.toString();
 	}
-	
+
 	/**
 	 * Checks if all given arrays contain the same values.<br>
-	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
+	 * Note: Only use this method when the given arrays are sorted and contain
+	 * only distinct values.
+	 * 
 	 * @param arrs
+	 * @return
 	 */
-	public static boolean containSameElementsSorted(short[]... arrs){
+	public static boolean containSameElementsSorted(short[]... arrs) {
 		Validate.notNull(arrs);
-		if(arrs.length == 1)
+		if (arrs.length == 1)
 			return true;
-		
+
 		int firstSize = arrs[0].length;
-		for(int i=1; i<arrs.length; i++){
-			if(arrs[i].length != firstSize){
+		for (int i = 1; i < arrs.length; i++) {
+			if (arrs[i].length != firstSize) {
 				return false;
 			}
 		}
-		
-		for(int j=0; j<firstSize; j++){
+
+		for (int j = 0; j < firstSize; j++) {
 			short firstValue = arrs[0][j];
-			for(int k=1; k<arrs.length; k++){
-				if(arrs[k][j] != firstValue)
+			for (int k = 1; k < arrs.length; k++) {
+				if (arrs[k][j] != firstValue)
 					return false;
 			}
 		}
 		return true;
 	}
-	
-	public static <T> boolean contains(T[] arr, T element){
-		for(T val: arr){
-			if(val.equals(element))
+
+	public static <T> boolean contains(T[] arr, T element) {
+		for (T val : arr) {
+			if (val.equals(element))
 				return true;
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * Determines the intersection of the given arrays.<br>
-	 * Note: Only use this method when the given arrays are sorted and contain only distinct values.
+	 * Note: Only use this method when the given arrays are sorted and contain
+	 * only distinct values.
+	 * 
+	 * @param arrs
+	 * @return
 	 */
-	public static short[] intersectionSorted(short[]... arrs){
-		if(arrs.length == 0)
+	public static short[] intersectionSorted(short[]... arrs) {
+		if (arrs.length == 0)
 			return new short[0];
-		if(arrs.length == 1)
+		if (arrs.length == 1)
 			return arrs[0];
-		
-		short[][] arrList = new short[arrs.length-1][];
+
+		short[][] arrList = new short[arrs.length - 1][];
 		short[] minLengthArray = arrs[0];
-		for(int i=1; i<arrs.length; i++){
+		for (int i = 1; i < arrs.length; i++) {
 			short[] arr = arrs[i];
-			if(arr.length < minLengthArray.length){
-				arrList[i-1] = minLengthArray;
+			if (arr.length < minLengthArray.length) {
+				arrList[i - 1] = minLengthArray;
 				minLengthArray = arr;
 			} else {
-				arrList[i-1] = arr;
+				arrList[i - 1] = arr;
 			}
 		}
-//		
-//		System.out.println("--");
-//		System.out.println(Arrays.toString(minLengthArray));
-//		for(short[] otherArr: arrList){
-//			System.out.println(Arrays.toString(otherArr));
-//		}
-//		System.out.println("--");
-		
-		short[] pointer = ArrayUtils.createArray(arrs.length-1, (short) 0);
-		
-		List<Short> commonIndices = new ArrayList<Short>(minLengthArray.length);
-		for(short i=0; i<minLengthArray.length; i++){
+		//
+		// System.out.println("--");
+		// System.out.println(Arrays.toString(minLengthArray));
+		// for(short[] otherArr: arrList){
+		// System.out.println(Arrays.toString(otherArr));
+		// }
+		// System.out.println("--");
+
+		short[] pointer = ArrayUtils.createArray(arrs.length - 1, (short) 0);
+
+		List<Short> commonIndices = new ArrayList<>(minLengthArray.length);
+		for (short i = 0; i < minLengthArray.length; i++) {
 			short stateIndex = minLengthArray[i];
 			boolean insert = true;
-			for(short j=0; j<pointer.length; j++){
-				for(short k=pointer[j]; k<arrList[j].length; k++){
-					if(stateIndex < arrList[j][k]){
+			for (short j = 0; j < pointer.length; j++) {
+				for (short k = pointer[j]; k < arrList[j].length; k++) {
+					if (stateIndex < arrList[j][k]) {
 						// Array does not contain the state-index
 						break;
-					} else if(stateIndex > arrList[j][k]){
-						if(k < arrList[j].length - 1){
+					} else if (stateIndex > arrList[j][k]) {
+						if (k < arrList[j].length - 1) {
 							pointer[j] = (short) (pointer[j] + 1);
 						} else {
 							break;
@@ -406,85 +481,85 @@ public class ArrayUtils {
 						break;
 					}
 				}
-				if(arrList[j][pointer[j]] != stateIndex){
+				if (arrList[j][pointer[j]] != stateIndex) {
 					insert = false;
 					break;
 				}
 			}
-			if(insert){
+			if (insert) {
 				commonIndices.add(stateIndex);
 			}
 		}
-		
+
 		short[] result = new short[commonIndices.size()];
-		for(int l=0; l<commonIndices.size(); l++){
+		for (int l = 0; l < commonIndices.size(); l++) {
 			result[l] = commonIndices.get(l);
 		}
 		return result;
 	}
-	
-	public static byte max(byte[] arr){
+
+	public static byte max(byte[] arr) {
 		byte maxValue = Byte.MIN_VALUE;
-		for(byte value: arr){
-			if(value > maxValue){
+		for (byte value : arr) {
+			if (value > maxValue) {
 				maxValue = value;
 			}
 		}
 		return maxValue;
 	}
-	
-	public static byte min(byte[] arr){
+
+	public static byte min(byte[] arr) {
 		byte minValue = Byte.MAX_VALUE;
-		for(byte value: arr){
-			if(value < minValue){
+		for (byte value : arr) {
+			if (value < minValue) {
 				minValue = value;
 			}
 		}
 		return minValue;
 	}
-	
-	public static MinMaxByte minMax(byte[] arr){
+
+	public static MinMaxByte minMax(byte[] arr) {
 		byte minValue = Byte.MAX_VALUE;
 		byte maxValue = Byte.MIN_VALUE;
-		for(byte value: arr){
-			if(value < minValue){
+		for (byte value : arr) {
+			if (value < minValue) {
 				minValue = value;
 			}
-			if(value > maxValue){
+			if (value > maxValue) {
 				maxValue = value;
 			}
 		}
 		return new MinMaxByte(minValue, maxValue);
 	}
-	
-	public static short max(short[] arr){
+
+	public static short max(short[] arr) {
 		short maxValue = Short.MIN_VALUE;
-		for(short value: arr){
-			if(value > maxValue){
+		for (short value : arr) {
+			if (value > maxValue) {
 				maxValue = value;
 			}
 		}
 		return maxValue;
 	}
-	
-	public static short min(short[] arr){
+
+	public static short min(short[] arr) {
 		short minValue = Short.MAX_VALUE;
-		for(short value: arr){
-			if(value < minValue){
+		for (short value : arr) {
+			if (value < minValue) {
 				minValue = value;
 			}
 		}
 		return minValue;
 	}
-	
-	public static MinMaxShort minMax(short[] arr){
+
+	public static MinMaxShort minMax(short[] arr) {
 		short minValue = Short.MAX_VALUE;
 		short maxValue = Short.MIN_VALUE;
-		for(short value: arr){
-			if(value < minValue){
+		for (short value : arr) {
+			if (value < minValue) {
 				minValue = value;
 			}
-			if(value > maxValue){
+			if (value > maxValue) {
 				maxValue = value;
 			}
 		}

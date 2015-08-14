@@ -3,19 +3,20 @@ package de.invation.code.toval.misc;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 public class Allocation {
 	
-	private HashMap<Object, Set<Object>> exclusions = new HashMap<Object, Set<Object>>();
-	private HashMap<Object, ArrayList<Object>> mapping = new HashMap<Object, ArrayList<Object>>();
-	private HashMap<Object, Integer> insertStat = new HashMap<Object, Integer>();
-	private Object[] subjects;
-	private Object[] objects;
+	private final Map<Object, Set<Object>> exclusions = new HashMap<>();
+	private final Map<Object, ArrayList<Object>> mapping = new HashMap<>();
+	private final Map<Object, Integer> insertStat = new HashMap<>();
+	private final Object[] subjects;
+	private final Object[] objects;
 	private int allocationCount = 1;
-	private Random rand = new Random();
+	private final Random rand = new Random();
 	
 	public Allocation(Object[] subjects, Object[] objects) {
 		this.subjects = subjects;
@@ -24,7 +25,7 @@ public class Allocation {
 	
 	public void addExclusion(Object key, Object value) {
 		if(!exclusions.containsKey(key)){
-			exclusions.put(key, new HashSet<Object>());
+			exclusions.put(key, new HashSet<>());
 		}
 		exclusions.get(key).add(value);
 	}
@@ -45,7 +46,7 @@ public class Allocation {
 		mapping.clear();
 		insertStat.clear();
 		Object nextObject;
-		ArrayList<Object> possibleObjects = new ArrayList<Object>();
+		List<Object> possibleObjects = new ArrayList<>();
 		while(getMappingSize()<subjects.length*allocationCount) {
 			possibleObjects.clear();
 			while(insertStat.containsKey((nextObject = objects[rand.nextInt(objects.length)])) && insertStat.get(nextObject)==allocationCount) {}
@@ -60,7 +61,7 @@ public class Allocation {
 					if(!inserted) {
 						ArrayList<Object> valueList = mapping.get(nextKey);
 						if(valueList==null) {
-							valueList = new ArrayList<Object>();
+							valueList = new ArrayList<>();
 							mapping.put(nextKey, valueList);
 						}
 						if(valueList.size()<allocationCount) {

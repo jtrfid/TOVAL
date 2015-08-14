@@ -1,9 +1,7 @@
 package de.invation.code.toval.misc.wd;
 
 import de.invation.code.toval.event.AbstractListenerSupport;
-import de.invation.code.toval.misc.soabase.SOABase;
 
-@SuppressWarnings("rawtypes")
 public class ComponentListenerSupport<O> extends AbstractListenerSupport<ComponentListener> {
 
     private static final long serialVersionUID = -5976107306359206805L;
@@ -34,5 +32,4 @@ public class ComponentListenerSupport<O> extends AbstractListenerSupport<Compone
             listener.componentsChanged();
         }
     }
-
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package de.invation.code.toval.misc.wd;
 
 import de.invation.code.toval.debug.SimpleDebugger;
@@ -33,6 +28,7 @@ import javax.swing.ScrollPaneConstants;
 /**
  *
  * @author stocker
+ * @param <E> Enumeration type used for property names
  */
 public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<String> implements PropertyChangeListener, ExceptionListener {
 
@@ -45,12 +41,12 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
     private JList listKnownDirectories;
     private JButton btnOK;
     private JButton btnCancel;
-    private DefaultListModel modelListKnownDirectories = new DefaultListModel();
+    private final DefaultListModel modelListKnownDirectories = new DefaultListModel();
 
     private NewWorkingDirectoryAction newDirectoryAction;
     private OpenWorkingDirectoryAction openDirectoryAction;
 
-    private List<String> directories = new ArrayList<>();
+    private final List<String> directories = new ArrayList<>();
     private AbstractWorkingDirectoryProperties<E> properties;
     private SimpleDebugger debugger;
 
@@ -110,7 +106,6 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
             super.okProcedure();
         } else {
             JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "No known entries, please create new " + properties.getWorkingDirectoryDescriptor().toLowerCase(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
-            return;
         }
     }
 
@@ -159,10 +154,13 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() instanceof NewWorkingDirectoryAction || evt.getSource() instanceof OpenWorkingDirectoryAction) {
-            if (evt.getPropertyName().equals(AbstractWorkingDirectoryProperties.PROPERTY_NAME_WORKING_DIRECTORY)) {
-                setDialogObject(evt.getNewValue().toString());
-            } else if (evt.getPropertyName().equals(AbstractWorkingDirectoryAction.PROPERTY_NAME_SUCCESS)) {
-                dispose();
+            switch (evt.getPropertyName()) {
+                case AbstractWorkingDirectoryProperties.PROPERTY_NAME_WORKING_DIRECTORY:
+                    setDialogObject(evt.getNewValue().toString());
+                    break;
+                case AbstractWorkingDirectoryAction.PROPERTY_NAME_SUCCESS:
+                    dispose();
+                    break;
             }
         }
     }

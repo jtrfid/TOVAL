@@ -17,7 +17,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * Takes a string and splits it according to the quote character '.<b>
+	 * Takes a string and splits it according to the quote character '.<br>
 	 * Use this method for splitting a string into several parts, where each part corresponds to a quoted substring in the input.<br>
 	 * A string "['stringA' 'stringB']" will result in the list (stringA,stringB) with ' being the character used for qouting.
 	 * @param array Input string, containing quoted character sets.
@@ -27,7 +27,7 @@ public class StringUtils {
 	public static List<String> splitArrayStringQuoted(String array, char quoteChar){
 		array = array.replace("[", "");
 		array = array.replace("]", "");
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		Integer actStart = null;
 		for(int i=0; i<array.length(); i++){
 			if(array.charAt(i) == quoteChar){
@@ -45,7 +45,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * Takes a string and splits it according to the quote character.<b>
+	 * Takes a string and splits it according to the quote character.<br>
 	 * Use this method for splitting a string into several parts, where each part corresponds to a quoted substring in the input.<br>
 	 * A string "['stringA' 'stringB']" will result in the list (stringA,stringB) with ' being the character used for qouting.
 	 * @param array Input string, containing quoted character sets.

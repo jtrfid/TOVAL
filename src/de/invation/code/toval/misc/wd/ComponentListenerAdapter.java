@@ -1,6 +1,5 @@
 package de.invation.code.toval.misc.wd;
 
-@SuppressWarnings("rawtypes")
 public class ComponentListenerAdapter<O> implements ComponentListener<O> {
 
 	@Override
