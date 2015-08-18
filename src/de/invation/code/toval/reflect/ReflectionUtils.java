@@ -6,10 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import de.invation.code.toval.validate.ParameterException;
@@ -81,9 +79,10 @@ public class ReflectionUtils {
      * Returns a {@link Set} of all classes in a specified package. Since the
      * result is returned as a {@link Set}, there won't be any duplicates.
      *
-     * @param packageName
-     * @param recursive
-     * @return
+     * @param packageName Set of package names.
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
+     * @return Set of classes in a specified package.
      * @throws ReflectionException
      */
     public static Set<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
@@ -109,7 +108,8 @@ public class ReflectionUtils {
                         throw new ReflectionException("Couldn't match JAR path pattern on \"" + packageURL.toString() + "\".");
                     }
 
-                    Enumeration<JarEntry> e = jarFile.entries(new ClassFilter(packagePath, recursive));
+                    jarFile.addFilter(new ClassFilter(packagePath, recursive));
+                    Enumeration<JarEntry> e = jarFile.entries();
                     URL[] packageURLs = {packageURL};
                     URLClassLoader cl = URLClassLoader.newInstance(packageURLs);
                     while (e.hasMoreElements()) {
@@ -161,12 +161,13 @@ public class ReflectionUtils {
      * possibility to search in multiple packages. Since the result is returned
      * as a {@link Set}, there won't be any duplicates.
      *
-     * @param packageNames
-     * @param recursive
-     * @return
+     * @param packageNames Set of package names.
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
+     * @return Set of classes in specified packages.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getClassesInPackages(List<String> packageNames, boolean recursive) throws ReflectionException {
+    public static Set<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(packageNames);
 
         Set<Class<?>> classes = new HashSet<>();
@@ -178,7 +179,7 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link List} of {@link Class} objects containing all classes of
+     * Returns a {@link Set} of {@link Class} objects containing all classes of
      * a specified package (including subpackages) which extend the given class.
      * </p>
      * <p>
@@ -203,9 +204,10 @@ public class ReflectionUtils {
      *
      * @param clazz Class which should be extended.
      * @param packageName Package to search for subclasses.
-     * @param recursive
-     * @return {@link List} of {@link Class} objects extending the given class
-     * in the specified package.
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
+     * @return {@link Set} of {@link Class} objects extending the given class in
+     * the specified package.
      * @throws ReflectionException
      */
     public static Set<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
@@ -253,7 +255,8 @@ public class ReflectionUtils {
      *
      * @param interfaze Interface which should be implemented.
      * @param packageName Package to search for classes.
-     * @param recursive
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
      * @return {@link Set} of {@link Class} objects implementing the given
      * interface in the specified package.
      * @throws ReflectionException
@@ -284,13 +287,14 @@ public class ReflectionUtils {
      * but with the possibility to search in multiple packages. Since the result
      * is returned as a {@link Set}, there won't be any duplicates.
      *
-     * @param interfaze
-     * @param packageNames
-     * @param recursive
-     * @return
+     * @param interfaze Interface class.
+     * @param packageNames Set of package names.
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
+     * @return Set of implementations of a given interface.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, List<String> packageNames, boolean recursive) throws ReflectionException {
+    public static Set<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         Validate.notNull(packageNames);
 
@@ -310,15 +314,15 @@ public class ReflectionUtils {
      * Returns all superclasses of the given class ordered top down. The last
      * element is always {@link java.lang.Object}.
      *
-     * @param clazz
-     * @return
-     * @throws ReflectionException
+     * @param clazz Class to read superclasses from.
+     * @return Set of superclasses.
+     * @throws ReflectionException If superclass can't be read.
      */
-    public static List<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
+    public static Set<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            List<Class<?>> clazzes = new ArrayList<>();
+            Set<Class<?>> clazzes = new HashSet<>();
             if (clazz.getSuperclass() != null) {
                 clazzes.add(clazz.getSuperclass());
                 clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
@@ -332,9 +336,9 @@ public class ReflectionUtils {
     /**
      * Returns all implemented interfaces of the given class.
      *
-     * @param clazz
-     * @return
-     * @throws ReflectionException
+     * @param clazz Class to read interfaces from.
+     * @return Set of interfaces.
+     * @throws ReflectionException If interfaces can't be read.
      */
     public static Set<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
@@ -342,7 +346,7 @@ public class ReflectionUtils {
         try {
             Set<Class<?>> interfaces = new HashSet<>();
             interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
-            List<Class<?>> superclasses = getSuperclasses(clazz);
+            Set<Class<?>> superclasses = getSuperclasses(clazz);
             for (Class<?> superclass : superclasses) {
                 interfaces.addAll(Arrays.asList(superclass.getInterfaces()));
             }
@@ -352,6 +356,9 @@ public class ReflectionUtils {
         }
     }
 
+    /**
+     * Accepts only classes.
+     */
     private static class ClassFilter implements JarEntryFilter {
 
         private final String packageName;
@@ -360,8 +367,10 @@ public class ReflectionUtils {
         /**
          * Creates a new instance of the filter.
          *
-         * @param packageName
-         * @param recursive
+         * @param packageName Name of the package with "/" as separators and
+         * without trailing "/".
+         * @param recursive Set <code>true</code> if subpackages should be
+         * considered, too.
          */
         public ClassFilter(String packageName, boolean recursive) {
             this.packageName = packageName + "/";

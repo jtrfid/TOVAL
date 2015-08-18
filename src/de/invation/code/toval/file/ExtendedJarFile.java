@@ -32,10 +32,14 @@ package de.invation.code.toval.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -54,10 +58,12 @@ import java.util.jar.JarFile;
  */
 public class ExtendedJarFile extends JarFile {
 
+    private final Set<JarEntryFilter> filters = new HashSet<>();
+
     /**
      * Creates a new JarFile to read from the specified file name.
      *
-     * @param string
+     * @param string File name.
      * @throws IOException
      */
     public ExtendedJarFile(String string) throws IOException {
@@ -67,7 +73,7 @@ public class ExtendedJarFile extends JarFile {
     /**
      * Creates a new JarFile to read from the specified file name.
      *
-     * @param string
+     * @param string File name.
      * @param verify
      * @throws IOException
      */
@@ -78,7 +84,7 @@ public class ExtendedJarFile extends JarFile {
     /**
      * Creates a new JarFile to read from the specified File object.
      *
-     * @param file
+     * @param file Target file.
      * @throws IOException
      */
     public ExtendedJarFile(File file) throws IOException {
@@ -88,7 +94,7 @@ public class ExtendedJarFile extends JarFile {
     /**
      * Creates a new JarFile to read from the specified File object.
      *
-     * @param file
+     * @param file Target file.
      * @param verify
      * @throws IOException
      */
@@ -100,7 +106,7 @@ public class ExtendedJarFile extends JarFile {
      * Creates a new JarFile to read from the specified File object in the
      * specified mode.
      *
-     * @param file
+     * @param file Target file.
      * @param verify
      * @param mode
      * @throws IOException
@@ -110,13 +116,17 @@ public class ExtendedJarFile extends JarFile {
     }
 
     /**
-     * Returns all entries filtered by the given {@link JarEntryFilter}.
+     * Adds a new {@link JarEntryFilter}.
      *
-     * @param filter
-     * @return
+     * @param filter Filter to add.
      */
-    public Enumeration<JarEntry> entries(JarEntryFilter filter) {
-        if (filter == null) {
+    public void addFilter(JarEntryFilter filter) {
+        filters.add(filter);
+    }
+
+    @Override
+    public Enumeration<JarEntry> entries() {
+        if (filters.isEmpty()) {
             return entries();
         }
 
@@ -125,11 +135,32 @@ public class ExtendedJarFile extends JarFile {
 
         while (allEntries.hasMoreElements()) {
             JarEntry entry = allEntries.nextElement();
-            if (filter.accept(entry)) {
-                filteredEntries.add(entry);
+            for (JarEntryFilter filter : filters) {
+                if (filter.accept(entry)) {
+                    filteredEntries.add(entry);
+                }
             }
         }
 
         return filteredEntries.elements();
+    }
+
+    /**
+     * Returns all filters.
+     *
+     * @return Set of filters.
+     */
+    public Set<JarEntryFilter> getFilters() {
+        return Collections.unmodifiableSet(filters);
+    }
+
+    @Override
+    public Stream<JarEntry> stream() {
+        Stream.Builder<JarEntry> builder = Stream.builder();
+        Enumeration<JarEntry> entries = entries();
+        while (entries.hasMoreElements()) {
+            builder.add(entries.nextElement());
+        }
+        return builder.build();
     }
 }
