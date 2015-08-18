@@ -1,5 +1,7 @@
 package de.invation.code.toval.reflect;
 
+import de.invation.code.toval.file.JarEntryFilter;
+import de.invation.code.toval.file.ExtendedJarFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,9 +18,6 @@ import java.io.InputStream;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +44,17 @@ public class ReflectionUtils {
      * The ".class" file suffix
      */
     public static final String CLASS_FILE_SUFFIX = CLASS_SUFFIX_SEPARATOR + "class";
+
+    /**
+     * <p>
+     * Pattern that matches paths of classes and packages like:</p>
+     * <ul>
+     * <li>SomeClass.class</li>
+     * <li>some/package/OtherClass$SubClass$1.class</li>
+     * <li>some/package/</li>
+     * </ul>
+     */
+    public static final Pattern CLASS_PATH_PATTERN = Pattern.compile("^((?:[a-z][a-z0-9-]*\\/)+)?([a-zA-Z0-9_\\-]+(?:\\$[a-zA-Z0-9_\\-]+)*.class)?$");
 
     /**
      * Pattern to parse a JAR path like
@@ -82,24 +92,24 @@ public class ReflectionUtils {
 
         try {
             String packagePath = packageName.replace(PACKAGE_SEPARATOR, PACKAGE_PATH_SEPARATOR);
-            URL packageURL = Thread.currentThread().getClass().getResource("/" + packagePath);
+            URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
             Set<Class<?>> classes = new HashSet<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
-                    JarFile jarFile = null;
+                    ExtendedJarFile jarFile = null;
                     String innerPath = null;
-                    while(jarPathMatcher.find()) {
-                        jarFile = new JarFile(jarPathMatcher.group(1));
+                    while (jarPathMatcher.find()) {
+                        jarFile = new ExtendedJarFile(jarPathMatcher.group(1));
                         innerPath = jarPathMatcher.group(2);
                     }
                     if (jarFile == null || innerPath == null) {
                         throw new ReflectionException("Couldn't match JAR path pattern on \"" + packageURL.toString() + "\".");
                     }
 
-                    Enumeration<JarEntry> e = jarFile.entries();
+                    Enumeration<JarEntry> e = jarFile.entries(new ClassFilter(packagePath, recursive));
                     URL[] packageURLs = {packageURL};
                     URLClassLoader cl = URLClassLoader.newInstance(packageURLs);
                     while (e.hasMoreElements()) {
@@ -108,8 +118,8 @@ public class ReflectionUtils {
                             continue;
                         }
                         // -6 because of .class
-                        String className = je.getName().substring(0, je.getName().length() - 6);
-                        className = className.replace('/', '.');
+                        String className = je.getName().substring(0, je.getName().length() - CLASS_FILE_SUFFIX.length());
+                        className = className.replace(PACKAGE_PATH_SEPARATOR, PACKAGE_SEPARATOR);
                         Class<?> c = cl.loadClass(className);
                         classes.add(c);
                     }
@@ -137,7 +147,7 @@ public class ReflectionUtils {
             } catch (IOException e) {
                 throw new ReflectionException("Cannot access package directory", e);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ReflectionUtils.class.getName()).log(Level.SEVERE, null, ex);
+                throw new ReflectionException("Error in class loader: ", ex);
             }
             return classes;
         } catch (IOException | ReflectionException e) {
@@ -214,46 +224,6 @@ public class ReflectionUtils {
                 }
             }
             return subClassesInPackage;
-        } catch (Exception e) {
-            throw new ReflectionException(e);
-        }
-    }
-
-    /**
-     * Returns a {@link Set} of all subpackages of a specified package. Since
-     * the result is returned as a {@link Set}, there won't be any duplicates.
-     *
-     * @param packageName
-     * @param recursive
-     * @return
-     * @throws ReflectionException
-     */
-    public static Set<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
-        Validate.notNull(packageName);
-        Validate.notEmpty(packageName);
-
-        try {
-            String packagePath = packageName.replace(PACKAGE_SEPARATOR, PACKAGE_PATH_SEPARATOR);
-            URL packageURL = Thread.currentThread().getContextClassLoader().getResource(packagePath); // TODO
-
-            Set<String> subpackages = new HashSet<>();
-            try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(packageURL.openStream()));
-                String line;
-
-                while ((line = in.readLine()) != null) {
-                    if (line.matches(PACKAGE_NAME_PATTERN)) { // package
-                        // recursive call to add classes in the package
-                        subpackages.add(packageName + PACKAGE_SEPARATOR + line);
-                        if (recursive) {
-                            subpackages.addAll(getSubpackages(packageName + PACKAGE_SEPARATOR + line, recursive));
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                throw new ReflectionException("Cannot access package directory", e);
-            }
-            return subpackages;
         } catch (Exception e) {
             throw new ReflectionException(e);
         }
@@ -379,6 +349,43 @@ public class ReflectionUtils {
             return interfaces;
         } catch (Exception e) {
             throw new ReflectionException(e);
+        }
+    }
+
+    private static class ClassFilter implements JarEntryFilter {
+
+        private final String packageName;
+        private final boolean recursive;
+
+        /**
+         * Creates a new instance of the filter.
+         *
+         * @param packageName
+         * @param recursive
+         */
+        public ClassFilter(String packageName, boolean recursive) {
+            this.packageName = packageName + "/";
+            this.recursive = recursive;
+        }
+
+        @Override
+        public boolean accept(JarEntry entry) {
+            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
+            while (matcher.find()) {
+                String packagePath = matcher.group(1);
+                String className = matcher.group(2);
+                if (packagePath == null && packageName.length() > 0) {
+                    return false;
+                } else if (recursive && packagePath != null && !packagePath.startsWith(packageName)) {
+                    return false;
+                } else if (!recursive && packagePath != null && !packagePath.equals(packageName)) {
+                    return false;
+                }
+                if (className != null && className.length() > 0) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
