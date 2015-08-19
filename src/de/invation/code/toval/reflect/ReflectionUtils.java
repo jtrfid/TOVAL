@@ -427,8 +427,8 @@ public class ReflectionUtils {
      */
     private static class ClassFilter implements JarEntryFilter {
 
-        private final String packageName;
-        private final boolean recursive;
+        public final String packageName;
+        public final boolean recursive;
 
         /**
          * Creates a new instance of the filter.
@@ -471,8 +471,8 @@ public class ReflectionUtils {
      */
     private static class PackageFilter implements JarEntryFilter {
 
-        private final String packageName;
-        private final boolean recursive;
+        public final String packageName;
+        public final boolean recursive;
 
         /**
          * Creates a new instance of the filter.
@@ -499,10 +499,9 @@ public class ReflectionUtils {
                     return false;
                 }
 
-                boolean emptyPackage = packagePath == null && packageName.equals(PACKAGE_PATH_SEPARATOR);
-                boolean acceptablePackageRec = recursive && packagePath != null && packagePath.startsWith(packageName);
-                boolean acceptablePackage = !recursive && packagePath != null && packagePath.equals(packageName);
-                return emptyPackage || acceptablePackageRec || acceptablePackage;
+                boolean emptyPackage = packageName.equals(PACKAGE_PATH_SEPARATOR) && ((!recursive && packagePath == null) || recursive);
+                boolean acceptablePackage = packagePath != null && packagePath.startsWith(packageName) && packagePath.length() > packageName.length() && (recursive || (!recursive && !packagePath.substring(packageName.length(), packagePath.length() - 1).contains(PACKAGE_PATH_SEPARATOR)));
+                return emptyPackage || acceptablePackage;
             }
             return false;
         }
