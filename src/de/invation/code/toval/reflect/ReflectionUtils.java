@@ -79,7 +79,7 @@ public class ReflectionUtils {
      * Returns a {@link Set} of all classes in a specified package. Since the
      * result is returned as a {@link Set}, there won't be any duplicates.
      *
-     * @param packageName Set of package names.
+     * @param packageName Package name.
      * @param recursive Set <code>true</code> if subpackages should be
      * considered, too.
      * @return Set of classes in a specified package.
@@ -180,60 +180,6 @@ public class ReflectionUtils {
     /**
      * <p>
      * Returns a {@link Set} of {@link Class} objects containing all classes of
-     * a specified package (including subpackages) which extend the given class.
-     * </p>
-     * <p>
-     * Example:
-     * </p>
-     *
-     * <pre>
-     * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
-     * Class&lt;?&gt; superclass = AbstractPlace.class;
-     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getSubclasses(superclass, pack);
-     * for (Class&lt;?&gt; c : classes) {
-     * 	System.out.println(c);
-     * }
-     *
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetPlace
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace
-     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace
-     * </pre>
-     *
-     * @param clazz Class which should be extended.
-     * @param packageName Package to search for subclasses.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return {@link Set} of {@link Class} objects extending the given class in
-     * the specified package.
-     * @throws ReflectionException
-     */
-    public static Set<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
-        Validate.notNull(clazz);
-        if (clazz.isInterface() || clazz.isEnum()) {
-            throw new ParameterException("Parameter is not a class");
-        }
-
-        Set<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
-
-        try {
-            Set<Class<?>> subClassesInPackage = new HashSet<>();
-            for (Class<?> classInPackage : classesInPackage) {
-                if (getSuperclasses(classInPackage).contains(clazz) && clazz != classInPackage) {
-                    subClassesInPackage.add(classInPackage);
-                }
-            }
-            return subClassesInPackage;
-        } catch (Exception e) {
-            throw new ReflectionException(e);
-        }
-    }
-
-    /**
-     * <p>
-     * Returns a {@link Set} of {@link Class} objects containing all classes of
      * a specified package (including subpackages) which implement the given
      * interface.
      * </p>
@@ -311,29 +257,6 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns all superclasses of the given class ordered top down. The last
-     * element is always {@link java.lang.Object}.
-     *
-     * @param clazz Class to read superclasses from.
-     * @return Set of superclasses.
-     * @throws ReflectionException If superclass can't be read.
-     */
-    public static Set<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
-        Validate.notNull(clazz);
-
-        try {
-            Set<Class<?>> clazzes = new HashSet<>();
-            if (clazz.getSuperclass() != null) {
-                clazzes.add(clazz.getSuperclass());
-                clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
-            }
-            return clazzes;
-        } catch (Exception e) {
-            throw new ReflectionException(e);
-        }
-    }
-
-    /**
      * Returns all implemented interfaces of the given class.
      *
      * @param clazz Class to read interfaces from.
@@ -357,6 +280,149 @@ public class ReflectionUtils {
     }
 
     /**
+     * <p>
+     * Returns a {@link Set} of {@link Class} objects containing all classes of
+     * a specified package (including subpackages) which extend the given class.
+     * </p>
+     * <p>
+     * Example:
+     * </p>
+     *
+     * <pre>
+     * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
+     * Class&lt;?&gt; superclass = AbstractPlace.class;
+     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getSubclasses(superclass, pack);
+     * for (Class&lt;?&gt; c : classes) {
+     * 	System.out.println(c);
+     * }
+     *
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.abstr.AbstractCPNPlace
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.cpn.CPNPlace
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.abstr.AbstractIFNetPlace
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.ifnet.IFNetPlace
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.pt.abstr.AbstractPTPlace
+     * // class de.uni.freiburg.iig.telematik.sepia.petrinet.pt.PTPlace
+     * </pre>
+     *
+     * @param clazz Class which should be extended.
+     * @param packageName Package to search for subclasses.
+     * @param recursive Set <code>true</code> if subpackages should be
+     * considered, too.
+     * @return {@link Set} of {@link Class} objects extending the given class in
+     * the specified package.
+     * @throws ReflectionException
+     */
+    public static Set<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
+        Validate.notNull(clazz);
+        if (clazz.isInterface() || clazz.isEnum()) {
+            throw new ParameterException("Parameter is not a class");
+        }
+
+        Set<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+
+        try {
+            Set<Class<?>> subClassesInPackage = new HashSet<>();
+            for (Class<?> classInPackage : classesInPackage) {
+                if (getSuperclasses(classInPackage).contains(clazz) && clazz != classInPackage) {
+                    subClassesInPackage.add(classInPackage);
+                }
+            }
+            return subClassesInPackage;
+        } catch (Exception e) {
+            throw new ReflectionException(e);
+        }
+    }
+
+    /**
+     * Returns a {@link Set} of all subpackages of a specified package. Since
+     * the result is returned as a {@link Set}, there won't be any duplicates.
+     *
+     * @param packageName Package name.
+     * @param recursive <code>true</code> if subpackages of subpackages should
+     * be considered, too.
+     * @return Set of package names in a specified package.
+     * @throws ReflectionException
+     */
+    public static Set<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
+        Validate.notNull(packageName);
+        Validate.notEmpty(packageName);
+
+        try {
+            String packagePath = packageName.replace(PACKAGE_SEPARATOR, PACKAGE_PATH_SEPARATOR);
+            URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
+            InputStream is = packageURL.openStream();
+
+            Set<String> packageNames = new HashSet<>();
+            try {
+                if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
+                    Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
+                    ExtendedJarFile jarFile = null;
+                    String innerPath = null;
+                    while (jarPathMatcher.find()) {
+                        jarFile = new ExtendedJarFile(jarPathMatcher.group(1));
+                        innerPath = jarPathMatcher.group(2);
+                    }
+                    if (jarFile == null || innerPath == null) {
+                        throw new ReflectionException("Couldn't match JAR path pattern on \"" + packageURL.toString() + "\".");
+                    }
+
+                    jarFile.addFilter(new PackageFilter(packagePath, recursive));
+                    Enumeration<JarEntry> e = jarFile.entries();
+                    while (e.hasMoreElements()) {
+                        JarEntry je = e.nextElement();
+                        if (je.isDirectory() || !je.getName().endsWith(CLASS_FILE_SUFFIX)) {
+                            packageNames.add(je.getName().replace(PACKAGE_PATH_SEPARATOR, PACKAGE_SEPARATOR).substring(0, je.getName().length() - 1));
+                        }
+
+                    }
+                } else {
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader in = new BufferedReader(isr);
+                    String line;
+
+                    while ((line = in.readLine()) != null) {
+                        if (line.matches(PACKAGE_NAME_PATTERN)) {
+                            packageNames.add(packageName + PACKAGE_SEPARATOR + line);
+                            if (recursive) {
+                                // recursive call to add subclasses in the package
+                                packageNames.addAll(getSubpackages(packageName + PACKAGE_SEPARATOR + line, recursive));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                throw new ReflectionException("Cannot access package directory", e);
+            }
+            return packageNames;
+        } catch (IOException | ReflectionException e) {
+            throw new ReflectionException(e);
+        }
+    }
+
+    /**
+     * Returns all superclasses of the given class ordered top down. The last
+     * element is always {@link java.lang.Object}.
+     *
+     * @param clazz Class to read superclasses from.
+     * @return Set of superclasses.
+     * @throws ReflectionException If superclass can't be read.
+     */
+    public static Set<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
+        Validate.notNull(clazz);
+
+        try {
+            Set<Class<?>> clazzes = new HashSet<>();
+            if (clazz.getSuperclass() != null) {
+                clazzes.add(clazz.getSuperclass());
+                clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
+            }
+            return clazzes;
+        } catch (Exception e) {
+            throw new ReflectionException(e);
+        }
+    }
+
+    /**
      * Accepts only classes.
      */
     private static class ClassFilter implements JarEntryFilter {
@@ -373,7 +439,9 @@ public class ReflectionUtils {
          * considered, too.
          */
         public ClassFilter(String packageName, boolean recursive) {
-            this.packageName = packageName + "/";
+            Validate.notNull(packageName);
+
+            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
             this.recursive = recursive;
         }
 
@@ -393,6 +461,48 @@ public class ReflectionUtils {
                 if (className != null && className.length() > 0) {
                     return true;
                 }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Accepts only packages.
+     */
+    private static class PackageFilter implements JarEntryFilter {
+
+        private final String packageName;
+        private final boolean recursive;
+
+        /**
+         * Creates a new instance of the filter.
+         *
+         * @param packageName Name of the package with "/" as separators and
+         * without trailing "/".
+         * @param recursive Set <code>true</code> if subpackages should be
+         * considered, too.
+         */
+        public PackageFilter(String packageName, boolean recursive) {
+            Validate.notNull(packageName);
+
+            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
+            this.recursive = recursive;
+        }
+
+        @Override
+        public boolean accept(JarEntry entry) {
+            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
+            while (matcher.find()) {
+                String packagePath = matcher.group(1);
+                String className = matcher.group(2);
+                if (className != null && className.length() > 0) {
+                    return false;
+                }
+
+                boolean emptyPackage = packagePath == null && packageName.equals(PACKAGE_PATH_SEPARATOR);
+                boolean acceptablePackageRec = recursive && packagePath != null && packagePath.startsWith(packageName);
+                boolean acceptablePackage = !recursive && packagePath != null && packagePath.equals(packageName);
+                return emptyPackage || acceptablePackageRec || acceptablePackage;
             }
             return false;
         }
