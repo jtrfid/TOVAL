@@ -32,10 +32,10 @@ package de.invation.code.toval.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -43,9 +43,9 @@ import java.util.stream.Stream;
 
 /**
  * <p>
- The ExtendedJarFile class is used to read the contents of a jar file from any
- file that can be opened with java.io.RandomAccessFile. It extends the class
- {@link JarFile} by the option to filter Jar entries.
+ * The ExtendedJarFile class is used to read the contents of a jar file from any
+ * file that can be opened with java.io.RandomAccessFile. It extends the class
+ * {@link JarFile} by the option to filter Jar entries.
  * </p>
  *
  * <p>
@@ -58,7 +58,8 @@ import java.util.stream.Stream;
  */
 public class ExtendedJarFile extends JarFile {
 
-    private final Set<JarEntryFilter> filters = new HashSet<>();
+    private final List<JarEntryFilter> filters = new ArrayList<>();
+    private final List<JarFileTransformation> transformations = new ArrayList<>();
 
     /**
      * Creates a new JarFile to read from the specified file name.
@@ -124,16 +125,24 @@ public class ExtendedJarFile extends JarFile {
         filters.add(filter);
     }
 
+    /**
+     * Adds a new {@link JarFileTransformation}.
+     *
+     * @param transformation Transformation to add.
+     */
+    public final void addTransformation(JarFileTransformation transformation) {
+        transformations.add(transformation);
+    }
+
     @Override
     public Enumeration<JarEntry> entries() {
-        if (filters.isEmpty()) {
+        if (filters.isEmpty() && transformations.isEmpty()) {
             return entries();
         }
 
         // Filters
         Enumeration<JarEntry> allEntries = super.entries();
         Vector<JarEntry> filteredEntries = new Vector<>();
-
         while (allEntries.hasMoreElements()) {
             JarEntry entry = allEntries.nextElement();
             for (JarEntryFilter filter : filters) {
@@ -143,16 +152,31 @@ public class ExtendedJarFile extends JarFile {
             }
         }
 
-        return filteredEntries.elements();
+        // Transformations
+        Enumeration<JarEntry> filteredEnumeration = filteredEntries.elements();
+        for (JarFileTransformation transformation : transformations) {
+            filteredEnumeration = transformation.transform(filteredEnumeration);
+        }
+
+        return filteredEnumeration;
     }
 
     /**
      * Returns all filters.
      *
-     * @return Set of filters.
+     * @return List of filters.
      */
-    public Set<JarEntryFilter> getFilters() {
-        return Collections.unmodifiableSet(filters);
+    public List<JarEntryFilter> getFilters() {
+        return Collections.unmodifiableList(filters);
+    }
+
+    /**
+     * Returns all transformations.
+     *
+     * @return List of transformations.
+     */
+    public List<JarFileTransformation> getTransformations() {
+        return Collections.unmodifiableList(transformations);
     }
 
     @Override

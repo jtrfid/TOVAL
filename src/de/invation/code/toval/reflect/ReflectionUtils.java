@@ -9,14 +9,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import java.io.InputStream;
 import java.net.URLClassLoader;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.regex.Matcher;
@@ -78,30 +77,17 @@ public class ReflectionUtils {
      */
     public static final String PACKAGE_PATH_SEPARATOR = "/";
 
-    private final static Comparator<Class<?>> CLASS_COMPARATOR;
-
-    static {
-        CLASS_COMPARATOR = new Comparator<Class<?>>() {
-
-            @Override
-            public int compare(Class<?> firstClass, Class<?> secondClass) {
-                return firstClass.getName().compareTo(secondClass.getName());
-            }
-        };
-    }
-
     /**
-     * Returns a {@link SortedSet} of all classes in a specified package. Since
-     * the result is returned as a {@link SortedSet}, there won't be any
-     * duplicates.
+     * Returns a {@link List} of all classes in a specified package. Since the
+     * result is returned as a {@link List}, there won't be any duplicates.
      *
      * @param packageName Package name.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return SortedSet of classes in a specified package.
+     * @return List of classes in a specified package.
      * @throws ReflectionException
      */
-    public static SortedSet<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -110,7 +96,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            SortedSet<Class<?>> classes = new TreeSet<>(CLASS_COMPARATOR);
+            List<Class<?>> classes = new ArrayList<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -175,18 +161,18 @@ public class ReflectionUtils {
      * The same method as
      * {@link #getSubclassesInPackage(Class, String, boolean)}, but with the
      * possibility to search in multiple packages. Since the result is returned
-     * as a {@link SortedSet}, there won't be any duplicates.
+     * as a {@link List}, there won't be any duplicates.
      *
      * @param packageNames Set of package names.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return SortedSet of classes in specified packages.
+     * @return List of classes in specified packages.
      * @throws ReflectionException
      */
-    public static SortedSet<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(packageNames);
 
-        SortedSet<Class<?>> classes = new TreeSet<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (String packageName : packageNames) {
             classes.addAll(getClassesInPackage(packageName, recursive));
         }
@@ -195,9 +181,9 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link SortedSet} of {@link Class} objects containing all
-     * classes of a specified package (including subpackages) which implement
-     * the given interface.
+     * Returns a {@link List} of {@link Class} objects containing all classes of
+     * a specified package (including subpackages) which implement the given
+     * interface.
      * </p>
      * <p>
      * Example:
@@ -206,7 +192,7 @@ public class ReflectionUtils {
      * <pre>
      * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
      * Class&lt;?&gt; interf = PNParserInterface.class;
-     * SortedSet&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
+     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
      * for (Class&lt;?&gt; c : classes) {
      * 	System.out.println(c);
      * }
@@ -219,19 +205,19 @@ public class ReflectionUtils {
      * @param packageName Package to search for classes.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return {@link SortedSet} of {@link Class} objects implementing the given
+     * @return {@link List} of {@link Class} objects implementing the given
      * interface in the specified package.
      * @throws ReflectionException
      */
-    public static SortedSet<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         if (!interfaze.isInterface()) {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        SortedSet<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
         try {
-            SortedSet<Class<?>> interfaceImplementationsInPackage = new TreeSet<>();
+            List<Class<?>> interfaceImplementationsInPackage = new ArrayList<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getInterfaces(classInPackage).contains(interfaze)) {
                     interfaceImplementationsInPackage.add(classInPackage);
@@ -247,16 +233,16 @@ public class ReflectionUtils {
      * The same method as
      * {@link ReflectionUtils#getInterfaceImplementationsInPackage(Class, String, boolean)},
      * but with the possibility to search in multiple packages. Since the result
-     * is returned as a {@link SortedSet}, there won't be any duplicates.
+     * is returned as a {@link List}, there won't be any duplicates.
      *
      * @param interfaze Interface class.
      * @param packageNames Set of package names.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return SortedSet of implementations of a given interface.
+     * @return List of implementations of a given interface.
      * @throws ReflectionException
      */
-    public static SortedSet<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         Validate.notNull(packageNames);
 
@@ -264,7 +250,7 @@ public class ReflectionUtils {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        SortedSet<Class<?>> classes = new TreeSet<>();
+        List<Class<?>> classes = new ArrayList<>();
 
         for (String packageName : packageNames) {
             classes.addAll(getInterfaceImplementationsInPackage(interfaze, packageName, recursive));
@@ -279,13 +265,13 @@ public class ReflectionUtils {
      * @return Set of interfaces.
      * @throws ReflectionException If interfaces can't be read.
      */
-    public static Set<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
+    public static List<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            SortedSet<Class<?>> interfaces = new TreeSet<>();
+            List<Class<?>> interfaces = new ArrayList<>();
             interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
-            SortedSet<Class<?>> superclasses = getSuperclasses(clazz);
+            List<Class<?>> superclasses = getSuperclasses(clazz);
             for (Class<?> superclass : superclasses) {
                 interfaces.addAll(Arrays.asList(superclass.getInterfaces()));
             }
@@ -297,9 +283,8 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link SortedSet} of {@link Class} objects containing all
-     * classes of a specified package (including subpackages) which extend the
-     * given class.
+     * Returns a {@link List} of {@link Class} objects containing all classes of
+     * a specified package (including subpackages) which extend the given class.
      * </p>
      * <p>
      * Example:
@@ -325,20 +310,20 @@ public class ReflectionUtils {
      * @param packageName Package to search for subclasses.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return {@link SortedSet} of {@link Class} objects extending the given
-     * class in the specified package.
+     * @return {@link List} of {@link Class} objects extending the given class
+     * in the specified package.
      * @throws ReflectionException
      */
-    public static SortedSet<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(clazz);
         if (clazz.isInterface() || clazz.isEnum()) {
             throw new ParameterException("Parameter is not a class");
         }
 
-        SortedSet<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
 
         try {
-            SortedSet<Class<?>> subClassesInPackage = new TreeSet<>();
+            List<Class<?>> subClassesInPackage = new ArrayList<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getSuperclasses(classInPackage).contains(clazz) && clazz != classInPackage) {
                     subClassesInPackage.add(classInPackage);
@@ -351,9 +336,8 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns a {@link SortedSet} of all subpackages of a specified package.
-     * Since the result is returned as a {@link SortedSet}, there won't be any
-     * duplicates.
+     * Returns a {@link List} of all subpackages of a specified package. Since
+     * the result is returned as a {@link List}, there won't be any duplicates.
      *
      * @param packageName Package name.
      * @param recursive <code>true</code> if subpackages of subpackages should
@@ -361,7 +345,7 @@ public class ReflectionUtils {
      * @return Set of package names in a specified package.
      * @throws ReflectionException
      */
-    public static SortedSet<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
+    public static List<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -370,7 +354,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            SortedSet<String> packageNames = new TreeSet<>();
+            List<String> packageNames = new ArrayList<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -422,14 +406,14 @@ public class ReflectionUtils {
      * element is always {@link java.lang.Object}.
      *
      * @param clazz Class to read superclasses from.
-     * @return SortedSet of superclasses.
+     * @return List of superclasses.
      * @throws ReflectionException If superclass can't be read.
      */
-    public static SortedSet<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
+    public static List<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            SortedSet<Class<?>> clazzes = new TreeSet<>();
+            List<Class<?>> clazzes = new ArrayList<>();
             if (clazz.getSuperclass() != null) {
                 clazzes.add(clazz.getSuperclass());
                 clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
