@@ -30,7 +30,11 @@
  */
 package de.invation.code.toval.file;
 
+import static de.invation.code.toval.reflect.ReflectionUtils.CLASS_PATH_PATTERN;
+import static de.invation.code.toval.reflect.ReflectionUtils.PACKAGE_PATH_SEPARATOR;
+import de.invation.code.toval.validate.Validate;
 import java.util.jar.JarEntry;
+import java.util.regex.Matcher;
 
 /**
  * Instances of classes that implement this interface are used to filter entries
@@ -50,4 +54,89 @@ public interface JarEntryFilter {
      * the entry list; false otherwise.
      */
     public boolean accept(JarEntry entry);
+
+    /**
+     * Accepts only classes.
+     */
+    public static class ClassFilter implements JarEntryFilter {
+
+        public final String packageName;
+        public final boolean recursive;
+
+        /**
+         * Creates a new instance of the filter.
+         *
+         * @param packageName Name of the package with "/" as separators and
+         * without trailing "/".
+         * @param recursive Set <code>true</code> if subpackages should be
+         * considered, too.
+         */
+        public ClassFilter(String packageName, boolean recursive) {
+            Validate.notNull(packageName);
+
+            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
+            this.recursive = recursive;
+        }
+
+        @Override
+        public boolean accept(JarEntry entry) {
+            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
+            while (matcher.find()) {
+                String packagePath = matcher.group(1);
+                String className = matcher.group(2);
+                if (packagePath == null && packageName.length() > 0) {
+                    return false;
+                } else if (recursive && packagePath != null && !packagePath.startsWith(packageName)) {
+                    return false;
+                } else if (!recursive && packagePath != null && !packagePath.equals(packageName)) {
+                    return false;
+                }
+                if (className != null && className.length() > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Accepts only packages.
+     */
+    public static class PackageFilter implements JarEntryFilter {
+
+        public final String packageName;
+        public final boolean recursive;
+
+        /**
+         * Creates a new instance of the filter.
+         *
+         * @param packageName Name of the package with "/" as separators and
+         * without trailing "/".
+         * @param recursive Set <code>true</code> if subpackages should be
+         * considered, too.
+         */
+        public PackageFilter(String packageName, boolean recursive) {
+            Validate.notNull(packageName);
+
+            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
+            this.recursive = recursive;
+        }
+
+        @Override
+        public boolean accept(JarEntry entry) {
+            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
+            while (matcher.find()) {
+                String packagePath = matcher.group(1);
+                String className = matcher.group(2);
+                if (className != null && className.length() > 0) {
+                    return false;
+                }
+
+                boolean emptyPackage = packageName.equals(PACKAGE_PATH_SEPARATOR) && ((!recursive && packagePath == null) || recursive);
+                boolean acceptablePackage = packagePath != null && packagePath.startsWith(packageName) && packagePath.length() > packageName.length() && (recursive || (!recursive && !packagePath.substring(packageName.length(), packagePath.length() - 1).contains(PACKAGE_PATH_SEPARATOR)));
+                return emptyPackage || acceptablePackage;
+            }
+            return false;
+        }
+    }
 }

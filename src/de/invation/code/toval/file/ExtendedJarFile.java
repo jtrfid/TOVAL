@@ -43,9 +43,9 @@ import java.util.stream.Stream;
 
 /**
  * <p>
- * The ExtendedJarFile class is used to read the contents of a jar file from any
- * file that can be opened with java.io.RandomAccessFile. It extends the class
- * {@link JarFile} by the option to filter Jar entries.
+ The ExtendedJarFile class is used to read the contents of a jar file from any
+ file that can be opened with java.io.RandomAccessFile. It extends the class
+ {@link JarFile} by the option to filter Jar entries.
  * </p>
  *
  * <p>
@@ -120,7 +120,7 @@ public class ExtendedJarFile extends JarFile {
      *
      * @param filter Filter to add.
      */
-    public void addFilter(JarEntryFilter filter) {
+    public final void addFilter(JarEntryFilter filter) {
         filters.add(filter);
     }
 
@@ -130,6 +130,7 @@ public class ExtendedJarFile extends JarFile {
             return entries();
         }
 
+        // Filters
         Enumeration<JarEntry> allEntries = super.entries();
         Vector<JarEntry> filteredEntries = new Vector<>();
 
