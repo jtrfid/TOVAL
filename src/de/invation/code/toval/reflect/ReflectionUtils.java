@@ -1,19 +1,21 @@
 package de.invation.code.toval.reflect;
 
-import de.invation.code.toval.file.JarEntryFilter;
 import de.invation.code.toval.file.ExtendedJarFile;
+import de.invation.code.toval.file.JarEntryFilter.ClassFilter;
+import de.invation.code.toval.file.JarEntryFilter.PackageFilter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import java.io.InputStream;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.regex.Matcher;
@@ -76,16 +78,16 @@ public class ReflectionUtils {
     public static final String PACKAGE_PATH_SEPARATOR = "/";
 
     /**
-     * Returns a {@link Set} of all classes in a specified package. Since the
-     * result is returned as a {@link Set}, there won't be any duplicates.
+     * Returns a {@link List} of all classes in a specified package. Since the
+     * result is returned as a {@link List}, there won't be any duplicates.
      *
      * @param packageName Package name.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return Set of classes in a specified package.
+     * @param recursive <code>true</code> if subpackages should be considered,
+     * too.
+     * @return List of classes in a specified package.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -94,7 +96,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            Set<Class<?>> classes = new HashSet<>();
+            List<Class<?>> classes = new ArrayList<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -159,18 +161,18 @@ public class ReflectionUtils {
      * The same method as
      * {@link #getSubclassesInPackage(Class, String, boolean)}, but with the
      * possibility to search in multiple packages. Since the result is returned
-     * as a {@link Set}, there won't be any duplicates.
+     * as a {@link List}, there won't be any duplicates.
      *
      * @param packageNames Set of package names.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return Set of classes in specified packages.
+     * @param recursive <code>true</code> if subpackages should be considered,
+     * too.
+     * @return List of classes in specified packages.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(packageNames);
 
-        Set<Class<?>> classes = new HashSet<>();
+        List<Class<?>> classes = new ArrayList<>();
         for (String packageName : packageNames) {
             classes.addAll(getClassesInPackage(packageName, recursive));
         }
@@ -179,7 +181,7 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link Set} of {@link Class} objects containing all classes of
+     * Returns a {@link List} of {@link Class} objects containing all classes of
      * a specified package (including subpackages) which implement the given
      * interface.
      * </p>
@@ -190,7 +192,7 @@ public class ReflectionUtils {
      * <pre>
      * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
      * Class&lt;?&gt; interf = PNParserInterface.class;
-     * Set&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
+     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
      * for (Class&lt;?&gt; c : classes) {
      * 	System.out.println(c);
      * }
@@ -201,21 +203,21 @@ public class ReflectionUtils {
      *
      * @param interfaze Interface which should be implemented.
      * @param packageName Package to search for classes.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return {@link Set} of {@link Class} objects implementing the given
+     * @param recursive <code>true</code> if subpackages should be considered,
+     * too.
+     * @return {@link List} of {@link Class} objects implementing the given
      * interface in the specified package.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         if (!interfaze.isInterface()) {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        Set<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
         try {
-            Set<Class<?>> interfaceImplementationsInPackage = new HashSet<>();
+            List<Class<?>> interfaceImplementationsInPackage = new ArrayList<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getInterfaces(classInPackage).contains(interfaze)) {
                     interfaceImplementationsInPackage.add(classInPackage);
@@ -231,16 +233,16 @@ public class ReflectionUtils {
      * The same method as
      * {@link ReflectionUtils#getInterfaceImplementationsInPackage(Class, String, boolean)},
      * but with the possibility to search in multiple packages. Since the result
-     * is returned as a {@link Set}, there won't be any duplicates.
+     * is returned as a {@link List}, there won't be any duplicates.
      *
      * @param interfaze Interface class.
      * @param packageNames Set of package names.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return Set of implementations of a given interface.
+     * @param recursive <code>true</code> if subpackages should be considered,
+     * too.
+     * @return List of implementations of a given interface.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         Validate.notNull(packageNames);
 
@@ -248,7 +250,7 @@ public class ReflectionUtils {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        Set<Class<?>> classes = new HashSet<>();
+        List<Class<?>> classes = new ArrayList<>();
 
         for (String packageName : packageNames) {
             classes.addAll(getInterfaceImplementationsInPackage(interfaze, packageName, recursive));
@@ -263,13 +265,13 @@ public class ReflectionUtils {
      * @return Set of interfaces.
      * @throws ReflectionException If interfaces can't be read.
      */
-    public static Set<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
+    public static List<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            Set<Class<?>> interfaces = new HashSet<>();
+            List<Class<?>> interfaces = new ArrayList<>();
             interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
-            Set<Class<?>> superclasses = getSuperclasses(clazz);
+            List<Class<?>> superclasses = getSuperclasses(clazz);
             for (Class<?> superclass : superclasses) {
                 interfaces.addAll(Arrays.asList(superclass.getInterfaces()));
             }
@@ -281,7 +283,7 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link Set} of {@link Class} objects containing all classes of
+     * Returns a {@link List} of {@link Class} objects containing all classes of
      * a specified package (including subpackages) which extend the given class.
      * </p>
      * <p>
@@ -306,22 +308,22 @@ public class ReflectionUtils {
      *
      * @param clazz Class which should be extended.
      * @param packageName Package to search for subclasses.
-     * @param recursive Set <code>true</code> if subpackages should be
-     * considered, too.
-     * @return {@link Set} of {@link Class} objects extending the given class in
-     * the specified package.
+     * @param recursive <code>true</code> if subpackages should be considered,
+     * too.
+     * @return {@link List} of {@link Class} objects extending the given class
+     * in the specified package.
      * @throws ReflectionException
      */
-    public static Set<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
+    public static List<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(clazz);
         if (clazz.isInterface() || clazz.isEnum()) {
             throw new ParameterException("Parameter is not a class");
         }
 
-        Set<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
 
         try {
-            Set<Class<?>> subClassesInPackage = new HashSet<>();
+            List<Class<?>> subClassesInPackage = new ArrayList<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getSuperclasses(classInPackage).contains(clazz) && clazz != classInPackage) {
                     subClassesInPackage.add(classInPackage);
@@ -334,8 +336,8 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns a {@link Set} of all subpackages of a specified package. Since
-     * the result is returned as a {@link Set}, there won't be any duplicates.
+     * Returns a {@link List} of all subpackages of a specified package. Since
+     * the result is returned as a {@link List}, there won't be any duplicates.
      *
      * @param packageName Package name.
      * @param recursive <code>true</code> if subpackages of subpackages should
@@ -343,7 +345,7 @@ public class ReflectionUtils {
      * @return Set of package names in a specified package.
      * @throws ReflectionException
      */
-    public static Set<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
+    public static List<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -352,7 +354,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            Set<String> packageNames = new HashSet<>();
+            List<String> packageNames = new ArrayList<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -404,14 +406,14 @@ public class ReflectionUtils {
      * element is always {@link java.lang.Object}.
      *
      * @param clazz Class to read superclasses from.
-     * @return Set of superclasses.
+     * @return List of superclasses.
      * @throws ReflectionException If superclass can't be read.
      */
-    public static Set<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
+    public static List<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            Set<Class<?>> clazzes = new HashSet<>();
+            List<Class<?>> clazzes = new ArrayList<>();
             if (clazz.getSuperclass() != null) {
                 clazzes.add(clazz.getSuperclass());
                 clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
@@ -419,91 +421,6 @@ public class ReflectionUtils {
             return clazzes;
         } catch (Exception e) {
             throw new ReflectionException(e);
-        }
-    }
-
-    /**
-     * Accepts only classes.
-     */
-    private static class ClassFilter implements JarEntryFilter {
-
-        public final String packageName;
-        public final boolean recursive;
-
-        /**
-         * Creates a new instance of the filter.
-         *
-         * @param packageName Name of the package with "/" as separators and
-         * without trailing "/".
-         * @param recursive Set <code>true</code> if subpackages should be
-         * considered, too.
-         */
-        public ClassFilter(String packageName, boolean recursive) {
-            Validate.notNull(packageName);
-
-            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
-            this.recursive = recursive;
-        }
-
-        @Override
-        public boolean accept(JarEntry entry) {
-            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
-            while (matcher.find()) {
-                String packagePath = matcher.group(1);
-                String className = matcher.group(2);
-                if (packagePath == null && packageName.length() > 0) {
-                    return false;
-                } else if (recursive && packagePath != null && !packagePath.startsWith(packageName)) {
-                    return false;
-                } else if (!recursive && packagePath != null && !packagePath.equals(packageName)) {
-                    return false;
-                }
-                if (className != null && className.length() > 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Accepts only packages.
-     */
-    private static class PackageFilter implements JarEntryFilter {
-
-        public final String packageName;
-        public final boolean recursive;
-
-        /**
-         * Creates a new instance of the filter.
-         *
-         * @param packageName Name of the package with "/" as separators and
-         * without trailing "/".
-         * @param recursive Set <code>true</code> if subpackages should be
-         * considered, too.
-         */
-        public PackageFilter(String packageName, boolean recursive) {
-            Validate.notNull(packageName);
-
-            this.packageName = packageName + PACKAGE_PATH_SEPARATOR;
-            this.recursive = recursive;
-        }
-
-        @Override
-        public boolean accept(JarEntry entry) {
-            Matcher matcher = CLASS_PATH_PATTERN.matcher(entry.getName());
-            while (matcher.find()) {
-                String packagePath = matcher.group(1);
-                String className = matcher.group(2);
-                if (className != null && className.length() > 0) {
-                    return false;
-                }
-
-                boolean emptyPackage = packageName.equals(PACKAGE_PATH_SEPARATOR) && ((!recursive && packagePath == null) || recursive);
-                boolean acceptablePackage = packagePath != null && packagePath.startsWith(packageName) && packagePath.length() > packageName.length() && (recursive || (!recursive && !packagePath.substring(packageName.length(), packagePath.length() - 1).contains(PACKAGE_PATH_SEPARATOR)));
-                return emptyPackage || acceptablePackage;
-            }
-            return false;
         }
     }
 }
