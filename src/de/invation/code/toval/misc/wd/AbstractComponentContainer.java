@@ -117,7 +117,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
         return componentFiles.get(componentName);
     }
 
-    protected final boolean mandatoryDirectory() {
+    protected boolean mandatoryDirectory() {
         return true;
     }
 
