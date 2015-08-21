@@ -30,16 +30,21 @@
  */
 package de.invation.code.toval.file;
 
+import de.invation.code.toval.misc.Transformable;
+import de.invation.code.toval.misc.Filterable;
+import de.invation.code.toval.validate.Validate;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
+import javax.swing.SortOrder;
 
 /**
  * <p>
@@ -58,8 +63,8 @@ import java.util.stream.Stream;
  */
 public class ExtendedJarFile extends JarFile {
 
-    private final List<JarEntryFilter> filters = new ArrayList<>();
-    private final List<JarFileTransformation> transformations = new ArrayList<>();
+    private final List<Filterable<JarEntry>> filters = new ArrayList<>();
+    private final List<Transformable<Enumeration<JarEntry>>> transformations = new ArrayList<>();
 
     /**
      * Creates a new JarFile to read from the specified file name.
@@ -117,20 +122,20 @@ public class ExtendedJarFile extends JarFile {
     }
 
     /**
-     * Adds a new {@link JarEntryFilter}.
+     * Adds a new filter as {@link Filterable}.
      *
      * @param filter Filter to add.
      */
-    public final void addFilter(JarEntryFilter filter) {
+    public final void addFilter(Filterable<JarEntry> filter) {
         filters.add(filter);
     }
 
     /**
-     * Adds a new {@link JarFileTransformation}.
+     * Adds a new {@link Transformable}.
      *
      * @param transformation Transformation to add.
      */
-    public final void addTransformation(JarFileTransformation transformation) {
+    public final void addTransformation(Transformable<Enumeration<JarEntry>> transformation) {
         transformations.add(transformation);
     }
 
@@ -145,7 +150,7 @@ public class ExtendedJarFile extends JarFile {
         Vector<JarEntry> filteredEntries = new Vector<>();
         while (allEntries.hasMoreElements()) {
             JarEntry entry = allEntries.nextElement();
-            for (JarEntryFilter filter : filters) {
+            for (Filterable<JarEntry> filter : filters) {
                 if (filter.accept(entry)) {
                     filteredEntries.add(entry);
                 }
@@ -154,7 +159,7 @@ public class ExtendedJarFile extends JarFile {
 
         // Transformations
         Enumeration<JarEntry> filteredEnumeration = filteredEntries.elements();
-        for (JarFileTransformation transformation : transformations) {
+        for (Transformable<Enumeration<JarEntry>> transformation : transformations) {
             filteredEnumeration = transformation.transform(filteredEnumeration);
         }
 
@@ -166,7 +171,7 @@ public class ExtendedJarFile extends JarFile {
      *
      * @return List of filters.
      */
-    public List<JarEntryFilter> getFilters() {
+    public List<Filterable> getFilters() {
         return Collections.unmodifiableList(filters);
     }
 
@@ -175,7 +180,7 @@ public class ExtendedJarFile extends JarFile {
      *
      * @return List of transformations.
      */
-    public List<JarFileTransformation> getTransformations() {
+    public List<Transformable<Enumeration<JarEntry>>> getTransformations() {
         return Collections.unmodifiableList(transformations);
     }
 
@@ -187,5 +192,50 @@ public class ExtendedJarFile extends JarFile {
             builder.add(entries.nextElement());
         }
         return builder.build();
+    }
+
+    /**
+     * Sorts an {@link Enumeration} of {@link JarEntry} objects by their names.
+     */
+    public static class SortNameTransformation implements Transformable<Enumeration<JarEntry>> {
+
+        public final SortOrder sortOrder;
+
+        /**
+         * Creates a new sort transformation with ascending order.
+         */
+        public SortNameTransformation() {
+            this(SortOrder.ASCENDING);
+        }
+
+        /**
+         * Creates a new sort transformation with the specified order.
+         *
+         * @param sortOrder
+         */
+        public SortNameTransformation(SortOrder sortOrder) {
+            Validate.notNull(sortOrder);
+
+            this.sortOrder = sortOrder;
+        }
+
+        @Override
+        public Enumeration<JarEntry> transform(Enumeration<JarEntry> entries) {
+            Comparator<JarEntry> comparator = new Comparator<JarEntry>() {
+                @Override
+                public int compare(JarEntry firstEntry, JarEntry secondEntry) {
+                    return firstEntry.getName().compareTo(secondEntry.getName());
+                }
+            };
+
+            Vector<JarEntry> list = new Vector<>(Collections.list(entries));
+            if (sortOrder == SortOrder.ASCENDING) {
+                Collections.sort(list, comparator);
+            } else if (sortOrder == SortOrder.DESCENDING) {
+                Collections.sort(list, Collections.reverseOrder(comparator));
+            }
+
+            return list.elements();
+        }
     }
 }
