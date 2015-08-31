@@ -8,14 +8,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.List;
 
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.Validate;
 import java.io.InputStream;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.jar.JarEntry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +58,7 @@ public class ReflectionUtils {
      * Pattern to parse a JAR path like
      * <code>jar:file:/path/to/file.jar!/de/invation/code/toval</code>.
      */
-    public static final Pattern JAR_PATH_PATTERN = Pattern.compile("^jar:file:([^!]*)!(.*)$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern JAR_PATH_PATTERN = Pattern.compile("^jar:file:([^!]*)!(\\S*)$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Name pattern for package name elements: "[a-z0-9]*"
@@ -77,16 +76,17 @@ public class ReflectionUtils {
     public static final String PACKAGE_PATH_SEPARATOR = "/";
 
     /**
-     * Returns a {@link List} of all classes in a specified package. Since the
-     * result is returned as a {@link List}, there won't be any duplicates.
+     * Returns a {@link LinkedHashSet} of all classes in a specified package.
+     * Since the result is returned as a {@link LinkedHashSet}, there won't be
+     * any duplicates.
      *
      * @param packageName Package name.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return List of classes in a specified package.
+     * @return {@link LinkedHashSet} of classes in a specified package.
      * @throws ReflectionException
      */
-    public static List<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getClassesInPackage(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -95,7 +95,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            List<Class<?>> classes = new ArrayList<>();
+            LinkedHashSet<Class<?>> classes = new LinkedHashSet<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -160,18 +160,18 @@ public class ReflectionUtils {
      * The same method as
      * {@link #getSubclassesInPackage(Class, String, boolean)}, but with the
      * possibility to search in multiple packages. Since the result is returned
-     * as a {@link List}, there won't be any duplicates.
+     * as a {@link LinkedHashSet}, there won't be any duplicates.
      *
      * @param packageNames Set of package names.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return List of classes in specified packages.
+     * @return {@link LinkedHashSet} of classes in specified packages.
      * @throws ReflectionException
      */
-    public static List<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getClassesInPackages(Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(packageNames);
 
-        List<Class<?>> classes = new ArrayList<>();
+        LinkedHashSet<Class<?>> classes = new LinkedHashSet<>();
         for (String packageName : packageNames) {
             classes.addAll(getClassesInPackage(packageName, recursive));
         }
@@ -180,9 +180,9 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link List} of {@link Class} objects containing all classes of
-     * a specified package (including subpackages) which implement the given
-     * interface.
+     * Returns a {@link LinkedHashSet} of {@link Class} objects containing all
+     * classes of a specified package (including subpackages) which implement
+     * the given interface.
      * </p>
      * <p>
      * Example:
@@ -191,7 +191,7 @@ public class ReflectionUtils {
      * <pre>
      * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
      * Class&lt;?&gt; interf = PNParserInterface.class;
-     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
+     * LinkedHashSet&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getInterfaceImplementations(interf, pack);
      * for (Class&lt;?&gt; c : classes) {
      * 	System.out.println(c);
      * }
@@ -204,19 +204,19 @@ public class ReflectionUtils {
      * @param packageName Package to search for classes.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return {@link List} of {@link Class} objects implementing the given
-     * interface in the specified package.
+     * @return {@link LinkedHashSet} of {@link Class} objects implementing the
+     * given interface in the specified package.
      * @throws ReflectionException
      */
-    public static List<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getInterfaceImplementationsInPackage(Class<?> interfaze, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         if (!interfaze.isInterface()) {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        LinkedHashSet<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
         try {
-            List<Class<?>> interfaceImplementationsInPackage = new ArrayList<>();
+            LinkedHashSet<Class<?>> interfaceImplementationsInPackage = new LinkedHashSet<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getInterfaces(classInPackage).contains(interfaze)) {
                     interfaceImplementationsInPackage.add(classInPackage);
@@ -232,16 +232,16 @@ public class ReflectionUtils {
      * The same method as
      * {@link ReflectionUtils#getInterfaceImplementationsInPackage(Class, String, boolean)},
      * but with the possibility to search in multiple packages. Since the result
-     * is returned as a {@link List}, there won't be any duplicates.
+     * is returned as a {@link LinkedHashSet}, there won't be any duplicates.
      *
      * @param interfaze Interface class.
      * @param packageNames Set of package names.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return List of implementations of a given interface.
+     * @return {@link LinkedHashSet} of implementations of a given interface.
      * @throws ReflectionException
      */
-    public static List<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getInterfaceImplementationsInPackages(Class<?> interfaze, Set<String> packageNames, boolean recursive) throws ReflectionException {
         Validate.notNull(interfaze);
         Validate.notNull(packageNames);
 
@@ -249,7 +249,7 @@ public class ReflectionUtils {
             throw new ParameterException("Parameter is not an interface");
         }
 
-        List<Class<?>> classes = new ArrayList<>();
+        LinkedHashSet<Class<?>> classes = new LinkedHashSet<>();
 
         for (String packageName : packageNames) {
             classes.addAll(getInterfaceImplementationsInPackage(interfaze, packageName, recursive));
@@ -261,16 +261,16 @@ public class ReflectionUtils {
      * Returns all implemented interfaces of the given class.
      *
      * @param clazz Class to read interfaces from.
-     * @return Set of interfaces.
+     * @return {@link LinkedHashSet} of interfaces.
      * @throws ReflectionException If interfaces can't be read.
      */
-    public static List<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getInterfaces(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            List<Class<?>> interfaces = new ArrayList<>();
+            LinkedHashSet<Class<?>> interfaces = new LinkedHashSet<>();
             interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
-            List<Class<?>> superclasses = getSuperclasses(clazz);
+            LinkedHashSet<Class<?>> superclasses = getSuperclasses(clazz);
             for (Class<?> superclass : superclasses) {
                 interfaces.addAll(Arrays.asList(superclass.getInterfaces()));
             }
@@ -282,8 +282,9 @@ public class ReflectionUtils {
 
     /**
      * <p>
-     * Returns a {@link List} of {@link Class} objects containing all classes of
-     * a specified package (including subpackages) which extend the given class.
+     * Returns a {@link LinkedHashSet} of {@link Class} objects containing all
+     * classes of a specified package (including subpackages) which extend the
+     * given class.
      * </p>
      * <p>
      * Example:
@@ -292,7 +293,7 @@ public class ReflectionUtils {
      * <pre>
      * String pack = &quot;de.uni.freiburg.iig.telematik.sepia&quot;;
      * Class&lt;?&gt; superclass = AbstractPlace.class;
-     * List&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getSubclasses(superclass, pack);
+     * LinkedHashSet&lt;Class&lt;?&gt;&gt; classes = ReflectionUtils.getSubclasses(superclass, pack);
      * for (Class&lt;?&gt; c : classes) {
      * 	System.out.println(c);
      * }
@@ -309,20 +310,20 @@ public class ReflectionUtils {
      * @param packageName Package to search for subclasses.
      * @param recursive <code>true</code> if subpackages should be considered,
      * too.
-     * @return {@link List} of {@link Class} objects extending the given class
-     * in the specified package.
+     * @return {@link LinkedHashSet} of {@link Class} objects extending the
+     * given class in the specified package.
      * @throws ReflectionException
      */
-    public static List<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getSubclassesInPackage(Class<?> clazz, String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(clazz);
         if (clazz.isInterface() || clazz.isEnum()) {
             throw new ParameterException("Parameter is not a class");
         }
 
-        List<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
+        LinkedHashSet<Class<?>> classesInPackage = getClassesInPackage(packageName, recursive);
 
         try {
-            List<Class<?>> subClassesInPackage = new ArrayList<>();
+            LinkedHashSet<Class<?>> subClassesInPackage = new LinkedHashSet<>();
             for (Class<?> classInPackage : classesInPackage) {
                 if (getSuperclasses(classInPackage).contains(clazz) && clazz != classInPackage) {
                     subClassesInPackage.add(classInPackage);
@@ -335,16 +336,17 @@ public class ReflectionUtils {
     }
 
     /**
-     * Returns a {@link List} of all subpackages of a specified package. Since
-     * the result is returned as a {@link List}, there won't be any duplicates.
+     * Returns a {@link LinkedHashSet} of all subpackages of a specified
+     * package. Since the result is returned as a {@link LinkedHashSet}, there
+     * won't be any duplicates.
      *
      * @param packageName Package name.
      * @param recursive <code>true</code> if subpackages of subpackages should
      * be considered, too.
-     * @return Set of package names in a specified package.
+     * @return {@link LinkedHashSet} of package names in a specified package.
      * @throws ReflectionException
      */
-    public static List<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
+    public static LinkedHashSet<String> getSubpackages(String packageName, boolean recursive) throws ReflectionException {
         Validate.notNull(packageName);
         Validate.notEmpty(packageName);
 
@@ -353,7 +355,7 @@ public class ReflectionUtils {
             URL packageURL = Thread.currentThread().getClass().getResource(PACKAGE_PATH_SEPARATOR + packagePath);
             InputStream is = packageURL.openStream();
 
-            List<String> packageNames = new ArrayList<>();
+            LinkedHashSet<String> packageNames = new LinkedHashSet<>();
             try {
                 if (Pattern.matches(JAR_PATH_PATTERN.pattern(), packageURL.toString())) {
                     Matcher jarPathMatcher = JAR_PATH_PATTERN.matcher(packageURL.toString());
@@ -405,14 +407,14 @@ public class ReflectionUtils {
      * element is always {@link java.lang.Object}.
      *
      * @param clazz Class to read superclasses from.
-     * @return List of superclasses.
+     * @return {@link LinkedHashSet} of superclasses.
      * @throws ReflectionException If superclass can't be read.
      */
-    public static List<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
+    public static LinkedHashSet<Class<?>> getSuperclasses(Class<?> clazz) throws ReflectionException {
         Validate.notNull(clazz);
 
         try {
-            List<Class<?>> clazzes = new ArrayList<>();
+            LinkedHashSet<Class<?>> clazzes = new LinkedHashSet<>();
             if (clazz.getSuperclass() != null) {
                 clazzes.add(clazz.getSuperclass());
                 clazzes.addAll(getSuperclasses(clazz.getSuperclass()));
