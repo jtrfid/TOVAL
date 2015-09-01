@@ -30,10 +30,16 @@
  */
 package de.invation.code.toval.os;
 
+import de.invation.code.toval.misc.GenericHandler;
 import de.invation.code.toval.os.WindowsRegistry.Hive;
 import de.invation.code.toval.os.WindowsRegistry.RegistryException;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +51,7 @@ import java.util.regex.Pattern;
  * @author Adrian Lange <lange@iig.uni-freiburg.de>
  */
 public final class WindowsUtils extends OSUtils<String> {
-    
+
     private static WindowsUtils instance = null;
 
     /**
@@ -193,7 +199,7 @@ public final class WindowsUtils extends OSUtils<String> {
         fileTypeExtension = sanitizeFileExtension(fileTypeExtension);
 
         // create path to linked application
-        String applicationPath = toWindowsPath(new File (application).getAbsolutePath());
+        String applicationPath = toWindowsPath(new File(application).getAbsolutePath());
 
         // Set registry hive
         WindowsRegistry.Hive hive = WindowsRegistry.Hive.HKEY_CURRENT_USER;
@@ -209,6 +215,15 @@ public final class WindowsUtils extends OSUtils<String> {
         WindowsRegistry.createKey(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension);
         WindowsRegistry.writeValue(hive.getName() + SOFTWARE_CLASSES_PATH + fileTypeExtension, WindowsRegistry.DEFAULT_KEY_NAME, fileTypeName);
         return true;
+    }
+
+    @Override
+    public void runCommand(String[] command, GenericHandler<BufferedReader> inputHandler, GenericHandler<BufferedReader> errorHandler) throws OSException {
+        String[] cmd = new String[command.length + 2];
+        cmd[0] = "cmd";
+        cmd[1] = "/C";
+        System.arraycopy(command, 0, cmd, 2, command.length);
+        super.runCommand(cmd, inputHandler, errorHandler);
     }
 
     /**

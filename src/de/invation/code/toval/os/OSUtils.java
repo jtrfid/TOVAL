@@ -30,9 +30,12 @@
  */
 package de.invation.code.toval.os;
 
+import de.invation.code.toval.misc.GenericHandler;
+import de.invation.code.toval.validate.Validate;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.regex.Pattern;
 
 /**
  * Utils class regarding operating system functionalities and properties.
@@ -112,7 +115,7 @@ public abstract class OSUtils<O extends Object> {
      *
      * @return Instance of OSUtils
      */
-    public OSUtils getOSUtils() {
+    public static OSUtils getOSUtils() {
         switch (getCurrentOS()) {
             case OS_LINUX:
                 return LinuxUtils.instance();
@@ -152,6 +155,41 @@ public abstract class OSUtils<O extends Object> {
      * @throws OSException
      */
     public abstract boolean registerFileExtension(String fileTypeName, String fileTypeExtension, String application) throws OSException;
+
+    /**
+     * Runs a command on the operating system.
+     *
+     * @param command String array of command parts. The parts are concatenated
+     * with spaces between the parts. The single command parts should not
+     * contain whitespaces.
+     * @param inputHandler {@link GenericHandler} to handle the process input
+     * stream {@link BufferedReader}.
+     * @param errorHandler {@link GenericHandler} to handle the process error
+     * output {@link BufferedReader}.
+     * @throws OSException
+     */
+    public void runCommand(String[] command, GenericHandler<BufferedReader> inputHandler, GenericHandler<BufferedReader> errorHandler) throws OSException {
+        Validate.notNull(command);
+
+        try {
+            Process p = Runtime.getRuntime().exec(command);
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+            if (inputHandler != null) {
+                inputHandler.handle(in);
+            }
+            if (errorHandler != null) {
+                errorHandler.handle(err);
+            }
+
+            in.close();
+            p.waitFor();
+            p.exitValue();
+        } catch (Exception ex) {
+            throw new OSException(ex.getMessage(), ex);
+        }
+    }
 
     /**
      * Sanitizes file extension such that it can be used in the Windows

@@ -30,6 +30,9 @@
  */
 package de.invation.code.toval.os;
 
+import de.invation.code.toval.misc.GenericHandler;
+import java.io.BufferedReader;
+
 /**
  * Utils class for Mac OS operating system regarding functionalities and
  * properties.
@@ -116,5 +119,14 @@ public class MacOSUtils extends OSUtils<String> {
     @Override
     public boolean registerFileExtension(String fileTypeName, String fileTypeExtension, String application) throws OSException {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void runCommand(String[] command, GenericHandler<BufferedReader> inputHandler, GenericHandler<BufferedReader> errorHandler) throws OSException {
+        String[] cmd = new String[command.length + 2];
+        cmd[0] = "/bin/sh";
+        cmd[1] = "-c";
+        System.arraycopy(command, 0, cmd, 2, command.length);
+        super.runCommand(cmd, inputHandler, errorHandler);
     }
 }

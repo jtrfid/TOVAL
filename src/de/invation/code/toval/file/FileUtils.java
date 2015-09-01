@@ -10,8 +10,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.invation.code.toval.misc.SystemUtils;
-import de.invation.code.toval.misc.SystemUtils.OperatingSystemType;
+import de.invation.code.toval.os.OSType;
+import de.invation.code.toval.os.OSUtils;
 import de.invation.code.toval.validate.ParameterException;
 import de.invation.code.toval.validate.ParameterException.ErrorCode;
 import de.invation.code.toval.validate.Validate;
@@ -45,7 +45,7 @@ public class FileUtils {
 
         File dir = Validate.directory(directory);
 
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
         File[] files = dir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String fileName) {
@@ -93,7 +93,7 @@ public class FileUtils {
 
     public static List<String> getFileNamesInDirectory(String directory, boolean onlyFiles, boolean onlyVisibleFiles, boolean absolutePath, Set<String> acceptedEndings) throws IOException {
         List<File> files = getFilesInDirectory(directory, onlyFiles, onlyVisibleFiles, acceptedEndings);
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (File file : files) {
             if (absolutePath) {
                 result.add(file.getAbsolutePath());
@@ -111,7 +111,7 @@ public class FileUtils {
             throw new ParameterException(ErrorCode.INCOMPATIBILITY, "Invalid or non-existing directory.");
         }
 
-        List<File> result = new ArrayList<File>();
+        List<File> result = new ArrayList<>();
         File[] files = dir.listFiles();
         for (int i = 0; files != null && i < files.length; i++) {
             if (!files[i].isDirectory()) {
@@ -148,7 +148,7 @@ public class FileUtils {
             throw new IllegalArgumentException("File is a directory: " + file.getAbsolutePath());
         }
 
-        boolean success = false;
+        boolean success;
         if (followLinks) {
             success = file.delete();
         } else {
@@ -165,28 +165,19 @@ public class FileUtils {
             return false;
         }
 
-        OperatingSystemType os = SystemUtils.getOperatingSystem();
+        OSType os = OSUtils.getCurrentOS();
 
-        String[] command = new String[3];
+        String[] command = new String[1];
         String path = file.getPath();
         switch (os) {
-            case win:
-                command[0] = "cmd";
-                command[1] = "/C";
-                command[2] = "del \"" + path + "\"";
-                break;
-            case mac:
-                command[0] = "/bin/sh";
-                command[1] = "-c";
-                command[2] = "rm \"" + path + "\"";
+            case OS_WINDOWS:
+                command[0] = "del \"" + path + "\"";
                 break;
             default:
-                command[0] = "/bin/sh";
-                command[1] = "-c";
-                command[2] = "rm \"" + path + "\"";
+                command[0] = "rm \"" + path + "\"";
                 break;
         }
-        SystemUtils.runCommand(command);
+        OSUtils.getOSUtils().runCommand(command, null, null);
         return true;
     }
 
@@ -346,8 +337,8 @@ public class FileUtils {
 
     public static String readStringFromFile(String fileName) throws IOException {
         FileReader reader = new FileReader(fileName);
-        StringBuffer stringBuffer = new StringBuffer();
-        String line = null;
+        StringBuilder stringBuffer = new StringBuilder();
+        String line;
         while ((line = reader.readLine()) != null) {
             stringBuffer.append(line).append(FileWriter.DEFAULT_EOL_STRING);
         }
@@ -357,8 +348,8 @@ public class FileUtils {
 
     public static List<String> readLinesFromFile(String fileName) throws IOException {
         FileReader reader = new FileReader(fileName);
-        List<String> lines = new ArrayList<String>();
-        String line = null;
+        List<String> lines = new ArrayList<>();
+        String line;
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
@@ -413,7 +404,9 @@ public class FileUtils {
         } catch (IOException e) {
             throw e;
         } finally {
-            fileIn.close();
+            if (fileIn != null) {
+                fileIn.close();
+            }
         }
         return linesCount;
     }

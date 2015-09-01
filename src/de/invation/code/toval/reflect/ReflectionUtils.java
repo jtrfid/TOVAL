@@ -52,7 +52,7 @@ public class ReflectionUtils {
      * <li>some/package/</li>
      * </ul>
      */
-    public static final Pattern CLASS_PATH_PATTERN = Pattern.compile("^((?:[a-z][a-z0-9-]*\\/)+)?([a-zA-Z0-9_\\-]+(?:\\$[a-zA-Z0-9_\\-]+)*.class)?$");
+    public static final Pattern CLASS_PATH_PATTERN = Pattern.compile("^((?:[a-z][a-z0-9-]*\\/)+)?([\\d\\w_\\-]+(?:\\$[\\d\\w_\\-]+)*\\.class)?$");
 
     /**
      * Pattern to parse a JAR path like
