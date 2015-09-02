@@ -30,7 +30,6 @@
  */
 package de.invation.code.toval.os;
 
-import de.invation.code.toval.misc.GenericHandler;
 import de.invation.code.toval.validate.Validate;
 import java.io.BufferedReader;
 import java.io.File;
@@ -217,5 +216,26 @@ public abstract class OSUtils<O extends Object> {
         newFileTypeExtension = "." + splittedFileExtension[splittedFileExtension.length - 1];
 
         return newFileTypeExtension;
+    }
+
+    /**
+     * <p>
+     * Generic handler interface. Has a method to handle the given generic type.
+     * </p>
+     *
+     * @param <T> Type of the object to handle.
+     *
+     * @version 1.0
+     * @author Adrian Lange <lange@iig.uni-freiburg.de>
+     */
+    public interface GenericHandler<T extends Object> {
+
+        /**
+         * Method to handle an object of the parameter <code>&#60;T&#62;</code>.
+         *
+         * @param parameter Object to handle.
+         * @throws Exception
+         */
+        public void handle(T parameter) throws Exception;
     }
 }

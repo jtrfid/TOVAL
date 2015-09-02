@@ -30,7 +30,6 @@
  */
 package de.invation.code.toval.os;
 
-import de.invation.code.toval.misc.GenericHandler;
 import java.io.BufferedReader;
 import java.util.HashSet;
 import java.util.Map;

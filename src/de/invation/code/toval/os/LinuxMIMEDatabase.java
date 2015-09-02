@@ -61,22 +61,22 @@ public class LinuxMIMEDatabase {
     /**
      * matches a MIME type
      */
-    protected final static Pattern MIME_PATTERN = Pattern.compile("[\\w\\d-]+\\/[\\w\\d-\\+\\.]+", Pattern.CASE_INSENSITIVE);
+    protected final static Pattern MIME_PATTERN = Pattern.compile("[\\w-]+\\/[\\w-\\+\\.]+", Pattern.CASE_INSENSITIVE);
 
     /*
      * Matches lists of MIME to list of application associations:
      * application/xml=brasero.desktop;mount-archive.desktop;
      */
-    private static final Pattern MIME_TYPE_APPS_PATTERN = Pattern.compile("([\\w\\d-]+\\/[\\w\\d-+\\.]+)\\=|([\\w\\d- \\.]+\\.desktop)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_APPS_PATTERN = Pattern.compile("([\\w-]+\\/[\\w-+\\.]+)\\=|([\\w- \\.]+\\.desktop)", Pattern.CASE_INSENSITIVE);
 
     /*
      * Matches file extension specifications in MIME type files (see MIME_TYPE_FILES)
      */
-    private static final Pattern MIME_TYPE_FILE_EXTENSION_PATTERN = Pattern.compile("<glob\\s+pattern=\\\"\\*?(\\.[\\w\\d]+)\\\"\\s*(?:\\/>|>(?:(?!<\\/glob>).)*<\\/glob>)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_FILE_EXTENSION_PATTERN = Pattern.compile("<glob\\s+pattern=\\\"\\*?(\\.[\\w]+)\\\"\\s*(?:\\/>|>(?:(?!<\\/glob>).)*<\\/glob>)", Pattern.CASE_INSENSITIVE);
     /*
      * Matches MIME types declarations in MIME type files (see MIME_TYPE_FILES)
      */
-    private static final Pattern MIME_TYPE_FILE_MIME_PATTERN = Pattern.compile("type=\\\"([\\w]+\\/[\\w\\d\\\\+-\\\\.]+)+\\\"", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MIME_TYPE_FILE_MIME_PATTERN = Pattern.compile("type=\\\"([a-z]+\\/[\\w\\\\+-\\\\.]+)+\\\"", Pattern.CASE_INSENSITIVE);
 
     /*
      * List of directories with MIME-type files with aliases and extension associations
