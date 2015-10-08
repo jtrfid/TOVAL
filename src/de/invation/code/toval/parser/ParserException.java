@@ -19,6 +19,10 @@ public class ParserException extends Exception {
 		super(message);
 	}
 
+	public ParserException(Throwable cause){
+		super(cause);
+	}
+
 	public ParserException(ErrorCode errorCode) {
 		super();
 		this.errorCode = errorCode;
