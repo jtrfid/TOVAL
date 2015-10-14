@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractIntervalList<T extends Interval> {
-	protected List<T> timeIntervals = new ArrayList<T>();
+	protected List<T> timeIntervals = new ArrayList<>();
 	protected Interval minBorders = new Interval(Long.MIN_VALUE, Long.MAX_VALUE);
 	protected Interval maxBorders = null;
 	

@@ -8,4 +8,8 @@ public class CompatibilityException extends ParameterException{
 		super(ErrorCode.INCONSISTENCY, message);
 	}
 
+	public CompatibilityException(String message, Throwable t) {
+		super(ErrorCode.INCONSISTENCY, message, t);
+	}
+
 }
