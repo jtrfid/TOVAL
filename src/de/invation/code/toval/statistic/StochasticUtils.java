@@ -1,7 +1,7 @@
 package de.invation.code.toval.statistic;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -19,7 +19,7 @@ public class StochasticUtils {
 		return getMoments(values, Arrays.asList(degree)).get(degree);
 	}
 	
-	public static HashMap<Integer, Double> getMoments(Collection<Double> values, Collection<Integer> degrees){
+	public static Map<Integer, Double> getMoments(Collection<Double> values, Collection<Integer> degrees){
 		Observation o = new Observation(values);
 		o.setMomentDegrees(degrees);
 		return o.getMoments();

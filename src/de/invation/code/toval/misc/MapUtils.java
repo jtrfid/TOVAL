@@ -1,7 +1,6 @@
 package de.invation.code.toval.misc;
 
 import de.invation.code.toval.types.HashList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,15 +27,15 @@ public class MapUtils {
 	 */
 	public static final String EMPTY_MAP = "[]";
 
-	public static String toString(HashMap<?, ?> map) {
+	public static String toString(Map<?, ?> map) {
 		return toString(map, DEFAULT_PRECISION, DEFAULT_PRECISION);
 	}
 
-	public static String toString(HashMap<?, ?> map, int precision) {
+	public static String toString(Map<?, ?> map, int precision) {
 		return toString(map, precision, precision);
 	}
 
-	public static String toString(HashMap<?, ?> map, int keyPrecision, int valuePrecision) {
+	public static String toString(Map<?, ?> map, int keyPrecision, int valuePrecision) {
 		if (map == null)
 			throw new NullPointerException();
 		if (map.isEmpty())

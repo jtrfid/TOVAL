@@ -34,11 +34,11 @@ public class Observation implements Serializable {
 	/**
 	 * Sequential list of all values in insertion order.
 	 */
-	protected ArrayList<Double> insertSeq = new ArrayList<Double>();
+	protected List<Double> insertSeq = new ArrayList<>();
 	/**
 	 * Map of distinct inserted values together with their frequency of occurrence.
 	 */
-	protected HashMap<Double, Integer> insertStat = new HashMap<Double, Integer>();
+	protected Map<Double, Integer> insertStat = new HashMap<>();
 	/**
 	 * Number of inserted values.
 	 */
@@ -78,7 +78,7 @@ public class Observation implements Serializable {
 	 * <li>...</li>
 	 * </ul>
 	 */
-	protected HashMap<Integer, Double> moments = new HashMap<Integer, Double>(momentDegrees.size());
+	protected Map<Integer, Double> moments = new HashMap<>(momentDegrees.size());
 	
 	/**
 	 * Controls the observations' update behavior.<br>
@@ -396,7 +396,7 @@ public class Observation implements Serializable {
 	 * @return The calculated moments (probabilistic measure)
 	 * @see #moments
 	 */
-	public HashMap<Integer, Double> getMoments() {
+	public Map<Integer, Double> getMoments() {
 		if(moments.isEmpty())
 			setMoments();
 		return moments;
@@ -534,7 +534,7 @@ public class Observation implements Serializable {
 		builder.append("\n");
 		builder.append(header);
 		builder.append("   moments: ");
-		HashMap<Integer, Double> m = getMoments();
+		Map<Integer, Double> m = getMoments();
 		if(m.isEmpty()) {
 			builder.append("- \n");
 		} else {
