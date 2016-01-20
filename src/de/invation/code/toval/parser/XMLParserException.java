@@ -16,6 +16,10 @@ public class XMLParserException extends ParserException {
 		this.errorCode = errorCode;
 	}
 
+	public XMLParserException(Throwable t) {
+		super(t);
+	}
+
 	@Override
 	public String getMessage(){
 		switch(errorCode){
