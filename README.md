@@ -22,11 +22,11 @@ Library with classes for common programming issues
 
 ### Latest Release
 
-The most recent release is TOVAL 1.0.1, released September 10, 2015.
+The most recent release is TOVAL 1.0.2, released January 22, 2016.
 
-* [toval-1.0.1.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.1/toval-1.0.1.jar)
-* [toval-1.0.1-sources.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.1/toval-1.0.1-sources.jar)
-* [toval-1.0.1-javadoc.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.1/toval-1.0.1-javadoc.jar)
+* [toval-1.0.2.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.2/toval-1.0.2.jar)
+* [toval-1.0.2-sources.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.2/toval-1.0.2-sources.jar)
+* [toval-1.0.2-javadoc.jar](https://github.com/GerdHolz/TOVAL/releases/download/v1.0.2/toval-1.0.2-javadoc.jar)
 
 To add a dependency on TOVAL using Maven, use the following:
 
@@ -34,7 +34,7 @@ To add a dependency on TOVAL using Maven, use the following:
 <dependency>
   <groupId>de.invation.code</groupId>
   <artifactId>TOVAL</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
