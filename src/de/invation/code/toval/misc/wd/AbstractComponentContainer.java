@@ -117,7 +117,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
         return componentFiles.get(componentName);
     }
 
-    protected boolean mandatoryDirectory() {
+    protected final boolean mandatoryDirectory() {
         return true;
     }
 
@@ -240,7 +240,8 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
     public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners)
             throws ProjectComponentException {
         validateComponent(componentName);
-        if (components.remove(componentName) != null) {
+        O component = getComponent(componentName);
+        //if (components.remove(componentName) != null) {
             if (removeFromDisk) {
                 if (useSubdirectoriesForComponents) {
                     try {
@@ -258,13 +259,15 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
                     }
                 }
             }
+            components.remove(componentName);
             componentFiles.remove(componentName);
             if (notifyListeners) {
-                listenerSupport.notifyComponentRemoved(getComponent(componentName));
+                listenerSupport.notifyComponentRemoved(component);
             }
-            return true;
-        }
-        return false;
+            //return true;
+        //}
+        return true;
+        //return false;
     }
 
     public void storeComponents() throws ProjectComponentException {
@@ -433,7 +436,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
 
     protected File getComponentFile(File pathFile, String componentName) throws ProjectComponentException {
         try {
-            return new File(String.format(componentFileFormat, pathFile.getCanonicalPath(), componentName, ".pnml"));
+            return new File(String.format(componentFileFormat, pathFile.getCanonicalPath(), File.separator+componentName, ".pnml"));
         } catch (IOException e) {
             throw new ProjectComponentException("Cannot compose component file.", e);
         }
