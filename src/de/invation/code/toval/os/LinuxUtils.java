@@ -143,7 +143,7 @@ public final class LinuxUtils extends OSUtils<Set<String>> {
         // TODO create mime-info in /usr/share/mime/packages
         // TODO add MIME type to .desktop file
         // not possible due to missing permissions?
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
