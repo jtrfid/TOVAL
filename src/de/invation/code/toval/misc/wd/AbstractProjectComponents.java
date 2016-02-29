@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class AbstractProjectComponents {
     
-    private List<AbstractComponentContainer> componentContainers = new HashList<>();
+    private final List<AbstractComponentContainer> componentContainers = new HashList<>();
     private SimpleDebugger debugger = null;
     
     protected AbstractProjectComponents() throws ProjectComponentException{

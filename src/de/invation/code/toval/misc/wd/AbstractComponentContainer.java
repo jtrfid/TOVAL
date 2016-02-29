@@ -233,8 +233,7 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
                 return removeComponent(componentName, removeFromDisk, DEFAULT_NOTIFY_LISTENERS);
         }
 
-        public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners)
-                throws ProjectComponentException {
+        public boolean removeComponent(String componentName, boolean removeFromDisk, boolean notifyListeners) throws ProjectComponentException {
                 validateComponent(componentName);
                 O component = getComponent(componentName);
                 //if (components.remove(componentName) != null) {
@@ -273,7 +272,13 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
         public void storeComponent(String componentName) throws ProjectComponentException {
                 validateComponent(componentName);
                 try {
-                        serializeComponent(getComponent(componentName), getComponentDirectory(componentName).getCanonicalPath(), getSerializationFileName(getComponent(componentName)).concat("." + getFileEndingForComponent(getComponent(componentName))));
+                        String fileEnding = getFileEndingForComponent(getComponent(componentName));
+                        String filename = getSerializationFileName(getComponent(componentName));
+                        if (!fileEnding.equals("")) {
+                                filename = filename + "." + fileEnding;
+                        }
+
+                        serializeComponent(getComponent(componentName), getComponentDirectory(componentName).getCanonicalPath(), filename);
                 } catch (Exception e) {
                         throw new ProjectComponentException("Cannot store component: " + e.getMessage() + ".", e);
                 }
