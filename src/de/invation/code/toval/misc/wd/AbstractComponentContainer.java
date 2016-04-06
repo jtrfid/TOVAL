@@ -38,8 +38,8 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
 	private static final String COMPONENT_FILE_FORMAT = "%s%s%s";
 
 	private boolean ignoreIncompatibleFiles = DEFAULT_IGNORE_INCOMPATIBLE_FILES;
-	private final Map<String, O> components = new HashMap<>();
-	private final Map<String, File> componentFiles = new HashMap<>();
+	protected final Map<String, O> components = new HashMap<>();
+	protected final Map<String, File> componentFiles = new HashMap<>();
 	private String basePath = null;
 	private SimpleDebugger debugger = null;
 	private boolean useSubdirectoriesForComponents = DEFAULT_USE_SUBDIRECTORIES_FOR_COMPONENTS;
