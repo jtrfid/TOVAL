@@ -5,6 +5,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -42,6 +43,7 @@ public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
             dir.mkdir();
             String workingDirectory = dir.getAbsolutePath() + "/";
             addKnownWorkingDirectory(workingDirectory, true);
+            JOptionPane.showMessageDialog(null, "Please restart SWAT to load the new Working Directory");
         }
     }
 

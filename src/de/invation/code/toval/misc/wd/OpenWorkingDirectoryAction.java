@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class OpenWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
 
@@ -30,6 +31,7 @@ public class OpenWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
             File file = fileChooser.getSelectedFile();
             String workingDirectory = file.getAbsolutePath() + System.getProperty("file.separator");
             addKnownWorkingDirectory(workingDirectory, false);
+            JOptionPane.showMessageDialog(null, "Please restart SWAT to load the choosen Working Directory");
         }
     }
 

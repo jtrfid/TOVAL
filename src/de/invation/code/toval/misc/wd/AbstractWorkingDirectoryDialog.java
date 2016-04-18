@@ -14,6 +14,7 @@ import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
@@ -24,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+
 
 /**
  *
@@ -102,7 +104,16 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
                 JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "Please choose a " + properties.getWorkingDirectoryDescriptor().toLowerCase(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            setDialogObject(directories.get(listKnownDirectories.getSelectedIndex()));
+            String directory = directories.get(listKnownDirectories.getSelectedIndex());
+            setDialogObject(directory);
+            
+            try {
+                properties.setWorkingDirectory(directory, true);
+                properties.store();
+                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "Please restart SWAT to load the choosen Working Directory");
+            } catch (ProjectComponentException | IOException e) {
+                throw new RuntimeException(e);
+            }
             super.okProcedure();
         } else {
             JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "No known entries, please create new " + properties.getWorkingDirectoryDescriptor().toLowerCase(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
