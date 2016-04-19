@@ -122,19 +122,7 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
 
     private JList getListKnownDirectories() {
         if (listKnownDirectories == null) {
-            listKnownDirectories = new JList(modelListKnownDirectories) {
-                private static final long serialVersionUID = -5571466323700430126L;
-
-                @Override
-                public String getToolTipText(MouseEvent event) {
-                    int index = locationToIndex(event.getPoint());
-                    if (index != -1) {
-                        return directories.get(index);
-                    }
-                    return super.getToolTipText(event);
-                }
-
-            };
+            listKnownDirectories = new JList(modelListKnownDirectories);
             listKnownDirectories.setCellRenderer(new AlternatingRowColorListCellRenderer());
             listKnownDirectories.setFixedCellHeight(20);
             listKnownDirectories.setVisibleRowCount(10);
@@ -151,7 +139,7 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
         try {
             for (String knownDirectory : properties.getKnownWorkingDirectories()) {
                 try {
-                    modelListKnownDirectories.addElement(FileUtils.getDirName(knownDirectory));
+                    modelListKnownDirectories.addElement(knownDirectory);
                     directories.add(knownDirectory);
                 } catch (ParameterException e) {
                     //Directory no longer available. Do not put into directories list
