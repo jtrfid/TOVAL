@@ -43,8 +43,8 @@ public class NewWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
             dir.mkdir();
             String workingDirectory = dir.getAbsolutePath() + "/";
             
-            if (properties.getKnownWorkingDirectories().size() != 0) {
-            	JOptionPane.showMessageDialog(null, "Please restart SWAT to load the new Working Directory");
+            if (!properties.getKnownWorkingDirectories().isEmpty()) {
+            	JOptionPane.showMessageDialog(null, "Please restart the program to load the new " + properties.getWorkingDirectoryDescriptor().toLowerCase());
             }
             addKnownWorkingDirectory(workingDirectory, true);
         }

@@ -115,7 +115,7 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
             try {
                 properties.setWorkingDirectory(directory, true);
                 properties.store();
-                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "Please restart SWAT to load the choosen Working Directory");
+                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "Please restart the program to load the choosen " + properties.getWorkingDirectoryDescriptor().toLowerCase());
             } catch (ProjectComponentException | IOException e) {
                 throw new RuntimeException(e);
             }
@@ -136,7 +136,7 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
             updateListKnownDirectories();
             FileUtils.deleteDirectory(selection, true);
             if (modelListKnownDirectories.isEmpty()) {
-                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "You deleted the last directory, exiting SWAT now ...");
+                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "You deleted the last directory, exiting program now ...");
                 System.exit(0);
             }
         } catch (Exception e) {

@@ -30,8 +30,8 @@ public class OpenWorkingDirectoryAction extends AbstractWorkingDirectoryAction {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             String workingDirectory = file.getAbsolutePath() + System.getProperty("file.separator");
-            if (properties.getKnownWorkingDirectories().size() != 0) {
-            	JOptionPane.showMessageDialog(null, "Please restart SWAT to load the choosen Working Directory");
+            if (!properties.getKnownWorkingDirectories().isEmpty()) {
+            	JOptionPane.showMessageDialog(null, "Please restart the program to load the choosen " + properties.getWorkingDirectoryDescriptor().toLowerCase());
             }
             addKnownWorkingDirectory(workingDirectory, false); 
         }
