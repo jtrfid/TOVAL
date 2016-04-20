@@ -11,7 +11,7 @@ import de.invation.code.toval.validate.Validate;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Window;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
 
     private static final long serialVersionUID = 2306027725394345926L;
     
-    public static final Dimension PREFERRED_SIZE = new Dimension(500, 300);
+    public static final Dimension PREFERRED_SIZE = new Dimension(600, 300);
 
     private final JPanel contentPanel = new JPanel();
 
@@ -94,6 +94,11 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
         buttons.add(newDirectoryButton);
         JButton openDirectoryButton = new JButton(openDirectoryAction);
         buttons.add(openDirectoryButton);
+        JButton deleteDirectoryButton = new JButton("Delete Directory");
+        deleteDirectoryButton.addActionListener((ActionEvent e) -> {
+		deleteWorkingDirectory();
+	});
+        buttons.add(deleteDirectoryButton);
         return buttons;
     }
 
@@ -120,6 +125,25 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
         }
     }
 
+    private void deleteWorkingDirectory() {
+        String selection = listKnownDirectories.getSelectedValue().toString();
+        if (selection == null) {
+            JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "Please choose a " + properties.getWorkingDirectoryDescriptor().toLowerCase(), "Invalid Parameter", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            properties.removeKnownWorkingDirectory(selection);
+            updateListKnownDirectories();
+            FileUtils.deleteDirectory(selection, true);
+            if (modelListKnownDirectories.isEmpty()) {
+                JOptionPane.showMessageDialog(AbstractWorkingDirectoryDialog.this, "You deleted the last directory, exiting SWAT now ...");
+                System.exit(0);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private JList getListKnownDirectories() {
         if (listKnownDirectories == null) {
             listKnownDirectories = new JList(modelListKnownDirectories);
@@ -128,7 +152,6 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
             listKnownDirectories.setVisibleRowCount(10);
             listKnownDirectories.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             listKnownDirectories.setBorder(null);
-
             updateListKnownDirectories();
         }
         return listKnownDirectories;
@@ -168,5 +191,4 @@ public abstract class AbstractWorkingDirectoryDialog<E> extends AbstractDialog<S
     public void exceptionOccurred(Object sender, Exception e){
         ExceptionDialog.showException(AbstractWorkingDirectoryDialog.this, "Exception", e, true, true);
     }
-
 }
