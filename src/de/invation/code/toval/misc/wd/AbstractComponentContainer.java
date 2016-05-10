@@ -251,8 +251,8 @@ public abstract class AbstractComponentContainer<O extends NamedComponent> {
 			} else {
 				try {
 					String fileName = getSerializationFileName(getComponent(componentName));
-					if (component.getClass().toString().contains("Analysis")) {
-						fileName += ".xml";
+					if (!getFileEndingForComponent(getComponent(componentName)).isEmpty()) {
+						fileName += "." + getFileEndingForComponent(getComponent(componentName));
 					}
 					FileUtils.deleteFile(basePath + fileName);
 				} catch (Exception e) {
