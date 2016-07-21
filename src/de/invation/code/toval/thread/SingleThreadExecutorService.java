@@ -89,7 +89,7 @@ public abstract class SingleThreadExecutorService<V, Z, E extends Exception> imp
 
         /**
          * 获取异步任务执行结果，如果任务没有结束，阻塞在此，等待计算结束。
-         * 因此，不用此函数，在监听中获取结果，避免阻塞。
+         * 因此，可以不用此函数，在监听中获取结果，避免阻塞。
          * @return
          * @throws E
          */
@@ -107,10 +107,11 @@ public abstract class SingleThreadExecutorService<V, Z, E extends Exception> imp
                 }
         }
 
+        /** 返回异常对象 */
         protected abstract E createException(String message, Throwable cause);
-
+        /** 返回异常对象 */
         protected abstract E executionException(ExecutionException e);
-
+        /** 获取异步任务执行结果，如果任务没有结束，阻塞在此，等待计算结束。*/
         protected abstract Z getResultFromCallableResult(V callableResult) throws Exception;
 
         @Override
