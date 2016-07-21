@@ -111,7 +111,7 @@ public abstract class SingleThreadExecutorService<V, Z, E extends Exception> imp
         protected abstract E createException(String message, Throwable cause);
         /** 返回异常对象 */
         protected abstract E executionException(ExecutionException e);
-        /** 获取异步任务执行结果，如果任务没有结束，阻塞在此，等待计算结束。*/
+        /** 监听获取执行结果时，调用此函数，可以在此函数中对执行结果（callableResult）进行处理,或直接返回即可。 */
         protected abstract Z getResultFromCallableResult(V callableResult) throws Exception;
 
         @Override

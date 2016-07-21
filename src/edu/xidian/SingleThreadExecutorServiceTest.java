@@ -40,7 +40,7 @@ import de.invation.code.toval.thread.SingleThreadExecutorService;
 		}		
 	};
 	
-   (3) 监听执行情况，必须，否则无法获取执行结果
+   (3) 可选，监听执行情况
    service.addExecutorListener(new ExecutorListener<String>(){
 
 			@Override
@@ -86,10 +86,10 @@ public class SingleThreadExecutorServiceTest {
 
 		@Override
 		protected String callRoutine() throws Exception {
-			for(int i = 0; i < 100; i++) {
+			for(int i = 0; i < 10; i++) {
 				//if(i == 10) throw new Exception("test exception"); // 测试抛出异常
 				System.out.println("i=" + i);
-				//Thread.sleep(1000); // 延时1s
+				Thread.sleep(1000); // 延时1s
 			}
 			return "ok";
 		}
@@ -157,7 +157,7 @@ public class SingleThreadExecutorServiceTest {
 			}
 			
 		});
-		    
+		
 		// 独立线程执行任务
 		test.service.setUpAndRun(); // 此后的语句继续执行，结果在监听中获取
 		
