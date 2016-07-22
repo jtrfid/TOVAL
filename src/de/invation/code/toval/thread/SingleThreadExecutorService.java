@@ -81,10 +81,16 @@ public abstract class SingleThreadExecutorService<V, Z, E extends Exception> imp
          * @throws ExecutionException
          */
         protected V getCallableResult() throws CancellationException, InterruptedException, ExecutionException {
-                if (getCallable().getCallableResult() == null) {
+        	   /**
+        	    // 注意，如果是第二次运行setUpAndRun(),此时将是上一次的结果，并且不等待
+                if (getCallable().getCallableResult() == null) {  
                         futureResult.get();  // Waits if necessary for the computation to complete, and then retrieves its result.
                 }
                 return getCallable().getCallableResult();
+               ***/
+        	
+                // 正解，即使第二次运行，也是等待获取第二次结果。不能用【getCallable().getCallableResult() == null】的判断，而影响第二次的结果。
+        	    return futureResult.get();   // Waits if necessary for the computation to complete, and then retrieves its result.     
         }
 
         /**
