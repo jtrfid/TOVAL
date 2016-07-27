@@ -15,8 +15,17 @@ public class HashList<E> extends ArrayList<E> implements Set<E> {
 
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * Set implementation that allows random access by extending <code>ArrayList</code>.<br>
+     * It extends <code>ArrayList</code> with the set feature, that it contains no two equal elements.
+	 */
 	public HashList() {}
 	
+	/**
+	 * Set implementation that allows random access by extending <code>ArrayList</code>.<br>
+     * It extends <code>ArrayList</code> with the set feature, that it contains no two equal elements.
+	 * @param c the elements to be inserted into this list.
+	 */
 	public HashList(Collection<? extends E> c) {
 		super();
 		addAll(c);
