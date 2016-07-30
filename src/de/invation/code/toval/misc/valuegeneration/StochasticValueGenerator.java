@@ -32,9 +32,9 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	
 	private static final String probFormat = "%s: %s%%\n";
 	
-	private List<E> keys = new ArrayList<E>();
-	private List<Double> limits = new ArrayList<Double>();
-	private Map<E, Double> probabilities = new HashMap<E, Double>();
+	private List<E> keys = new ArrayList<E>();  // "a","b","c"
+	private List<Double> limits = new ArrayList<Double>(); // 0.2,(0.2+0.3),(0.2+0.3+0.5)
+	private Map<E, Double> probabilities = new HashMap<E, Double>(); // ("a",0.2),("b",0.3),("c",0.5)
 	private boolean isValid = false;
 	private Random rand = new Random();
 	private double tolerance;
@@ -181,12 +181,37 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	}
 	
 	
-	public static void main(String[] args) throws ParameterException {
+	//public static void main(String[] args) throws ParameterException{  // 如果异常，不易发现
+	public static void main(String[] args) {
 		StochasticValueGenerator<String> vg = new StochasticValueGenerator<String>(1000);
-		vg.addProbability("a", 0.3);
-		vg.addProbability("b", 0.7);
+		try {
+			vg.addProbability("a", 0.3);
+			vg.addProbability("b", 0.2);
+			vg.addProbability("c", 0.5);
+		} catch (InconsistencyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ParameterException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		System.out.println(vg);
-		System.out.println(vg.isValid());
+		
+		int numa=0,numb=0,numc=0;
+		String v;
+		try {
+			for(int i=0; i<10; i++) {
+			   v = vg.getNextValue();
+			   if (v.compareTo("a") == 0) numa++;
+			   else if (v.compareTo("b") == 0) numb++;
+			   else if (v.compareTo("c") == 0) numc++;
+			   System.out.println("next: " + v + ",[a,b,c=]" + numa + "," + numb + "," + numc);
+			}
+		} catch (ValueGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("a,b,c%=" + numa/10.0 + "," + numb/10.0 + "," + numc/10.0);
 		vg.removeElement("b");
 		System.out.println(vg);
 		System.out.println(vg.isValid());
