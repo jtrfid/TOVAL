@@ -184,6 +184,7 @@ public class StochasticValueGenerator<E> implements ValueGenerator<E>{
 	//public static void main(String[] args) throws ParameterException{  // 如果异常，不易发现
 	public static void main(String[] args) {
 		StochasticValueGenerator<String> vg = new StochasticValueGenerator<String>(1000);
+		// 随机选出a,b,c元素的概率分别为0.3,0.2,0.5,【各元素的概率之和=1】
 		try {
 			vg.addProbability("a", 0.3);
 			vg.addProbability("b", 0.2);

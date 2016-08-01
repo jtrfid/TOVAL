@@ -15,8 +15,9 @@ import de.invation.code.toval.validate.InconsistencyException;
  */
 public interface ValueGenerator<E extends Object> {
 	
+	/** 获取下一值 */
 	public E getNextValue() throws ValueGenerationException;
-	
+	/** 是否有效 */
 	public boolean isValid();
 	
 	@SuppressWarnings("rawtypes")
